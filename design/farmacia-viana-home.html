@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  aesthetic_dna: Retail Pharmacy Storefront (Ultradesign)
+  ui_paradigm: Hybrid E-commerce Shell (Curated Homepage + Dense Faceted Catalog + Contextual Drawer)
+  palette: Ivory (#FCFBFA), Deep Green (#08382A), Copper (#D9774E), Sage (#E9ECE8)
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia Viana - Tu farmacia de confianza en Paraguay</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            ivory: '#FCFBFA',
+                            green: { dark: '#08382A', mid: '#2B7A5F' },
+                            copper: { DEFAULT: '#D9774E', dark: '#C06640' },
+                            sage: { DEFAULT: '#E9ECE8', dark: '#D0D6D1' },
+                            red: '#D94E4E'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(8, 56, 42, 0.08)',
+                        'hover': '0 20px 40px -15px rgba(8, 56, 42, 0.12)',
+                        'inner-border': 'inset 0 0 0 1px rgba(8, 56, 42, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            background-color: theme('colors.brand.ivory');
+            color: #18181B;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        
+        /* Layout Transitions */
+        .view-section { display: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; transform: translateY(10px); }
+        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom Scrollbar for global */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: theme('colors.brand.sage.dark'); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.brand.green.mid'); }
+
+        /* Hero Carousel Engine */
+        .hero-slide {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+            transform: scale(1.02);
+        }
+        .hero-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+            z-index: 10;
+        }
+        .hero-slide .slide-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s var(--ease-out-expo) 0.2s;
+        }
+        .hero-slide.active .slide-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Product Card Engine */
+        .product-card {
+            transition: transform 300ms var(--ease-spring), box-shadow 300ms ease;
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: theme('boxShadow.inner-border');
+            pointer-events: none;
+            z-index: 10;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: theme('boxShadow.hover');
+        }
+        .p-image-wrap { overflow: hidden; border-radius: 0.75rem; background: theme('colors.brand.sage.DEFAULT'); }
+        .p-image-wrap img { transition: transform 0.5s var(--ease-out-expo); mix-blend-mode: multiply; }
+        .product-card:hover .p-image-wrap img { transform: scale(1.05); }
+        
+        .p-quick-add {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 300ms var(--ease-spring);
+        }
+        @media (min-width: 1024px) {
+            .product-card:hover .p-quick-add { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 1023px) {
+            .p-quick-add { opacity: 1; transform: translateY(0); position: relative; bottom: auto; margin-top: 0.5rem; }
+        }
+
+        /* Search Dropdown */
+        .search-container:focus-within .search-dropdown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* Nav active */
+        .cat-nav-btn.active { color: theme('colors.brand.copper.DEFAULT'); border-color: theme('colors.brand.copper.DEFAULT'); }
+        .cat-nav-btn::after {
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px;
+            background: theme('colors.brand.copper.DEFAULT'); transform: scaleX(0); transition: transform 0.3s ease;
+        }
+        .cat-nav-btn:hover::after, .cat-nav-btn.active::after { transform: scaleX(1); }
+
+        /* Drawer overlay animation */
+        .drawer-overlay { opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(4px); }
+        .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+        .drawer-panel { transform: translateX(100%); transition: transform 0.5s var(--ease-spring); }
+        .drawer-panel.open { transform: translateX(0); }
+
+        /* Marquee */
+        .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Staggered lists */
+        .stagger-item { animation: slideUpFade 0.5s var(--ease-out-expo) backwards; }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="antialiased min-h-[100dvh] flex flex-col relative">
+
+    <!-- Announcement Bar -->
+    <div class="bg-brand-green-dark text-white text-xs font-medium py-2 px-4 text-center tracking-wide z-[55] relative flex items-center justify-center gap-4">
+        <span><i class="ph-fill ph-moped text-brand-copper mr-1"></i> Envío gratis desde Gs. 150.000</span>
+        <span class="hidden sm:inline opacity-30">|</span>
+        <span class="hidden sm:inline"><i class="ph-fill ph-storefront text-brand-copper mr-1"></i> Retiro en tienda en 30 min</span>
+    </div>
+
+    <!-- Sticky Header Shell -->
+    <header class="sticky top-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-brand-sage-dark/50 shadow-sm transition-all duration-300" id="mainHeader">
+        <!-- Main Top Row -->
+        <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between gap-4 lg:gap-8">
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-zinc-900 text-2xl"><i class="ph ph-list"></i></button>
+
+            <!-- Logo -->
+            <a href="#" onclick="switchView('home'); return false;" class="flex items-center gap-2 flex-shrink-0 group" rel="nofollow">
+                <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-brand-green-dark text-white flex items-center justify-center group-hover:bg-brand-green-mid transition-colors duration-300">
+                    <i class="ph-fill ph-heartbeat text-xl md:text-2xl"></i>
+                </div>
+                <div class="font-serif font-bold text-xl md:text-2xl text-brand-green-dark tracking-tight leading-none mt-1">VIANA</div>
+            </a>
+
+            <!-- Search Area (Centered) -->
+            <div class="flex-grow max-w-2xl hidden md:block relative z-50 search-container group">
+                <div class="relative flex items-center w-full">
+                    <input type="text" placeholder="Buscar medicamentos, vitaminas, cosméticos..." 
+                           class="w-full h-11 pl-11 pr-4 rounded-full bg-brand-sage border border-transparent focus:bg-white focus:border-brand-copper focus:ring-4 focus:ring-brand-copper/10 outline-none transition-all text-sm text-zinc-900 placeholder:text-zinc-500 font-medium">
+                    <i class="ph ph-magnifying-glass absolute left-4 text-lg text-zinc-400 group-focus-within:text-brand-copper transition-colors"></i>
+                </div>
+                
+                <!-- Search Result Dropdown -->
+                <div class="search-dropdown absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-hover border border-brand-sage-dark overflow-hidden opacity-0 pointer-events-none transform -translate-y-2 transition-all">
+                    <div class="p-3 border-b border-brand-sage text-xs font-bold text-zinc-400 uppercase tracking-wider">
+                        Sugerencias Populares
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <!-- Mock Result 1 -->
+                        <a href="javascript:openProductDrawer()" class="flex items-center gap-3 p-2 hover:bg-brand-sage/50 rounded-xl transition-colors group/item" rel="nofollow">
+                            <div class="w-12 h-12 rounded-lg bg-brand-sage flex-shrink-0 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1707129785947-ddc627a8bab9?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dml0YW1pbiUyMGN8ZW58MHx8MHx8fDA%3D" alt="Vitamin C" class="w-full h-full object-cover mix-blend-multiply group-hover/item:scale-110 transition-transform">
+                            </div>
+                            <div class="flex-grow">
+                                <div class="text-sm font-semibold text-zinc-900">Vitamina C 1000mg + Zinc</div>
+                                <div class="text-xs text-zinc-500">Suplementos</div>
+                            </div>
+                            <div class="text-sm font-bold tabular-nums text-brand-green-dark">US$ 14.50</div>
+                        </a>
+                        <!-- Mock Result 2 -->
+                        <a href="javascript:openProductDrawer()" class="flex items-center gap-3 p-2 hover:bg-brand-sage/50 rounded-xl transition-colors group/item" rel="nofollow">
+                            <div class="w-12 h-12 rounded-lg bg-brand-sage flex-shrink-0 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=100&q=80" alt="Skincare" class="w-full h-full object-cover mix-blend-multiply group-hover/item:scale-110 transition-transform">
+                            </div>
+                            <div class="flex-grow">
+                                <div class="text-sm font-semibold text-zinc-900">Suero Facial Vitamina C Anti-Age</div>
+                                <div class="text-xs text-zinc-500">Cosméticos</div>
+                            </div>
+                            <div class="text-sm font-bold tabular-nums text-brand-green-dark">US$ 28.00</div>
+                        </a>
+                    </div>
+                    <div class="p-3 bg-brand-sage/30 text-center border-t border-brand-sage-dark flex justify-center">
+                        <button onclick="switchView('catalog')" class="text-sm text-brand-copper font-bold hover:text-brand-copper-dark flex items-center gap-1 transition-colors">Ver todos los resultados <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Cluster -->
+            <div class="flex items-center gap-3 md:gap-5 flex-shrink-0">
+                <button class="md:hidden text-zinc-900"><i class="ph ph-magnifying-glass text-2xl"></i></button>
+                
+                <!-- Ticker -->
+                <div class="hidden xl:flex items-center gap-3 text-[11px] font-bold tabular-nums bg-brand-ivory px-4 py-2 rounded-full border border-brand-sage-dark shadow-inner-border">
+                    <div class="text-brand-green-dark flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></div>USD 1.00</div>
+                    <div class="w-px h-3 bg-brand-sage-dark"></div>
+                    <div class="text-zinc-500">BRL 5.08</div>
+                    <div class="w-px h-3 bg-brand-sage-dark"></div>
+                    <div class="text-zinc-500">G$ 7.250</div>
+                </div>
+
+                <!-- Account -->
+                <a href="#" class="hidden sm:flex items-center gap-2 text-zinc-600 hover:text-brand-green-dark transition-colors text-sm font-semibold" rel="nofollow">
+                    <i class="ph ph-user text-xl"></i>
+                    <span class="hidden lg:inline">Ingresar</span>
+                </a>
+
+                <!-- Cart -->
+                <button class="flex items-center gap-2 text-zinc-900 hover:text-brand-copper transition-colors relative group">
+                    <div class="relative bg-brand-sage group-hover:bg-brand-copper/10 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                        <i class="ph ph-shopping-bag text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-brand-red text-white text-[10px] font-bold w-[18px] h-[18px] rounded-full flex items-center justify-center border-2 border-white">2</span>
+                    </div>
+                    <div class="hidden md:flex flex-col items-start leading-none">
+                        <span class="text-[10px] text-zinc-500 font-medium uppercase tracking-wider mb-0.5">Carrito</span>
+                        <span class="font-bold tabular-nums text-sm text-brand-green-dark">US$ 42.50</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Nav Row -->
+        <div class="w-full bg-white border-t border-brand-sage">
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
+                <nav class="flex items-center gap-6 lg:gap-8 overflow-x-auto no-scrollbar whitespace-nowrap py-3 text-[13px] font-bold text-zinc-500 uppercase tracking-wider">
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 text-brand-red flex items-center gap-1.5 hover:text-brand-copper transition-colors"><i class="ph-fill ph-tag text-lg"></i> Ofertas</button>
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 hover:text-brand-green-dark transition-colors active">Medicamentos</button>
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 hover:text-brand-green-dark transition-colors">Suplementos</button>
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 hover:text-brand-green-dark transition-colors">Cosméticos</button>
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 hover:text-brand-green-dark transition-colors">Performance</button>
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 hover:text-brand-green-dark transition-colors">Vitaminas</button>
+                    <button onclick="switchView('catalog')" class="cat-nav-btn relative py-1 hover:text-brand-green-dark transition-colors">Especialidades</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- VIEWS CONTAINER -->
+    <main class="flex-grow w-full">
+        
+        <!-- ==================== HOMEPAGE VIEW ==================== -->
+        <div id="view-home" class="view-section active w-full pb-20">
+            
+            <!-- Top Spacing -->
+            <div class="h-4 md:h-8"></div>
+
+            <!-- Hero Section -->
+            <section class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
+                <div class="relative w-full h-[400px] md:h-[500px] xl:h-[600px] rounded-3xl overflow-hidden bg-brand-green-dark group">
+                    
+                    <!-- Carousel Slides container -->
+                    <div id="hero-carousel" class="absolute inset-0 w-full h-full">
+                        
+                        <!-- Slide 1: Supplements -->
+                        <div class="hero-slide active absolute inset-0 w-full h-full flex items-center">
+                            <img src="https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=1600&q=80" alt="Supplements" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay">
+                            <div class="absolute inset-0 bg-gradient-to-r from-brand-green-dark via-brand-green-dark/90 to-transparent"></div>
+                            
+                            <div class="slide-content relative z-10 w-full max-w-2xl px-6 md:px-12 lg:px-20 text-brand-ivory">
+                                <span class="inline-block px-3 py-1 bg-brand-sage/10 rounded-md text-xs font-bold tracking-widest uppercase mb-4 border border-brand-sage/20 backdrop-blur-sm">Vitalidad Diaria</span>
+                                <h2 class="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-4">
+                                    Energía y <br>defensas al máximo
+                                </h2>
+                                <p class="text-brand-sage text-sm md:text-base lg:text-lg mb-8 max-w-md font-medium opacity-90">
+                                    Descubrí nuestra nueva línea de multivitaminicos y asegurá tu bienestar todo el año.
+                                </p>
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <button class="bg-brand-copper hover:bg-white hover:text-brand-green-dark text-white px-8 py-4 rounded-full font-bold text-sm transition-all duration-300 hover:shadow-lg active:scale-95">Comprar ahora</button>
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-brand-sage opacity-70">Precios desde</span>
+                                        <span class="text-2xl font-bold tabular-nums">US$ 12.50</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Skincare -->
+                        <div class="hero-slide absolute inset-0 w-full h-full flex items-center">
+                            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1600&q=80" alt="Skincare" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay">
+                            <div class="absolute inset-0 bg-gradient-to-r from-[#1b1918] via-[#1b1918]/80 to-transparent"></div>
+                            
+                            <div class="slide-content relative z-10 w-full max-w-2xl px-6 md:px-12 lg:px-20 text-brand-ivory">
+                                <span class="inline-block px-3 py-1 bg-white/10 rounded-md text-xs font-bold tracking-widest uppercase mb-4 border border-white/20 backdrop-blur-sm">Dermocosmética</span>
+                                <h2 class="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-4">
+                                    Cuidados que <br>tu piel merece
+                                </h2>
+                                <p class="text-gray-300 text-sm md:text-base lg:text-lg mb-8 max-w-md font-medium">
+                                    Sueros, protectores y cremas hidratantes de las mejores marcas globales.
+                                </p>
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <button class="bg-white text-zinc-900 hover:bg-brand-copper hover:text-white px-8 py-4 rounded-full font-bold text-sm transition-all duration-300 shadow-lg active:scale-95">Ver Catálogo</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Hero Controls -->
+                    <div class="absolute bottom-6 md:bottom-10 left-6 md:left-12 lg:left-20 flex items-center gap-3 z-20">
+                        <button onclick="changeSlide(0)" class="w-12 h-1 bg-white rounded-full transition-all duration-300 opacity-100" id="dot-0"></button>
+                        <button onclick="changeSlide(1)" class="w-4 h-1 bg-white rounded-full transition-all duration-300 opacity-40 hover:opacity-70" id="dot-1"></button>
+                    </div>
+
+                    <div class="absolute bottom-6 md:bottom-10 right-6 md:right-12 lg:right-20 hidden md:flex items-center gap-2 z-20">
+                        <button onclick="prevSlide()" class="w-10 h-10 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-brand-green-dark transition-all backdrop-blur-sm"><i class="ph-bold ph-arrow-left"></i></button>
+                        <button onclick="nextSlide()" class="w-10 h-10 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-brand-green-dark transition-all backdrop-blur-sm"><i class="ph-bold ph-arrow-right"></i></button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Marquee Partners -->
+            <section class="max-w-[1400px] mx-auto px-4 mt-8 md:mt-12 overflow-hidden border-y border-brand-sage py-6 bg-brand-ivory relative">
+                <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-brand-ivory to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-brand-ivory to-transparent z-10 pointer-events-none"></div>
+                <div class="marquee-track flex items-center gap-16 md:gap-24 opacity-40 grayscale font-bold text-xl md:text-2xl tracking-widest uppercase">
+                    <span>SUNDOWN NATURALS</span>
+                    <span>GOOD ENERGY</span>
+                    <span>LANDERLAN</span>
+                    <span>CATEDRAL</span>
+                    <span>INDUFAR</span>
+                    <span>ETICOS</span>
+                    <span>SUNDOWN NATURALS</span>
+                    <span>GOOD ENERGY</span>
+                    <span>LANDERLAN</span>
+                </div>
+            </section>
+
+            <!-- Bento Categories Grid -->
+            <section class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 mt-16 md:mt-24">
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <h3 class="font-serif text-3xl md:text-4xl text-brand-green-dark font-bold tracking-tight">Explora por categoría</h3>
+                        <p class="text-zinc-500 mt-2 font-medium">Encuentra exactamente lo que necesitas</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]">
+                    
+                    <!-- Bento Item 1: Ofertas (Spans 2 cols, 2 rows) -->
+                    <div class="md:col-span-2 md:row-span-2 relative rounded-3xl overflow-hidden bg-brand-sage group cursor-pointer" onclick="switchView('catalog')">
+                        <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=600&q=80" alt="Ofertas" class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-50 group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-green-dark via-brand-green-dark/40 to-transparent p-6 md:p-8 flex flex-col justify-end">
+                            <div class="w-fit bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full mb-3">-40% OFF</div>
+                            <h4 class="font-serif text-3xl text-white font-bold mb-2">Ofertas Relámpago</h4>
+                            <p class="text-brand-sage text-sm mb-4">Descuentos exclusivos por tiempo limitado.</p>
+                            <span class="text-brand-copper font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">Ver Más <i class="ph-bold ph-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Bento Item 2 -->
+                    <div class="relative rounded-3xl overflow-hidden bg-[#F0EBE1] group p-6 flex flex-col justify-between cursor-pointer" onclick="switchView('catalog')">
+                        <img src="https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=300&q=80" alt="Cosmeticos" class="absolute right-0 bottom-0 w-32 h-32 object-cover rounded-tl-full mix-blend-multiply opacity-80 group-hover:scale-110 transition-transform origin-bottom-right">
+                        <div class="relative z-10">
+                            <h4 class="font-serif text-xl text-zinc-900 font-bold mb-1">Cosméticos</h4>
+                            <span class="text-zinc-500 text-xs font-bold uppercase tracking-wider">Cuidado personal</span>
+                        </div>
+                    </div>
+
+                    <!-- Bento Item 3 -->
+                    <div class="relative rounded-3xl overflow-hidden bg-[#E8F0EA] group p-6 flex flex-col justify-between cursor-pointer" onclick="switchView('catalog')">
+                        <i class="ph ph-pill absolute -right-6 -bottom-6 text-9xl text-brand-green-mid/10 group-hover:rotate-12 transition-transform"></i>
+                        <div class="relative z-10">
+                            <h4 class="font-serif text-xl text-brand-green-dark font-bold mb-1">Medicamentos</h4>
+                            <span class="text-zinc-500 text-xs font-bold uppercase tracking-wider">Salud general</span>
+                        </div>
+                    </div>
+
+                    <!-- Bento Item 4 -->
+                    <div class="relative rounded-3xl overflow-hidden bg-[#EAE8F0] group p-6 flex flex-col justify-between cursor-pointer" onclick="switchView('catalog')">
+                         <div class="relative z-10">
+                            <h4 class="font-serif text-xl text-zinc-900 font-bold mb-1">Performance</h4>
+                            <span class="text-zinc-500 text-xs font-bold uppercase tracking-wider">Deportes & Energía</span>
+                        </div>
+                    </div>
+
+                     <!-- Bento Item 5 -->
+                     <div class="relative rounded-3xl overflow-hidden bg-white border border-brand-sage-dark group p-6 flex flex-col justify-between cursor-pointer shadow-sm hover:shadow-md transition-shadow" onclick="switchView('catalog')">
+                        <div class="relative z-10 flex items-center justify-between w-full h-full text-brand-green-dark font-bold">
+                            <span class="font-serif text-xl">Todas las categorías</span>
+                            <div class="w-10 h-10 rounded-full bg-brand-sage flex items-center justify-center group-hover:bg-brand-green-dark group-hover:text-white transition-colors">
+                                <i class="ph-bold ph-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Best Sellers Carousel -->
+            <section class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 mt-24">
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <h3 class="font-serif text-3xl md:text-4xl text-brand-green-dark font-bold tracking-tight">Más Vendidos</h3>
+                        <p class="text-zinc-500 mt-2 font-medium">Los favoritos de nuestros clientes</p>
+                    </div>
+                    <button class="hidden sm:flex text-sm font-bold text-brand-copper items-center gap-1 hover:text-brand-copper-dark transition-colors" onclick="switchView('catalog')">
+                        Ver todos <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Product Grid (Mocked as Horizontal Scroll on mobile, Grid on Desktop) -->
+                <div class="flex overflow-x-auto no-scrollbar gap-4 md:gap-6 pb-8 md:grid md:grid-cols-4 md:overflow-visible">
+                    
+                    <!-- Card 1 -->
+                    <div class="product-card flex-shrink-0 w-[240px] md:w-auto bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()">
+                        <div class="absolute top-5 left-5 z-20">
+                            <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">-15%</span>
+                        </div>
+                        <div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=400&q=80" alt="Colageno" class="w-[80%] h-[80%] object-contain">
+                        </div>
+                        <div class="flex flex-col flex-grow px-2 pb-2">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Suplementos</span>
+                            <h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Colágeno Hidrolizado Plus con Vitamina C</h4>
+                            <div class="mt-auto pt-3 flex items-end justify-between">
+                                <div>
+                                    <div class="text-[10px] text-zinc-400 line-through mb-0.5">US$ 24.50</div>
+                                    <div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 20.80</div>
+                                </div>
+                                <div class="text-xs text-zinc-500 font-medium tabular-nums">R$ 105.00</div>
+                            </div>
+                            <button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white hover:border-brand-green-dark text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">
+                                Añadir al carrito
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="product-card flex-shrink-0 w-[240px] md:w-auto bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()">
+                        <div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1723951174326-2a97221d3b7f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZpdGFtaW4lMjBjfGVufDB8fDB8fHww" alt="Vitamina C" class="w-[80%] h-[80%] object-contain">
+                        </div>
+                        <div class="flex flex-col flex-grow px-2 pb-2">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Vitaminas</span>
+                            <h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Vitamina C 1000mg + Zinc Inmunidad</h4>
+                            <div class="mt-auto pt-3 flex items-end justify-between">
+                                <div>
+                                    <div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 14.50</div>
+                                </div>
+                                <div class="text-xs text-zinc-500 font-medium tabular-nums">R$ 73.00</div>
+                            </div>
+                            <button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir al carrito</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="product-card flex-shrink-0 w-[240px] md:w-auto bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()">
+                        <div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center bg-[#EAE8F0]">
+                             <img src="https://images.unsplash.com/photo-1704650311981-419f841421cc?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJlJTIwd29ya291dHxlbnwwfHwwfHx8MA%3D%3D" alt="Pre entreno" class="w-[80%] h-[80%] object-contain">
+                        </div>
+                        <div class="flex flex-col flex-grow px-2 pb-2">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Performance</span>
+                            <h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Pre-entreno C4 Original Explosive</h4>
+                            <div class="mt-auto pt-3 flex items-end justify-between">
+                                <div>
+                                    <div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 32.00</div>
+                                </div>
+                                <div class="text-xs text-zinc-500 font-medium tabular-nums">R$ 160.00</div>
+                            </div>
+                            <button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir al carrito</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="product-card flex-shrink-0 w-[240px] md:w-auto bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()">
+                         <div class="absolute top-5 left-5 z-20">
+                            <span class="bg-zinc-900 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">NUEVO</span>
+                        </div>
+                        <div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center bg-[#F0EBE1]">
+                             <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80" alt="Cosmetics" class="w-[80%] h-[80%] object-contain">
+                        </div>
+                        <div class="flex flex-col flex-grow px-2 pb-2">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Cosméticos</span>
+                            <h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Suero Facial Vitamina C Anti-Age Diurno</h4>
+                            <div class="mt-auto pt-3 flex items-end justify-between">
+                                <div>
+                                    <div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 28.00</div>
+                                </div>
+                                <div class="text-xs text-zinc-500 font-medium tabular-nums">R$ 142.00</div>
+                            </div>
+                            <button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir al carrito</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- How It Works Banner -->
+            <section class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 mt-24 mb-12">
+                <div class="bg-brand-green-dark rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
+                    <i class="ph ph-shield-check text-[300px] absolute -right-10 -top-20 text-white/5 pointer-events-none"></i>
+                    
+                    <div class="text-center mb-12 relative z-10">
+                        <h3 class="font-serif text-3xl md:text-4xl text-white font-bold tracking-tight">Cómo funciona</h3>
+                        <p class="text-brand-sage/80 mt-2 font-medium">Compra fácil, rápido y seguro.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                        <div class="hidden md:block absolute top-8 left-[12%] right-[12%] h-[1px] bg-gradient-to-r from-brand-sage/0 via-brand-sage/20 to-brand-sage/0"></div>
+                        
+                        <!-- Step 1 -->
+                        <div class="flex flex-col items-center text-center group cursor-default">
+                            <div class="w-16 h-16 rounded-full bg-white/10 text-brand-copper flex items-center justify-center text-2xl font-serif font-bold mb-4 backdrop-blur-sm group-hover:bg-brand-copper group-hover:text-white transition-colors">1</div>
+                            <h4 class="text-white font-bold text-lg mb-1">Elige</h4>
+                            <p class="text-brand-sage/70 text-sm">Busca tus productos en nuestro catálogo.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="flex flex-col items-center text-center group cursor-default">
+                            <div class="w-16 h-16 rounded-full bg-white/10 text-brand-copper flex items-center justify-center text-2xl font-serif font-bold mb-4 backdrop-blur-sm group-hover:bg-brand-copper group-hover:text-white transition-colors">2</div>
+                            <h4 class="text-white font-bold text-lg mb-1">Paga online</h4>
+                            <p class="text-brand-sage/70 text-sm">Paga con tarjeta, PIX o dólares.</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="flex flex-col items-center text-center group cursor-default">
+                            <div class="w-16 h-16 rounded-full bg-white/10 text-brand-copper flex items-center justify-center text-2xl font-serif font-bold mb-4 backdrop-blur-sm group-hover:bg-brand-copper group-hover:text-white transition-colors">3</div>
+                            <h4 class="text-white font-bold text-lg mb-1">Retira en tienda</h4>
+                            <p class="text-brand-sage/70 text-sm">O elige envío rápido a tu domicilio.</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="flex flex-col items-center text-center group cursor-default">
+                            <div class="w-16 h-16 rounded-full bg-white/10 text-brand-copper flex items-center justify-center text-2xl font-serif font-bold mb-4 backdrop-blur-sm group-hover:bg-brand-copper group-hover:text-white transition-colors">4</div>
+                            <h4 class="text-white font-bold text-lg mb-1">Listo</h4>
+                            <p class="text-brand-sage/70 text-sm">Recibe todo con la garantía Viana.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ==================== CATALOG VIEW ==================== -->
+        <div id="view-catalog" class="view-section w-full pb-20">
+            
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-6 pb-4 border-b border-brand-sage">
+                <div class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <a href="#" onclick="switchView('home')" class="hover:text-brand-green-dark" rel="nofollow">Inicio</a>
+                    <span>/</span>
+                    <span class="text-brand-green-dark">Catálogo</span>
+                </div>
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h1 class="font-serif text-4xl md:text-5xl text-brand-green-dark font-bold tracking-tight mb-2">Todos los productos</h1>
+                        <p class="text-zinc-500 font-medium text-sm">Mostrando 24 productos organizados para ti.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <select class="bg-white border border-brand-sage-dark rounded-full px-4 py-2 text-sm font-bold text-zinc-700 outline-none focus:border-brand-copper appearance-none pr-8 relative">
+                            <option>Relevancia</option>
+                            <option>Precio Menor</option>
+                            <option>Precio Mayor</option>
+                            <option>Novedades</option>
+                        </select>
+                        <button class="md:hidden w-10 h-10 border border-brand-sage-dark rounded-full flex items-center justify-center text-zinc-600 bg-white"><i class="ph ph-faders"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Active Filters -->
+                <div class="flex items-center gap-2 mt-6 flex-wrap">
+                    <span class="bg-brand-sage text-brand-green-dark text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">En Oferta <i class="ph-bold ph-x cursor-pointer hover:text-brand-red"></i></span>
+                    <span class="bg-brand-sage text-brand-green-dark text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">Hasta US$ 50 <i class="ph-bold ph-x cursor-pointer hover:text-brand-red"></i></span>
+                    <button class="text-xs font-bold text-brand-copper hover:underline ml-2">Limpiar filtros</button>
+                </div>
+            </div>
+
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 py-8 flex items-start gap-8">
+                
+                <!-- Sidebar (Desktop) -->
+                <aside class="hidden md:block w-[240px] flex-shrink-0 sticky top-28">
+                    
+                    <div class="mb-8">
+                        <h3 class="font-bold text-zinc-900 mb-4 uppercase tracking-wider text-xs">Categorías</h3>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="cat" class="w-4 h-4 text-brand-green-dark focus:ring-brand-green-dark border-zinc-300">
+                                <span class="text-sm text-zinc-600 group-hover:text-zinc-900 font-medium">Medicamentos</span>
+                                <span class="text-xs text-zinc-400 ml-auto tabular-nums">142</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="cat" class="w-4 h-4 text-brand-green-dark focus:ring-brand-green-dark border-zinc-300" checked>
+                                <span class="text-sm text-brand-green-dark font-bold">Suplementos</span>
+                                <span class="text-xs text-brand-green-dark ml-auto tabular-nums">84</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="cat" class="w-4 h-4 text-brand-green-dark focus:ring-brand-green-dark border-zinc-300">
+                                <span class="text-sm text-zinc-600 group-hover:text-zinc-900 font-medium">Cosméticos</span>
+                                <span class="text-xs text-zinc-400 ml-auto tabular-nums">56</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 border-t border-brand-sage pt-6">
+                        <h3 class="font-bold text-zinc-900 mb-4 uppercase tracking-wider text-xs">Rango de Precio</h3>
+                        <input type="range" class="w-full accent-brand-green-dark mb-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-zinc-500 tabular-nums">
+                            <span>US$ 0</span>
+                            <span>US$ 150+</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-brand-sage pt-6">
+                        <label class="flex items-center gap-3 cursor-pointer bg-brand-sage/50 p-3 rounded-xl border border-brand-sage-dark">
+                            <input type="checkbox" class="w-4 h-4 text-brand-red rounded focus:ring-brand-red border-zinc-300">
+                            <span class="text-sm font-bold text-zinc-900">Solo Ofertas</span>
+                        </label>
+                    </div>
+                </aside>
+
+                <!-- Grid -->
+                <!-- Note: Reusing the same product cards logic -->
+                <div class="flex-grow grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                    
+                    <!-- Inject 8 cards to show density -->
+                    <!-- Clone of Card 1 -->
+                    <div class="product-card bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()"><div class="absolute top-5 left-5 z-20"><span class="bg-brand-red text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">-15%</span></div><div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center"><img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=400&q=80" alt="Colageno" class="w-[80%] h-[80%] object-contain"></div><div class="flex flex-col flex-grow px-2 pb-2"><span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Suplementos</span><h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Colágeno Hidrolizado Plus con Vitamina C</h4><div class="mt-auto pt-3 flex items-end justify-between"><div><div class="text-[10px] text-zinc-400 line-through mb-0.5">US$ 24.50</div><div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 20.80</div></div><div class="text-xs text-zinc-500 font-medium tabular-nums">R$ 105.00</div></div><button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir</button></div></div>
+                    
+                    <!-- Clone of Card 2 -->
+                    <div class="product-card bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()"><div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center"><img src="https://images.unsplash.com/photo-1723951174326-2a97221d3b7f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZpdGFtaW4lMjBjfGVufDB8fDB8fHww" alt="Vitamina C" class="w-[80%] h-[80%] object-contain"></div><div class="flex flex-col flex-grow px-2 pb-2"><span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Vitaminas</span><h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Vitamina C 1000mg + Zinc Inmunidad</h4><div class="mt-auto pt-3 flex items-end justify-between"><div><div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 14.50</div></div><div class="text-xs text-zinc-500 font-medium tabular-nums">R$ 73.00</div></div><button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir</button></div></div>
+                    
+                    <!-- Add more static variants for density ... -->
+                    <div class="product-card bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()">
+                        <div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center bg-[#E8F0EA]">
+                            <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&w=400&q=80" alt="Med" class="w-[80%] h-[80%] object-contain grayscale">
+                        </div>
+                        <div class="flex flex-col flex-grow px-2 pb-2">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Medicamentos</span>
+                            <h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Ibuprofeno 400mg Capsulas Blandas</h4>
+                            <div class="mt-auto pt-3 flex items-end justify-between">
+                                <div><div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 5.00</div></div>
+                            </div>
+                            <button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()">
+                        <div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center bg-[#F0EBE1]">
+                            <img src="https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&q=80" alt="Skincare" class="w-[80%] h-[80%] object-contain">
+                        </div>
+                        <div class="flex flex-col flex-grow px-2 pb-2">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Cosméticos</span>
+                            <h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Protector Solar FPS 50 Toque Seco</h4>
+                            <div class="mt-auto pt-3 flex items-end justify-between">
+                                <div><div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 22.00</div></div>
+                            </div>
+                            <button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir</button>
+                        </div>
+                    </div>
+
+                    <!-- Repeat grid items to show a full page... -->
+                    <!-- Duplicates for visual weight -->
+                     <div class="product-card bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()"><div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center bg-[#EAE8F0]"><img src="https://images.unsplash.com/photo-1704650311981-419f841421cc?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJlJTIwd29ya291dHxlbnwwfHwwfHx8MA%3D%3D" alt="Pre entreno" class="w-[80%] h-[80%] object-contain"></div><div class="flex flex-col flex-grow px-2 pb-2"><span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Performance</span><h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Pre-entreno C4 Original</h4><div class="mt-auto pt-3 flex items-end justify-between"><div><div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 32.00</div></div></div><button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir</button></div></div>
+                     <div class="product-card bg-white rounded-[18px] p-3 flex flex-col relative group cursor-pointer" onclick="openProductDrawer()"><div class="p-image-wrap aspect-square w-full mb-4 relative flex items-center justify-center"><img src="https://images.unsplash.com/photo-1723951174326-2a97221d3b7f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZpdGFtaW4lMjBjfGVufDB8fDB8fHww" alt="Vitamina C" class="w-[80%] h-[80%] object-contain"></div><div class="flex flex-col flex-grow px-2 pb-2"><span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Vitaminas</span><h4 class="text-sm font-bold text-zinc-900 leading-tight mb-2 line-clamp-2">Complejo B Forte</h4><div class="mt-auto pt-3 flex items-end justify-between"><div><div class="text-lg font-bold text-brand-green-dark tabular-nums leading-none">US$ 18.00</div></div></div><button class="p-quick-add w-full mt-4 bg-brand-ivory border border-brand-sage-dark hover:bg-brand-green-dark hover:text-white text-zinc-900 font-bold text-sm py-2.5 rounded-xl transition-all">Añadir</button></div></div>
+                     
+                </div>
+            </div>
+
+            <!-- Empty state fallback (Hidden but present) -->
+            <div id="catalog-empty" class="hidden max-w-xl mx-auto text-center py-24">
+                <i class="ph ph-magnifying-glass text-6xl text-brand-sage-dark mb-4 drop-shadow-sm"></i>
+                <h3 class="font-serif text-2xl font-bold text-brand-green-dark mb-2">No encontramos productos</h3>
+                <p class="text-zinc-500 mb-6">Intenta modificar tus filtros o buscar con otras palabras clave.</p>
+                <button class="bg-brand-ivory text-zinc-900 border border-brand-sage-dark px-6 py-2 rounded-full font-bold text-sm hover:bg-white transition-colors">Limpiar Filtros</button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-green-dark text-white pt-20 pb-10 mt-auto border-t-[8px] border-brand-copper">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
+                
+                <div class="lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-white text-brand-green-dark flex items-center justify-center">
+                            <i class="ph-fill ph-heartbeat text-2xl"></i>
+                        </div>
+                        <div class="font-serif font-bold text-3xl tracking-tight leading-none mt-1">VIANA</div>
+                    </div>
+                    <p class="text-brand-sage/70 font-medium max-w-sm mb-8 leading-relaxed">
+                        Tu farmacia de confianza en Paraguay. Compra online con seguridad, retira en tienda o recibe directo en tu hogar con envíos rápidos.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-copper hover:text-white transition-colors" rel="nofollow"><i class="ph-fill ph-instagram-logo text-xl"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-copper hover:text-white transition-colors" rel="nofollow"><i class="ph-fill ph-facebook-logo text-xl"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="font-bold mb-6 text-brand-copper uppercase tracking-wider text-sm">Categorías</h5>
+                    <ul class="space-y-4 text-brand-sage/80 font-medium text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Medicamentos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Suplementos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Cosméticos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Performance</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-bold mb-6 text-brand-copper uppercase tracking-wider text-sm">Enlaces útiles</h5>
+                    <ul class="space-y-4 text-brand-sage/80 font-medium text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Mi Cuenta</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Términos y Condiciones</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Políticas de Devolución</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-bold mb-6 text-brand-copper uppercase tracking-wider text-sm">Atención</h5>
+                    <ul class="space-y-4 text-brand-sage/80 font-medium text-sm">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-whatsapp text-lg text-[#25D366]"></i>
+                            <div>
+                                <span class="block text-white font-bold mb-0.5">Consultar por WhatsApp</span>
+                                <span class="text-xs">+595 9XX 123 456</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-map-pin text-lg text-brand-sage"></i>
+                            <div>
+                                <span class="block text-white font-bold mb-0.5">Tienda Principal</span>
+                                <span class="text-xs">Asunción, Paraguay</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-brand-sage/50 font-medium">&copy; 2026 Farmacia Viana. Todos los derechos reservados.</p>
+                <div class="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 transition-all duration-300">
+                     <!-- Payment Mocks -->
+                     <div class="w-10 h-6 bg-white/20 rounded flex items-center justify-center text-[10px] font-bold">VISA</div>
+                     <div class="w-10 h-6 bg-white/20 rounded flex items-center justify-center text-[10px] font-bold">PIX</div>
+                     <div class="w-10 h-6 bg-white/20 rounded flex items-center justify-center text-[10px] font-bold">USD</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ==================== DRAWER OVERLAY ==================== -->
+    <div id="drawerOverlay" class="drawer-overlay fixed inset-0 bg-brand-green-dark/30 z-[60]" onclick="closeProductDrawer()"></div>
+    
+    <!-- Drawer Panel Wrapper -->
+    <div id="drawerPanel" class="drawer-panel fixed top-0 right-0 h-full w-full max-w-[500px] bg-white shadow-2xl z-[70] flex flex-col">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-brand-sage bg-white">
+            <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest">Detalle del Producto</span>
+            <button onclick="closeProductDrawer()" class="w-8 h-8 rounded-full bg-brand-ivory hover:bg-brand-red/10 hover:text-brand-red flex items-center justify-center transition-colors text-zinc-500">
+                <i class="ph-bold ph-x"></i>
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-grow overflow-y-auto w-full">
+            <!-- Large Image -->
+            <div class="bg-brand-sage w-full aspect-square relative flex items-center justify-center p-8">
+                <div class="absolute top-4 left-4 z-10 flex gap-2">
+                    <span class="bg-white text-zinc-900 border border-brand-sage-dark text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">Suplementos</span>
+                    <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">-15% OFF</span>
+                </div>
+                <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80" alt="Colageno High Res" class="w-full h-full object-contain mix-blend-multiply drop-shadow-xl">
+            </div>
+
+            <!-- Details Box -->
+            <div class="p-6 md:p-8">
+                <div class="mb-2 text-xs font-bold text-zinc-400 uppercase tracking-widest">SUNDOWN NATURALS</div>
+                <h2 class="font-serif text-2xl md:text-3xl text-zinc-900 font-bold leading-tight mb-4 tracking-tight">Colágeno Hidrolizado Plus con Vitamina C - 120 Cápsulas</h2>
+                
+                <p class="text-zinc-600 text-sm leading-relaxed mb-6">
+                    Fórmula avanzada que ayuda a mantener la elasticidad de la piel, fortalecer el cabello y las uñas, y apoyar la salud articular. Absorción rápida y efectiva comprobada.
+                </p>
+
+                <!-- Variants / Presentation -->
+                <div class="mb-8">
+                    <span class="block text-xs font-bold text-zinc-900 mb-3 uppercase tracking-wider">Presentación</span>
+                    <div class="flex gap-3">
+                        <button class="px-4 py-2 rounded-xl border-2 border-brand-green-dark text-brand-green-dark font-bold text-sm bg-brand-green-dark/5">120 Cáps</button>
+                        <button class="px-4 py-2 rounded-xl border-2 border-brand-sage-dark text-zinc-500 font-bold text-sm hover:border-zinc-400 transition-colors bg-white">60 Cáps</button>
+                    </div>
+                </div>
+
+                <!-- Price Block -->
+                <div class="bg-brand-ivory rounded-2xl p-6 border border-brand-sage-dark mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-sm text-zinc-400 line-through tabular-nums font-medium">US$ 24.50</span>
+                            <span class="bg-brand-red/10 text-brand-red text-[10px] font-bold px-1.5 py-0.5 rounded">ESTÁS AHORRANDO US$ 3.70</span>
+                        </div>
+                        <div class="text-4xl font-bold text-brand-green-dark tabular-nums tracking-tighter">US$ 20.80</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-bold text-zinc-600 tabular-nums">R$ 105.00 <span class="text-[10px] font-normal text-zinc-400 ml-1">PIX</span></div>
+                        <div class="text-sm font-bold text-zinc-600 tabular-nums">G$ 150.800</div>
+                    </div>
+                </div>
+
+                <!-- Action Add -->
+                <div class="flex gap-4">
+                    <!-- Qty -->
+                    <div class="flex items-center border-2 border-brand-sage-dark rounded-full bg-white overflow-hidden w-28 flex-shrink-0">
+                        <button class="w-8 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900"><i class="ph ph-minus"></i></button>
+                        <input type="text" value="1" class="w-full text-center font-bold text-zinc-900 bg-transparent outline-none tabular-nums" readonly>
+                        <button class="w-8 h-12 flex items-center justify-center text-zinc-500 hover:text-zinc-900"><i class="ph ph-plus"></i></button>
+                    </div>
+                    <!-- Buy Btn -->
+                    <button class="flex-grow bg-brand-copper hover:bg-brand-copper-dark text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 leading-none">
+                        <i class="ph-bold ph-shopping-cart-simple text-lg"></i> Añadir al carrito
+                    </button>
+                </div>
+
+                <!-- Secondary Action -->
+                <button class="w-full mt-4 flex items-center justify-center gap-2 text-zinc-600 font-bold text-sm py-3 rounded-full hover:bg-brand-sage transition-colors border border-transparent hover:border-brand-sage-dark">
+                    <i class="ph-bold ph-whatsapp text-[#25D366] text-lg"></i> Consultar disponibilidad por WhatsApp
+                </button>
+
+                <!-- Trust signals -->
+                <div class="mt-8 pt-6 border-t border-brand-sage flex gap-4 text-xs font-medium text-zinc-500">
+                    <div class="flex items-center gap-1.5"><i class="ph ph-shield-check text-brand-green-dark text-lg"></i> Garantía Viana</div>
+                    <div class="flex items-center gap-1.5"><i class="ph ph-storefront text-brand-green-dark text-lg"></i> Retiro Hoy</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Hero Carousel Logic
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = [document.getElementById('dot-0'), document.getElementById('dot-1')];
+        let currentSlideIndex = 0;
+        let slideInterval;
+
+        function updateSlideUI() {
+            slides.forEach((slide, i) => {
+                if(i === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            dots.forEach((dot, i) => {
+                if(dot){
+                    if(i === currentSlideIndex) {
+                        dot.classList.remove('opacity-40');
+                        dot.classList.add('opacity-100');
+                    } else {
+                        dot.classList.add('opacity-40');
+                        dot.classList.remove('opacity-100');
+                    }
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            updateSlideUI();
+            resetInterval();
+        }
+
+        function prevSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+            updateSlideUI();
+            resetInterval();
+        }
+
+        function changeSlide(index) {
+            currentSlideIndex = index;
+            updateSlideUI();
+            resetInterval();
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 6000);
+        }
+        
+        // Init Carousel
+        if(slides.length > 0) resetInterval();
+
+        // View Switcher (Simulates Routing)
+        function switchView(viewId) {
+            const views = document.querySelectorAll('.view-section');
+            views.forEach(v => {
+                v.classList.remove('active');
+            });
+            document.getElementById('view-' + viewId).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Update Header Nav States (mock UI only)
+            const navBtns = document.querySelectorAll('.cat-nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            // Optionally set active state based on context, here we just remove to show change
+        }
+
+        // Product Drawer Logic
+        const drawerPanel = document.getElementById('drawerPanel');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        function openProductDrawer() {
+            drawerOverlay.classList.add('open');
+            drawerPanel.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeProductDrawer() {
+            drawerOverlay.classList.remove('open');
+            drawerPanel.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Close drawer on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && drawerPanel.classList.contains('open')) {
+                closeProductDrawer();
+            }
+        });
+
+        // Sticky Header scroll effect
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                header.classList.add('shadow-md');
+                header.classList.remove('shadow-sm');
+            } else {
+                header.classList.remove('shadow-md');
+                header.classList.add('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>

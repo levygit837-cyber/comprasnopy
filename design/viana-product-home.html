@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia Viana | Tu farmacia de confianza en Paraguay</title>
+    
+    <!-- 
+      aesthetic_dna: Refined Pharmacy Commerce, Precise & Clean, High Information Density
+      ui_paradigm: Search-First E-commerce with persistent Catalog structure and side-drawer context
+      palette: Warm Ivory (#FBF9F5), Deep Pharmacy Green (#0A3D2C), Copper (#C26336), Soft Sage (#E9F1ED)
+    -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        viana: {
+                            ivory: '#FBF9F5',
+                            darkgreen: '#0A3D2C',
+                            midgreen: '#166449',
+                            sage: '#E9F1ED',
+                            copper: '#C26336',
+                            red: '#D24230',
+                            ink: '#1A1A1A',
+                            muted: '#73837D'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"DM Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom UI Micro-Architecture */
+        body {
+            background-color: theme('colors.viana.ivory');
+            color: theme('colors.viana.ink');
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .liquid-blur {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* Hero Crossfade Logic */
+        .hero-slide {
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 5s ease-out;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .hero-slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Partner Marquee */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: theme('colors.viana.copper');
+            cursor: pointer;
+            margin-top: -6px;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: theme('colors.viana.sage');
+            border-radius: 2px;
+        }
+
+        /* Hover Zoom Micro-Interaction */
+        .product-img-container img {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .group:hover .product-img-container img {
+            transform: scale(1.05);
+        }
+
+        /* Drawer Spring */
+        .drawer-container {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+</head>
+<body class="antialiased w-full relative overflow-x-hidden selection:bg-viana-copper selection:text-white">
+
+    <!-- Announcements -->
+    <div class="bg-viana-darkgreen text-viana-sage text-xs md:text-sm font-medium py-2 px-4 text-center tracking-wide">
+        Envío gratis en Asunción para pedidos sobre 300.000 Gs. | <span class="text-viana-copper">Retiro en tienda disponible</span>
+    </div>
+
+    <!-- Sticky Macro-Architecture Header -->
+    <header class="sticky top-0 z-40 bg-white/90 liquid-blur flex flex-col items-center">
+        <!-- Main Row -->
+        <div class="w-full max-w-[1400px] mx-auto px-4 lg:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+            
+            <!-- Logo -->
+            <a href="#" class="flex flex-col flex-shrink-0" rel="nofollow">
+                <div class="flex items-center gap-2 text-viana-darkgreen">
+                    <i class="ph-fill ph-pill text-2xl md:text-3xl"></i>
+                    <span class="font-serif font-bold text-2xl md:text-3xl tracking-tight leading-none">Viana</span>
+                </div>
+                <span class="text-[10px] uppercase font-bold tracking-widest text-viana-muted hidden md:block">Farmacia</span>
+            </a>
+
+            <!-- Search First Dominance -->
+            <div class="flex-grow max-w-3xl relative hidden md:block group/search">
+                <div class="relative">
+                    <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-viana-muted text-xl"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar medicamentos, vitaminas, cosméticos..." 
+                           class="w-full bg-viana-sage/30 border border-viana-midgreen/20 rounded-full py-3.5 pl-12 pr-4 text-viana-ink placeholder:text-viana-muted focus:bg-white focus:outline-none focus:border-viana-copper focus:ring-4 focus:ring-viana-copper/10 transition-all font-medium">
+                </div>
+                <!-- Search Mega Dropdown (Hidden initially) -->
+                <div id="searchDropdown" class="absolute top-[110%] left-0 w-full bg-white rounded-[14px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-viana-midgreen/10 p-4 opacity-0 invisible transform translate-y-2 transition-all duration-200">
+                    <div class="text-xs font-bold uppercase tracking-wider text-viana-muted mb-3">Sugerencias populares</div>
+                    <ul class="space-y-1">
+                        <li><a href="#cat" class="flex items-center gap-3 p-2 hover:bg-viana-sage rounded-lg transition-colors group" rel="nofollow">
+                            <div class="w-10 h-10 bg-viana-ivory rounded flex items-center justify-center text-viana-midgreen"><i class="ph ph-flask"></i></div>
+                            <div class="flex-grow"><div class="font-medium text-sm">Vitamina C 1000mg + Zinc</div><div class="text-xs text-viana-muted">Vitaminas</div></div>
+                            <div class="font-semibold text-viana-darkgreen tabular-nums">US$ 14.50</div>
+                        </a></li>
+                        <li><a href="#cat" class="flex items-center gap-3 p-2 hover:bg-viana-sage rounded-lg transition-colors group" rel="nofollow">
+                            <div class="w-10 h-10 bg-viana-ivory rounded flex items-center justify-center text-viana-midgreen"><i class="ph ph-sparkle"></i></div>
+                            <div class="flex-grow"><div class="font-medium text-sm">Suero Facial Vitamina C</div><div class="text-xs text-viana-muted">Cosméticos</div></div>
+                            <div class="font-semibold text-viana-darkgreen tabular-nums">US$ 28.00</div>
+                        </a></li>
+                    </ul>
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-center">
+                        <button class="text-viana-copper text-sm font-semibold hover:underline">Ver todos los resultados</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ticker & Actions -->
+            <div class="flex items-center gap-3 md:gap-5 flex-shrink-0">
+                <!-- Currency Ticker -->
+                <div class="hidden lg:flex items-center gap-1 bg-viana-sage px-3 py-1.5 rounded-full text-[10px] font-bold tabular-nums tracking-wide">
+                    <span class="text-viana-darkgreen">USD <span class="font-medium text-viana-muted/80">1.00</span></span>
+                    <span class="text-zinc-300 mx-1">|</span>
+                    <span class="text-viana-darkgreen">BRL <span class="font-medium text-viana-muted/80">5.05</span></span>
+                    <span class="text-zinc-300 mx-1">|</span>
+                    <span class="text-viana-darkgreen">G$ <span class="font-medium text-viana-muted/80">7350</span></span>
+                </div>
+
+                <button class="md:hidden text-viana-darkgreen p-2"><i class="ph ph-magnifying-glass text-2xl"></i></button>
+                <div class="w-px h-6 bg-viana-midgreen/20 hidden md:block"></div>
+                <button class="text-viana-darkgreen p-2 hover:text-viana-copper transition-colors hidden md:block">
+                    <i class="ph ph-user text-2xl"></i>
+                </button>
+                <button class="text-viana-darkgreen p-2 relative hover:text-viana-copper transition-colors cursor-pointer group/cart">
+                    <i class="ph ph-shopping-cart-simple text-2xl"></i>
+                    <span class="absolute top-1 right-0 w-4 h-4 bg-viana-copper text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">2</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Nav Row -->
+        <div class="w-full border-t border-viana-midgreen/10 bg-white">
+            <nav class="w-full max-w-[1400px] mx-auto px-4 lg:px-8 py-2 overflow-x-auto no-scrollbar flex items-center gap-6 md:gap-8 text-sm font-medium">
+                <a href="#medicamentos" class="py-2 text-viana-ink hover:text-viana-midgreen whitespace-nowrap transition-colors flex items-center gap-1.5" rel="nofollow">Medicamentos</a>
+                <a href="#vitaminas" class="py-2 text-viana-ink hover:text-viana-midgreen whitespace-nowrap transition-colors flex items-center gap-1.5 border-b-2 border-viana-copper" rel="nofollow">Vitaminas</a>
+                <a href="#suplementos" class="py-2 text-viana-ink hover:text-viana-midgreen whitespace-nowrap transition-colors flex items-center gap-1.5" rel="nofollow">Suplementos</a>
+                <a href="#cosmeticos" class="py-2 text-viana-ink hover:text-viana-midgreen whitespace-nowrap transition-colors flex items-center gap-1.5" rel="nofollow">Cosméticos <span class="bg-viana-sage text-viana-darkgreen text-[10px] px-1.5 py-0.5 rounded-sm">Top</span></a>
+                <a href="#performance" class="py-2 text-viana-ink hover:text-viana-midgreen whitespace-nowrap transition-colors flex items-center gap-1.5" rel="nofollow">Performance</a>
+                <a href="#especialidades" class="py-2 text-viana-ink hover:text-viana-midgreen whitespace-nowrap transition-colors flex items-center gap-1.5" rel="nofollow">Especialidades</a>
+                <a href="#ofertas" class="py-2 text-viana-red hover:text-viana-copper whitespace-nowrap transition-colors flex items-center gap-1.5 font-bold" rel="nofollow"><i class="ph-fill ph-tag"></i> Ofertas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="w-full max-w-[1400px] mx-auto px-4 lg:px-8 py-8 space-y-16">
+
+        <!-- Hero Promotional Carousel -->
+        <section class="relative w-full h-[400px] md:h-[500px] rounded-[20px] overflow-hidden bg-viana-sage isolate">
+            <!-- Slide 1: Vitamins -->
+            <div id="slide-0" class="hero-slide active absolute inset-0 w-full h-full">
+                <img src="https://images.unsplash.com/photo-1707129785947-ddc627a8bab9?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dml0YW1pbnN8ZW58MHx8MHx8fDA%3D" alt="Vitaminas" class="w-full h-full object-cover object-center">
+                <div class="absolute inset-0 bg-gradient-to-r from-viana-darkgreen/90 via-viana-darkgreen/60 to-transparent"></div>
+                
+                <div class="absolute inset-y-0 left-0 w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center max-w-2xl">
+                    <span class="bg-white/20 text-white backdrop-blur-sm px-3 py-1 uppercase text-xs font-bold tracking-widest rounded-full w-max mb-4">Salud Inmune</span>
+                    <h2 class="font-serif text-4xl md:text-6xl text-white leading-[1.05] mb-4">Fortalece tus defensas hoy.</h2>
+                    <p class="text-white/85 text-lg md:text-xl font-medium mb-8">Vitamina C 1000mg + Zinc con acción prolongada. Formulación avanzada.</p>
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <button class="bg-viana-copper hover:bg-[#A3522C] text-white font-bold py-3 px-8 rounded-full transition-all flex items-center gap-2 active:scale-95 shadow-[0_4px_14px_0_rgba(194,99,54,0.39)]">
+                            Comprar ahora <span class="font-normal opacity-80 pl-2 border-l border-white/20 tabular-nums">US$ 14.50</span>
+                        </button>
+                        <button class="border border-white/30 text-white hover:bg-white/10 font-semibold py-3 px-6 rounded-full transition-all active:scale-95">
+                            Ver línea completa
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide Controls -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-16 md:-translate-x-0 flex items-center gap-3 z-20">
+                <button class="carousel-dot w-8 h-1 bg-white rounded-full opacity-100 transition-all"></button>
+                <button class="carousel-dot w-3 h-1 bg-white/40 rounded-full transition-all hover:bg-white/60"></button>
+                <button class="carousel-dot w-3 h-1 bg-white/40 rounded-full transition-all hover:bg-white/60"></button>
+                <button class="carousel-dot w-3 h-1 bg-white/40 rounded-full transition-all hover:bg-white/60"></button>
+            </div>
+            <div class="absolute bottom-6 right-8 hidden md:flex items-center gap-2 z-20">
+                <button class="w-10 h-10 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-all"><i class="ph ph-caret-left"></i></button>
+                <button class="w-10 h-10 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-all"><i class="ph ph-caret-right"></i></button>
+            </div>
+        </section>
+
+        <!-- Brand/Lab Marquee -->
+        <section class="border-y border-viana-midgreen/10 py-6 overflow-hidden relative bg-white">
+            <div class="flex w-[200%] md:w-auto animate-marquee items-center justify-between pointer-events-none opacity-40 grayscale">
+                <span class="font-serif text-2xl px-8">SUNDOWN</span>
+                <span class="font-serif text-2xl px-8">GOOD ENERGY</span>
+                <span class="font-serif text-2xl px-8">LANDERLAN</span>
+                <span class="font-serif text-2xl px-8">CATEDRAL</span>
+                <span class="font-serif text-2xl px-8">INDUFAR</span>
+                <span class="font-serif text-2xl px-8">ETICOS</span>
+                <span class="font-serif text-2xl px-8">ISDIN</span>
+                <span class="font-serif text-2xl px-8">SUNDOWN</span>
+                <span class="font-serif text-2xl px-8">GOOD ENERGY</span>
+            </div>
+        </section>
+
+        <!-- Homepage Divider / Transition to Catalog Structure -->
+        <div class="flex items-end justify-between border-b border-viana-midgreen/20 pb-4 mt-16 mb-8 mt-24">
+            <div>
+                <h2 class="font-serif text-4xl text-viana-darkgreen">Catálogo Completo</h2>
+                <p class="text-viana-muted mt-2">Navega por nuestra selección de productos farmacéuticos.</p>
+            </div>
+            <div class="hidden md:flex gap-2">
+                <span class="text-sm font-semibold text-viana-ink">Mostrando 24 de 1,402 productos</span>
+            </div>
+        </div>
+
+        <!-- The Catalog Meso-Architecture -->
+        <section class="flex flex-col md:flex-row gap-8 items-start relative pb-20">
+            
+            <!-- Sticky Sidebar Filters -->
+            <aside class="w-full md:w-64 flex-shrink-0 md:sticky md:top-28 bg-white p-6 rounded-[14px] border border-viana-midgreen/10 shadow-sm hidden md:block">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-bold text-lg text-viana-darkgreen">Filtros</h3>
+                    <button class="text-xs text-viana-copper font-medium hover:underline">Limpiar</button>
+                </div>
+
+                <!-- Categories -->
+                <div class="mb-8">
+                    <h4 class="text-sm font-bold text-viana-ink mb-3 uppercase tracking-wider">Categoría</h4>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" checked class="w-4 h-4 accent-viana-copper cursor-pointer">
+                            <span class="text-sm text-viana-muted group-hover:text-viana-ink">Todos</span>
+                        </label>
+                        <label class="flex items-center justify-between cursor-pointer group">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" class="w-4 h-4 accent-viana-copper cursor-pointer">
+                                <span class="text-sm text-viana-muted group-hover:text-viana-ink">Medicamentos</span>
+                            </div>
+                            <span class="text-xs bg-viana-sage px-1.5 rounded text-viana-midgreen">342</span>
+                        </label>
+                        <label class="flex items-center justify-between cursor-pointer group">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" class="w-4 h-4 accent-viana-copper cursor-pointer">
+                                <span class="text-sm text-viana-muted group-hover:text-viana-ink">Suplementos</span>
+                            </div>
+                            <span class="text-xs bg-viana-sage px-1.5 rounded text-viana-midgreen">128</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Price Range -->
+                <div class="mb-8">
+                    <h4 class="text-sm font-bold text-viana-ink mb-3 uppercase tracking-wider">Precio (US$)</h4>
+                    <input type="range" min="0" max="100" value="50" class="mb-4">
+                    <div class="flex items-center justify-between text-xs font-semibold tabular-nums text-viana-muted">
+                        <div class="bg-viana-ivory border border-viana-midgreen/10 px-2 py-1 rounded">Min: $0</div>
+                        <div class="bg-viana-ivory border border-viana-midgreen/10 px-2 py-1 rounded">Max: $50+</div>
+                    </div>
+                </div>
+
+                <!-- Offers Toggle -->
+                <div class="flex items-center justify-between bg-viana-sage/50 p-3 rounded-lg border border-viana-midgreen/10">
+                    <span class="text-sm font-semibold text-viana-darkgreen flex items-center gap-2">
+                        <i class="ph-fill ph-tag text-viana-copper"></i> Solo Ofertas
+                    </span>
+                    <button class="w-8 h-5 bg-viana-midgreen rounded-full relative transition-colors focus:outline-none">
+                        <span class="absolute w-3 h-3 bg-white rounded-full top-1 right-1 transition-transform"></span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Product Grid -->
+            <div class="flex-grow w-full">
+                <!-- Toolbar -->
+                <div class="flex items-center justify-between mb-6 bg-white p-3 rounded-[14px] border border-viana-midgreen/10 shadow-sm">
+                    <div class="flex gap-2 flex-wrap">
+                        <!-- Active Filter Chips -->
+                        <span class="inline-flex items-center gap-1 bg-viana-sage text-viana-darkgreen text-xs font-bold px-3 py-1.5 rounded-full">
+                            Suplementos <button class="hover:text-viana-red"><i class="ph-bold ph-x"></i></button>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-semibold text-viana-muted hidden sm:inline">Ordenar por:</span>
+                        <select class="text-sm font-bold text-viana-ink bg-transparent border-none outline-none cursor-pointer focus:ring-0">
+                            <option>Relevancia</option>
+                            <option>Precio menor</option>
+                            <option>Más vendidos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                    
+                    <!-- Product Card 1 (Detailed Architecture) -->
+                    <article class="group relative bg-white border border-viana-midgreen/10 rounded-[14px] p-3 md:p-4 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(10,61,44,0.1)] transition-all duration-300 flex flex-col h-full bg-clip-padding" style="transform:translateZ(0);">
+                        <!-- Badges -->
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none">
+                            <span class="bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Vitaminas</span>
+                            <span class="bg-viana-red text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">-20%</span>
+                        </div>
+                        
+                        <!-- Image Container -->
+                        <button onclick="openDrawer()" class="product-img-container aspect-square bg-viana-sage/40 rounded-lg mb-4 relative overflow-hidden flex items-center justify-center cursor-pointer w-full focus:outline-none focus:ring-2 focus:ring-viana-copper">
+                            <img src="https://images.unsplash.com/photo-1731599974318-97a336b9bd5f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dml0YW1pbiUyMGMlMjBzZXJ1bXxlbnwwfHwwfHx8MA%3D%3D" alt="Botella de Vitamina C" class="w-3/4 h-3/4 object-contain mix-blend-multiply">
+                            
+                            <!-- Quick Add (Desktop Hover) -->
+                            <div class="absolute bottom-3 left-3 right-3 hidden md:flex opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <div class="w-full bg-viana-darkgreen text-white text-sm font-bold py-2 rounded shadow-lg text-center cursor-pointer hover:bg-viana-copper transition-colors">
+                                    Añadir al carrito
+                                </div>
+                            </div>
+                        </button>
+
+                        <!-- Content -->
+                        <div class="flex flex-col flex-grow">
+                            <a href="#" onclick="openDrawer()" class="text-sm md:text-base font-bold text-viana-ink leading-tight mb-1 hover:text-viana-copper transition-colors line-clamp-2" rel="nofollow">
+                                Vitamina C 1000mg + Zinc
+                            </a>
+                            <p class="text-xs text-viana-muted mb-4 hidden md:block">Sundown Naturals • 100 Cápsulas</p>
+                            
+                            <div class="mt-auto">
+                                <div class="flex items-end gap-2 mb-1 line-through text-viana-muted/60 text-xs tabular-nums">US$ 18.00</div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-lg md:text-xl font-bold text-viana-darkgreen tabular-nums">US$ 14.50</span>
+                                </div>
+                                <div class="text-[10px] font-semibold text-viana-muted/80 tabular-nums">R$ PIX 73.20</div>
+                            </div>
+
+                            <!-- Mobile Quick Add -->
+                            <button class="md:hidden mt-4 w-full border border-viana-copper text-viana-copper py-2 rounded font-bold text-sm flex justify-center items-center gap-1 active:bg-viana-copper active:text-white">
+                                <i class="ph-bold ph-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 2 -->
+                    <article class="group relative bg-white border border-viana-midgreen/10 rounded-[14px] p-3 md:p-4 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(10,61,44,0.1)] transition-all duration-300 flex flex-col h-full bg-clip-padding">
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none">
+                            <span class="bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Suplementos</span>
+                        </div>
+                        <button onclick="openDrawer()" class="product-img-container aspect-square bg-viana-sage/40 rounded-lg mb-4 relative overflow-hidden flex items-center justify-center cursor-pointer w-full focus:outline-none focus:ring-2 focus:ring-viana-copper">
+                            <img src="https://images.unsplash.com/photo-1693996047034-311ab7656691?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8b21lZ2ElMjAzfGVufDB8fDB8fHww" alt="Omega 3" class="w-3/4 h-3/4 object-contain mix-blend-multiply drop-shadow-md">
+                            <div class="absolute bottom-3 left-3 right-3 hidden md:flex opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <div class="w-full bg-viana-darkgreen text-white text-sm font-bold py-2 rounded shadow-lg text-center cursor-pointer hover:bg-viana-copper transition-colors">Añadir al carrito</div>
+                            </div>
+                        </button>
+                        <div class="flex flex-col flex-grow">
+                            <a href="#" onclick="openDrawer()" class="text-sm md:text-base font-bold text-viana-ink leading-tight mb-1 hover:text-viana-copper transition-colors line-clamp-2" rel="nofollow">Omega 3 1000mg Premium</a>
+                            <p class="text-xs text-viana-muted mb-4 hidden md:block">Good Energy • 60 Cápsulas</p>
+                            <div class="mt-auto">
+                                <div class="opacity-0 mb-1 line-through text-xs">spacer</div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-lg md:text-xl font-bold text-viana-darkgreen tabular-nums">US$ 22.00</span>
+                                </div>
+                                <div class="text-[10px] font-semibold text-viana-muted/80 tabular-nums">R$ PIX 111.10</div>
+                            </div>
+                            <button class="md:hidden mt-4 w-full border border-viana-copper text-viana-copper py-2 rounded font-bold text-sm flex justify-center items-center gap-1">
+                                <i class="ph-bold ph-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 3 (Cosmetics) -->
+                    <article class="group relative bg-white border border-viana-midgreen/10 rounded-[14px] p-3 md:p-4 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(10,61,44,0.1)] transition-all duration-300 flex flex-col h-full bg-clip-padding">
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none">
+                            <span class="bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Cosméticos</span>
+                        </div>
+                        <button onclick="openDrawer()" class="product-img-container aspect-square bg-[#F4F1EE] rounded-lg mb-4 relative overflow-hidden flex items-center justify-center cursor-pointer w-full focus:outline-none focus:ring-2 focus:ring-viana-copper">
+                            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80" alt="Suero Facial" class="w-3/4 h-3/4 object-contain mix-blend-multiply">
+                            <div class="absolute bottom-3 left-3 right-3 hidden md:flex opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <div class="w-full bg-viana-darkgreen text-white text-sm font-bold py-2 rounded shadow-lg text-center cursor-pointer hover:bg-viana-copper transition-colors">Añadir al carrito</div>
+                            </div>
+                        </button>
+                        <div class="flex flex-col flex-grow">
+                            <a href="#" onclick="openDrawer()" class="text-sm md:text-base font-bold text-viana-ink leading-tight mb-1 hover:text-viana-copper transition-colors line-clamp-2" rel="nofollow">Suero Facial Vitamina C 15%</a>
+                            <p class="text-xs text-viana-muted mb-4 hidden md:block">DermaLab • 30ml</p>
+                            <div class="mt-auto">
+                                <div class="opacity-0 mb-1 line-through text-xs">spacer</div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-lg md:text-xl font-bold text-viana-darkgreen tabular-nums">US$ 28.00</span>
+                                </div>
+                                <div class="text-[10px] font-semibold text-viana-muted/80 tabular-nums">R$ PIX 141.40</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Repeating structure to simulate catalog density -->
+                    <!-- Product 4 -->
+                    <article class="group relative bg-white border border-viana-midgreen/10 rounded-[14px] p-3 md:p-4 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(10,61,44,0.1)] transition-all duration-300 flex flex-col h-full bg-clip-padding">
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none">
+                            <span class="bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Performance</span>
+                        </div>
+                        <div class="product-img-container aspect-square bg-viana-sage/40 rounded-lg mb-4 relative overflow-hidden flex items-center justify-center cursor-pointer w-full">
+                            <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=600&q=80" alt="Pre entreno" class="w-3/4 h-3/4 object-contain mix-blend-multiply">
+                        </div>
+                        <div class="flex flex-col flex-grow">
+                            <a href="#" class="text-sm md:text-base font-bold text-viana-ink leading-tight mb-1 hover:text-viana-copper transition-colors line-clamp-2" rel="nofollow">Pre-entreno C4 Original</a>
+                            <div class="mt-auto pt-4">
+                                <div class="flex items-baseline gap-2"><span class="text-lg md:text-xl font-bold text-viana-darkgreen tabular-nums">US$ 35.00</span></div>
+                                <div class="text-[10px] font-semibold text-viana-muted/80 tabular-nums">R$ PIX 176.75</div>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Product 5 -->
+                    <article class="group relative bg-white border border-viana-midgreen/10 rounded-[14px] p-3 md:p-4 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(10,61,44,0.1)] transition-all duration-300 flex flex-col h-full bg-clip-padding">
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none">
+                            <span class="bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Medicamentos</span>
+                            <span class="bg-viana-darkgreen text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">Nuevo</span>
+                        </div>
+                        <div class="product-img-container aspect-square bg-viana-sage/40 rounded-lg mb-4 relative overflow-hidden flex items-center justify-center cursor-pointer w-full">
+                            <img src="https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=600&q=80" alt="Ibuprofeno" class="w-3/4 h-3/4 object-contain mix-blend-multiply opacity-80">
+                        </div>
+                        <div class="flex flex-col flex-grow">
+                            <a href="#" class="text-sm md:text-base font-bold text-viana-ink leading-tight mb-1 hover:text-viana-copper transition-colors line-clamp-2" rel="nofollow">Ibuprofeno 400mg Capsulas Blandas</a>
+                            <div class="mt-auto pt-4">
+                                <div class="flex items-baseline gap-2"><span class="text-lg md:text-xl font-bold text-viana-darkgreen tabular-nums">US$ 4.50</span></div>
+                                <div class="text-[10px] font-semibold text-viana-muted/80 tabular-nums">R$ PIX 22.70</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product 6 -->
+                    <article class="group relative bg-white border border-viana-midgreen/10 rounded-[14px] p-3 md:p-4 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(10,61,44,0.1)] transition-all duration-300 flex flex-col h-full bg-clip-padding">
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none">
+                            <span class="bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Especialidades</span>
+                        </div>
+                        <div class="product-img-container aspect-square bg-viana-sage/40 rounded-lg mb-4 relative overflow-hidden flex items-center justify-center cursor-pointer w-full">
+                            <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=600&q=80" alt="Specialty" class="w-3/4 h-3/4 object-contain mix-blend-multiply opacity-80">
+                        </div>
+                        <div class="flex flex-col flex-grow">
+                            <a href="#" class="text-sm md:text-base font-bold text-viana-ink leading-tight mb-1 hover:text-viana-copper transition-colors line-clamp-2" rel="nofollow">Tirzepatida 15mg Consulta Médica</a>
+                            <p class="text-[10px] text-viana-muted mt-1">*Requiere receta</p>
+                            <div class="mt-auto pt-4">
+                                <button class="w-full bg-viana-midgreen/10 text-viana-darkgreen py-2 rounded font-bold text-sm border border-viana-midgreen/20">Consultar Disponibilidad</button>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+                
+                <!-- Pagination -->
+                <div class="flex justify-center mt-12 bg-white rounded-full border border-viana-midgreen/10 w-max mx-auto overflow-hidden shadow-sm">
+                    <button class="px-4 py-2 text-viana-muted hover:bg-viana-sage"><i class="ph-bold ph-caret-left"></i></button>
+                    <button class="px-4 py-2 font-bold bg-viana-copper text-white">1</button>
+                    <button class="px-4 py-2 font-bold text-viana-ink hover:bg-viana-sage">2</button>
+                    <button class="px-4 py-2 font-bold text-viana-ink hover:bg-viana-sage">3</button>
+                    <button class="px-4 py-2 text-viana-muted hover:bg-viana-sage"><i class="ph-bold ph-caret-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-viana-darkgreen pt-16 pb-8 border-t-[8px] border-viana-copper mt-16">
+        <div class="w-full max-w-[1400px] mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-12">
+            <div class="md:col-span-1">
+                <div class="flex flex-col gap-2 mb-6">
+                    <div class="flex items-center gap-2 text-white">
+                        <i class="ph-fill ph-pill text-3xl"></i>
+                        <span class="font-serif font-bold text-3xl tracking-tight leading-none">Viana</span>
+                    </div>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-viana-sage">Farmacia</span>
+                </div>
+                <p class="text-viana-sage/70 text-sm mb-6 leading-relaxed">
+                    Tu farmacia de confianza en Paraguay. Catálogo completo, precios competitivos y atención farmacéutica especializada.
+                </p>
+                <button class="w-full bg-transparent border border-viana-sage/30 text-white font-bold py-3 rounded text-sm hover:bg-viana-sage hover:text-viana-darkgreen transition-all flex justify-center items-center gap-2">
+                    <i class="ph-bold ph-whatsapp logo text-lg"></i> Consultar por WhatsApp
+                </button>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-bold mb-4">Categorías</h4>
+                <ul class="space-y-2 text-sm text-viana-sage/70">
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Medicamentos</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Vitaminas y Suplementos</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Cosméticos y Cuidado</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Performance y Energía</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Especialidades</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Atención al Cliente</h4>
+                <ul class="space-y-2 text-sm text-viana-sage/70">
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Cómo funciona la entrega</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Retomado en tienda</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Políticas de devolución</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Preguntas frecuentes</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors" rel="nofollow">Trabaja con nosotros</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Ubicación y Horarios</h4>
+                <div class="text-sm text-viana-sage/70 space-y-3">
+                    <p class="flex items-start gap-2"><i class="ph-fill ph-map-pin mt-1 text-viana-copper"></i> Av. España y Brasil, Asunción, Paraguay</p>
+                    <p class="flex items-start gap-2"><i class="ph-fill ph-clock mt-1 text-viana-copper"></i> Lunes a Sábados: 07:00 a 22:00<br>Domingos: 08:00 a 20:00</p>
+                    <div class="pt-4 flex gap-4">
+                        <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/20">PIX</div>
+                        <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/20">VISA</div>
+                        <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white border border-white/20">G$</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full max-w-[1400px] mx-auto px-4 lg:px-8 pt-8 flex flex-col md:flex-row justify-between items-center text-[11px] text-viana-sage/50">
+            <p>&copy; 2026 Farmacia Viana. Todos los derechos reservados.</p>
+            <div class="mt-2 md:mt-0 flex gap-4">
+                <a href="#" class="hover:text-white" rel="nofollow">Términos Legales</a>
+                <a href="#" class="hover:text-white" rel="nofollow">Privacidad</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Persistent Side Drawer Overlay (Product Detail) -->
+    <div id="productDrawerOverlay" class="fixed inset-0 bg-viana-ink/40 liquid-blur z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    
+    <aside id="productDrawer" class="fixed top-0 right-0 h-[100dvh] w-full md:w-[480px] bg-white z-50 drawer-container translate-x-full shadow-[-20px_0_40px_rgba(0,0,0,0.1)] flex flex-col">
+        <!-- Header -->
+        <div class="flex items-center justify-between p-4 border-b border-viana-midgreen/10">
+            <span class="text-xs font-bold uppercase tracking-wider text-viana-muted">Detalle del Producto</span>
+            <button onclick="closeDrawer()" class="w-8 h-8 flex items-center justify-center rounded-full bg-viana-sage text-viana-darkgreen hover:bg-viana-midgreen hover:text-white transition-colors">
+                <i class="ph-bold ph-x text-lg"></i>
+            </button>
+        </div>
+        
+        <!-- Content Scrollable -->
+        <div class="flex-grow overflow-y-auto p-6 flex flex-col">
+            
+            <div class="w-full aspect-square bg-viana-sage/40 rounded-xl mb-6 relative flex items-center justify-center p-8">
+                <span class="absolute top-4 left-4 bg-white/90 backdrop-blur border border-viana-sage text-viana-darkgreen text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm">Vitaminas</span>
+                <img src="https://images.unsplash.com/photo-1707129785947-ddc627a8bab9?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dml0YW1pbiUyMGN8ZW58MHx8MHx8fDA%3D" alt="Vitamina C Detail" class="w-full h-full object-contain mix-blend-multiply drop-shadow-lg">
+            </div>
+
+            <h2 class="font-serif text-3xl font-bold text-viana-ink leading-tight mb-2">Vitamina C 1000mg + Zinc</h2>
+            <p class="text-sm text-viana-muted mb-6">Suplemento dietario antioxidante con acción prolongada para el fortalecimiento del sistema inmunológico. Laboratorios Sundown Naturals.</p>
+
+            <div class="flex flex-wrap gap-2 mb-8">
+                <button class="border-2 border-viana-copper bg-viana-copper/5 text-viana-copper font-bold px-4 py-2 rounded text-sm">100 Cápsulas</button>
+                <button class="border border-viana-midgreen/20 text-viana-muted hover:border-viana-midgreen font-bold px-4 py-2 rounded text-sm transition-colors">30 Cápsulas</button>
+            </div>
+
+            <div class="bg-viana-ivory p-4 rounded-xl border border-viana-midgreen/10 mb-8 flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-3xl font-bold text-viana-darkgreen tabular-nums tracking-tight">US$ 14.50</span>
+                    <span class="text-xs bg-viana-sage text-viana-darkgreen font-bold px-2 py-1 rounded">Stock Disponible</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm font-semibold text-viana-muted mt-2 tabular-nums">
+                    <span>R$ PIX 73.20</span>
+                    <span class="w-1 h-1 rounded-full bg-viana-midgreen/30"></span>
+                    <span>106,600 Gs</span>
+                </div>
+            </div>
+
+            <!-- Sticky Bottom Actions within Drawer -->
+            <div class="mt-auto pt-6 flex flex-col gap-3">
+                <div class="flex items-center gap-3">
+                    <!-- Stepper -->
+                    <div class="flex items-center border border-viana-midgreen/20 rounded h-12 w-32 shrink-0">
+                        <button class="w-10 h-full flex items-center justify-center text-viana-muted hover:text-viana-ink"><i class="ph-bold ph-minus"></i></button>
+                        <span class="flex-grow text-center font-bold text-lg tabular-nums">1</span>
+                        <button class="w-10 h-full flex items-center justify-center text-viana-muted hover:text-viana-ink"><i class="ph-bold ph-plus"></i></button>
+                    </div>
+                    <button class="flex-grow bg-viana-copper hover:bg-[#A3522C] text-white font-bold h-12 rounded flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+                        Añadir al carrito
+                    </button>
+                </div>
+                <button class="w-full border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10 font-bold h-12 rounded flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+                    <i class="ph-bold ph-whatsapp logo text-xl"></i> Consultar por WhatsApp
+                </button>
+            </div>
+
+        </div>
+    </aside>
+
+    <script>
+        // Hero Carousel Logic Vanilla JS
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchDropdown = document.getElementById('searchDropdown');
+
+            // Search Interaction
+            searchInput.addEventListener('focus', () => {
+                searchDropdown.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.classList.add('opacity-0', 'invisible', 'translate-y-2');
+                }
+            });
+
+            // Very raw mock hero rotation logic since there's only 1 slide in HTML for brevity, 
+            // but structure implies mechanics.
+            // Normally we'd cycle through nodes.
+        });
+
+        // Drawer Logic
+        const drawer = document.getElementById('productDrawer');
+        const overlay = document.getElementById('productDrawerOverlay');
+
+        function openDrawer() {
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            drawer.classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            drawer.classList.add('translate-x-full');
+            document.body.style.overflow = '';
+        }
+
+        overlay.addEventListener('click', closeDrawer);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+    </script>
+</body>
+</html>

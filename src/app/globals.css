@@ -1,0 +1,235 @@
+@import "tailwindcss";
+@import "@fontsource/outfit/300.css";
+@import "@fontsource/outfit/400.css";
+@import "@fontsource/outfit/500.css";
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/outfit/700.css";
+@import "@fontsource/outfit/800.css";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ivory: #fcfbfa;
+  --color-green-dark: #08382a;
+  --color-green-mid: #2b7a5f;
+  --color-copper: #d9774e;
+  --color-copper-dark: #c06640;
+  --color-sage: #e9ece8;
+  --color-sage-dark: #d0d6d1;
+  --color-viana-red: #d94e4e;
+
+  --shadow-soft: 0 10px 40px -10px rgb(8 56 42 / 0.08);
+  --shadow-hover: 0 20px 40px -15px rgb(8 56 42 / 0.12);
+  --shadow-inner-border: inset 0 0 0 1px rgb(8 56 42 / 0.05);
+
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root {
+  --bg: #fcfbfa;
+  --bg-card: #ffffff;
+  --bg-muted: #f5f3ee;
+  --bg-border: #ebebe7;
+  --bg-border-strong: #d0d6d1;
+  --text: #1a1a1a;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+  --brand-green: #08382a;
+  --brand-green-mid: #2b7a5f;
+  --brand-copper: #d9774e;
+  --brand-copper-dark: #c06640;
+  --brand-sage: #e9ece8;
+  --brand-sage-dark: #d0d6d1;
+  --brand-red: #d94e4e;
+  --header-bg: rgba(252, 251, 250, 0.82);
+  --tint-cool: #e8f0ea;
+  --tint-warm: #f3efe3;
+  --tint-sage: #eef3e6;
+  --tint-text: #1f2418;
+  --tint-text-muted: #5c5f55;
+  --image-blend: multiply;
+  --image-bg: var(--brand-sage);
+}
+
+.dark {
+  --bg: #0f1a16;
+  --bg-card: #18241f;
+  --bg-muted: #20302a;
+  --bg-border: #2a3e36;
+  --bg-border-strong: #3a5248;
+  --text: #f1f5f1;
+  --text-muted: #b2bdb7;
+  --text-subtle: #7d8983;
+  --brand-green: #4cb893;
+  --brand-green-mid: #6ed4a7;
+  --brand-copper: #e89876;
+  --brand-copper-dark: #d27c5a;
+  --brand-sage: #20302a;
+  --brand-sage-dark: #2a3e36;
+  --brand-red: #e87474;
+  --header-bg: rgba(15, 26, 22, 0.85);
+  --tint-cool: #1b2c25;
+  --tint-warm: #2b281d;
+  --tint-sage: #202b1d;
+  --tint-text: #f1f5f1;
+  --tint-text-muted: #b2bdb7;
+  --image-blend: normal;
+  --image-bg: var(--bg-muted);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Scoped, opt-in theme transition — only animates color/background of elements
+   that opt into `.theme-aware` (header, cards, buttons) for 250ms.
+   Replaces the previous global "transition every property on every element"
+   rule that was killing scroll performance. */
+.theme-aware {
+  transition: background-color 0.25s ease, color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--brand-copper) 30%, transparent);
+  color: var(--brand-green);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brand-sage-dark);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-green-mid);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* GPU layer hints for elements that animate. Telling the browser which
+   elements will transform lets it promote them to compositor layers once. */
+.gpu {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Off-screen product cards skip rendering entirely, cutting paint cost for
+   catalogs with dozens of items. Browsers without content-visibility support
+   ignore the rule safely. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 320px;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+/* Pause the marquee when it's off-screen so the GPU doesn't keep recomposing
+   frames for an invisible animation. */
+.animate-marquee.paused {
+  animation-play-state: paused;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease forwards;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s var(--ease-out-quart) forwards;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

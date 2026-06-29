@@ -1,0 +1,24 @@
+# Build output
+dist/
+.astro/
+.next/
+
+# Dependencies
+node_modules/
+
+# Python venv used for image processing
+venv/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+.kimchi/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# TypeScript build info
+*.tsbuildinfo

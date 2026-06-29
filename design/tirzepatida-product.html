@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia Viana - Tirzepatida</title>
+    
+    <!-- 
+      aesthetic_dna: Premium Clinical / Editorial Pharmacy
+      ui_paradigm: Asymmetrical Split Hero 45/55
+      palette: Warm Ivory (#FCFBFA), Deep Green (#08382A), Copper (#D9774E), Sage (#E9ECE8)
+    -->
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            ivory: '#FCFBFA',
+                            white: '#FFFFFF',
+                            green: {
+                                deep: '#08382A',
+                                mid: '#2B7A5F'
+                            },
+                            copper: {
+                                primary: '#D9774E',
+                                dark: '#C06640'
+                            },
+                            sage: {
+                                surface: '#E9ECE8',
+                                dark: '#D0D6D1'
+                            },
+                            red: '#D94E4E',
+                            ink: '#18181B'
+                        }
+                    },
+                    transitionTimingFunction: {
+                        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        'ease-out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Physics & Motion Engine */
+        :root {
+            --index: 0;
+            --motion-intensity: 1; /* Scales floating animations */
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            :root { --motion-intensity: 0; }
+            .motion-reduce-static { animation: none !important; transform: none !important; }
+        }
+
+        /* Float Animations */
+        @keyframes slow-float {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            50% { transform: translateY(-12px) rotateY(6deg); }
+        }
+        
+        @keyframes orbit-ring {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes drift-up {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes breathe-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        /* Staggered Reveal Logic */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition-delay: calc(var(--index) * 80ms);
+        }
+
+        .is-revealed .reveal-element {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Applied Animations */
+        .anim-float {
+            animation: slow-float calc(10s / max(var(--motion-intensity), 0.1)) ease-in-out infinite;
+        }
+        .anim-orbit {
+            animation: orbit-ring calc(60s / max(var(--motion-intensity), 0.1)) linear infinite;
+        }
+        .anim-drift {
+            animation: drift-up calc(6s / max(var(--motion-intensity), 0.1)) ease-in-out infinite;
+        }
+        .anim-breathe {
+            animation: breathe-scale calc(5s / max(var(--motion-intensity), 0.1)) ease-in-out infinite;
+        }
+        .anim-sway {
+            animation: sway calc(7s / max(var(--motion-intensity), 0.1)) ease-in-out infinite;
+        }
+
+        /* Asset Blending fix for provided visual */
+        .product-render {
+            /* Fallback blend mode assuming black background on light surface */
+            mix-blend-mode: screen; 
+            filter: drop-shadow(0 30px 40px rgba(8, 56, 42, 0.15));
+        }
+
+        /* Underline Hover */
+        .hover-underline-grow::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: theme('colors.brand.green.mid');
+            transition: width 0.3s ease;
+        }
+        .group:hover .hover-underline-grow::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-brand-ivory text-brand-ink antialiased selection:bg-brand-copper-primary selection:text-white">
+
+    <!-- HERO FEATURE SECTION -->
+    <section id="tirzepatida-feature" class="relative min-h-[100dvh] flex items-center py-16 md:py-24 lg:py-32 overflow-hidden w-full">
+        
+        <!-- Background Ambient Elements -->
+        <div class="absolute inset-0 pointer-events-none select-none overflow-hidden">
+            <!-- Copper Anchor Line (Left) -->
+            <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-brand-copper-primary/20 to-transparent"></div>
+            
+            <!-- Soft Grid Texture (4% opacity) -->
+            <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(to right, #08382A 1px, transparent 1px), linear-gradient(to bottom, #08382A 1px, transparent 1px); background-size: 40px 40px;"></div>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto w-full px-4 md:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                
+                <!-- CONTENT COLUMN (Left on Desktop, 2nd on Mobile) -->
+                <div class="lg:col-span-5 order-2 lg:order-1 flex flex-col gap-6 lg:pr-8">
+                    
+                    <!-- Header Block -->
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-center gap-3 reveal-element" style="--index: 1;">
+                            <span class="w-8 h-[1px] bg-brand-copper-primary"></span>
+                            <span class="text-brand-copper-primary text-xs font-bold tracking-[0.18em] uppercase">Producto Estrella</span>
+                        </div>
+                        <h2 class="font-serif text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.1] text-brand-green-deep tracking-tight reveal-element" style="--index: 2;">
+                            Tirzepatida<br />15 mg
+                        </h2>
+                        <p class="font-sans text-lg md:text-xl text-brand-green-mid font-medium reveal-element" style="--index: 3;">
+                            El producto más solicitado de Farmacia Viana.
+                        </p>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="w-full h-[1px] bg-brand-sage-dark/30 reveal-element" style="--index: 4;"></div>
+
+                    <!-- Description -->
+                    <p class="text-brand-ink/80 text-base md:text-lg leading-relaxed reveal-element" style="--index: 5;">
+                        Consultas guiadas por WhatsApp y disponibilidad confirmada en tienda para acompañar tu tratamiento con responsabilidad.
+                    </p>
+
+                    <!-- Benefits / Features -->
+                    <ul class="flex flex-col gap-4 mt-2 reveal-element" style="--index: 6;">
+                        <li class="group flex items-start gap-3 cursor-default">
+                            <div class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-sage-surface flex items-center justify-center text-brand-green-mid">
+                                <i class="ph-fill ph-check-circle text-sm"></i>
+                            </div>
+                            <span class="text-brand-ink/90 font-medium relative hover-underline-grow">Apoyo metabólico bajo supervisión profesional</span>
+                        </li>
+                        <li class="group flex items-start gap-3 cursor-default">
+                            <div class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-sage-surface flex items-center justify-center text-brand-green-mid">
+                                <i class="ph-fill ph-check-circle text-sm"></i>
+                            </div>
+                            <span class="text-brand-ink/90 font-medium relative hover-underline-grow">Aplicación semanal simple y precisa</span>
+                        </li>
+                        <li class="group flex items-start gap-3 cursor-default">
+                            <div class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-brand-sage-surface flex items-center justify-center text-brand-green-mid">
+                                <i class="ph-fill ph-check-circle text-sm"></i>
+                            </div>
+                            <span class="text-brand-ink/90 font-medium relative hover-underline-grow">Disponible en farmacia con asesoría</span>
+                        </li>
+                    </ul>
+
+                    <!-- Social Proof Stats -->
+                    <div class="flex flex-wrap lg:flex-nowrap items-center gap-6 md:gap-8 py-6 border-b border-brand-sage-dark/40 reveal-element" style="--index: 7;">
+                        <div class="flex flex-col gap-1 group relative cursor-help">
+                            <span class="font-serif text-3xl text-brand-green-deep font-[tabular-nums] leading-none tracking-tight">+500</span>
+                            <span class="text-xs font-medium text-brand-ink/60 uppercase tracking-widest">Consultas</span>
+                        </div>
+                        <div class="w-[1px] h-8 bg-brand-sage-dark/40 hidden md:block"></div>
+                        <div class="flex flex-col gap-1 group relative cursor-help">
+                            <span class="font-serif text-3xl text-brand-copper-primary font-[tabular-nums] leading-none tracking-tight">Top #1</span>
+                            <span class="text-xs font-medium text-brand-ink/60 uppercase tracking-widest">Solicitado</span>
+                        </div>
+                        <div class="w-[1px] h-8 bg-brand-sage-dark/40 hidden md:block"></div>
+                        <div class="flex flex-col gap-1 group relative cursor-help">
+                            <span class="font-serif text-3xl text-brand-green-deep font-[tabular-nums] leading-none tracking-tight text-center"><i class="ph ph-calendar-check text-2xl"></i></span>
+                            <span class="text-xs font-medium text-brand-ink/60 uppercase tracking-widest">Stock Semanal</span>
+                        </div>
+                    </div>
+
+                    <!-- Availability Pills -->
+                    <div class="flex flex-wrap gap-3 mt-2 reveal-element" style="--index: 8;">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-sage-surface text-brand-green-deep text-xs font-bold tracking-wide uppercase border border-brand-green-mid/10">
+                            <i class="ph-fill ph-storefront"></i> Disponible en tienda
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-brand-copper-primary/40 text-brand-copper-primary text-xs font-bold tracking-wide uppercase bg-brand-ivory">
+                            <i class="ph-fill ph-chat-circle-text"></i> Requiere asesoría
+                        </span>
+                    </div>
+
+                    <!-- Calls to Action -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-6 reveal-element" style="--index: 9;">
+                        <button class="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 h-[48px] rounded-full bg-brand-copper-primary text-white font-medium hover:bg-brand-copper-dark transition-all duration-250 ease-out shadow-[0_10px_20px_-10px_rgba(217,119,78,0.5)] hover:shadow-[0_15px_25px_-10px_rgba(217,119,78,0.7)] hover:-translate-y-[1px] active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-brand-copper-primary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-ivory">
+                            <i class="ph ph-whatsapp-logo text-xl"></i>
+                            Consultar por WhatsApp
+                        </button>
+                        <button class="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 h-[48px] rounded-full bg-transparent border border-brand-green-deep text-brand-green-deep font-medium hover:bg-brand-sage-surface transition-all duration-250 ease-out hover:-translate-y-[1px] active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-brand-green-deep focus-visible:ring-offset-2 focus-visible:ring-offset-brand-ivory">
+                            Ver detalles
+                        </button>
+                    </div>
+
+                    <!-- Reassurance Microcopy -->
+                    <p class="text-sm text-brand-sage-dark mt-2 font-medium flex-col sm:flex-row flex gap-1 sm:gap-2 reveal-element" style="--index: 10;">
+                        <span>Te orientamos por WhatsApp antes de cualquier compra.</span>
+                        <span class="hidden sm:inline-block">·</span>
+                        <span>Retiro en tienda o reserva.</span>
+                    </p>
+
+                </div>
+
+
+                <!-- VISUAL COLUMN (Right on Desktop, 1st on Mobile) -->
+                <div class="lg:col-span-7 order-1 lg:order-2 w-full reveal-element" style="--index: 3;">
+                    
+                    <!-- Media Feature Container -->
+                    <div class="relative w-full aspect-[4/5] lg:aspect-[5/4] bg-brand-sage-surface rounded-[2rem] md:rounded-[3rem] overflow-hidden flex items-center justify-center shadow-[inset_0_0_0_1px_rgba(208,214,209,0.3)] shadow-[0_20px_40px_-15px_rgba(8,56,42,0.1)] group">
+                        
+                        <!-- Radial Glow Background -->
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(217,119,78,0.12),transparent_65%)] transition-opacity duration-1000 group-hover:opacity-75"></div>
+                        
+                        <!-- Parallax Mist (Right side edge) -->
+                        <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-brand-sage-surface/50 to-transparent blur-xl pointer-events-none z-20"></div>
+
+                        <!-- Orbit Ring (Precision/Science cue) -->
+                        <div class="absolute top-1/2 left-1/2 w-[70%] lg:w-[60%] aspect-square rounded-full border border-brand-copper-primary/10 anim-orbit pointer-events-none"></div>
+                        <div class="absolute top-1/2 left-1/2 w-[50%] lg:w-[40%] aspect-square rounded-full border border-brand-green-deep/5 anim-orbit" style="animation-direction: reverse; animation-duration: 90s;"></div>
+
+                        <!-- Floating Accent: Capsule Motif -->
+                        <div class="absolute top-[20%] left-[15%] z-20 anim-drift motion-reduce-static">
+                            <div class="w-4 h-10 rounded-full bg-brand-copper-primary/90 shadow-lg transform rotate-45 border border-white/20 backdrop-blur-sm"></div>
+                        </div>
+
+                        <!-- Floating Accent: Dosage Badge -->
+                        <div class="absolute bottom-[25%] right-[10%] z-20 anim-breathe motion-reduce-static">
+                            <div class="w-16 h-16 rounded-full bg-brand-sage-surface shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md">
+                                <span class="text-brand-green-deep font-bold font-[tabular-nums] leading-none text-center">15<br/><span class="text-[10px] font-sans font-medium uppercase tracking-wider">mg</span></span>
+                            </div>
+                        </div>
+
+                        <!-- Floating Accent: Leaf -->
+                        <div class="absolute top-[15%] right-[20%] opacity-40 anim-sway z-20 motion-reduce-static text-brand-green-mid">
+                            <i class="ph-fill ph-leaf text-4xl"></i>
+                        </div>
+
+                        <!-- Central Product Render -->
+                        <div class="relative z-10 w-full h-full flex items-center justify-center p-8 lg:p-12">
+                            <!-- Contact Shadow on Surface below product -->
+                            <div class="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-48 h-8 bg-brand-green-deep/20 blur-xl rounded-[100%] transition-transform duration-700 group-hover:scale-110"></div>
+                            
+                            <!-- Product Image Container wrapping 3D Asset -->
+                            <div class="anim-float w-full max-w-[280px] md:max-w-[340px] xl:max-w-[400px] h-full flex items-center justify-center transition-transform duration-700 group-hover:rotate-[2deg] group-hover:scale-105">
+                                <img 
+                                    src="https://cdn.aidesigner.ai/user-assets/dc797395bd71753e/1782747620282-tg-view.png" 
+                                    alt="Frasco de Tirzepatida 15mg en entorno de farmacia" 
+                                    class="w-full h-auto object-contain product-render pointer-events-none"
+                                />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Vanilla JS for Micro-interactions & Reveal Physics -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const section = document.getElementById('tirzepatida-feature');
+            
+            // Intersection Observer for Staggered Reveal on Scroll
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -15% 0px', // Trigger slightly before it comes fully into view
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        section.classList.add('is-revealed');
+                        observer.unobserve(entry.target); // Run once
+                    }
+                });
+            }, observerOptions);
+
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
