@@ -17,6 +17,7 @@ import type { Product } from "@/lib/types";
 import { useCartStore } from "@/lib/cart-store";
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
+import { useOverlayOpen, useOverlayStore } from "@/lib/overlay-store";
 import { getImageSrcs } from "@/lib/images";
 import { categoryById } from "@/lib/categories";
 import { waLink } from "@/lib/store";
@@ -25,8 +26,17 @@ import { cn } from "@/lib/utils";
 export function ProductDetailDrawer() {
   const product = useCartStore((s) => s.detailProduct);
   const variants = useCartStore((s) => s.detailVariants);
-  const close = useCartStore((s) => s.closeDetail);
+  const closeDetail = useCartStore((s) => s.closeDetail);
   const add = useCartStore((s) => s.add);
+  const open = useOverlayOpen("detail");
+  const closeOverlay = useOverlayStore((s) => s.close);
+
+  // Closing the drawer means closing both the overlay (which controls the
+  // Dialog open prop) and clearing the cart-store detail data.
+  const close = () => {
+    closeOverlay("detail");
+    closeDetail();
+  };
 
   const { format } = useCurrency();
   const { t, lang } = useLanguage();
@@ -64,7 +74,7 @@ export function ProductDetailDrawer() {
   const waUrl = waLink(waMessage);
 
   return (
-    <Dialog.Root open={!!product} onOpenChange={(o) => (o ? null : close())}>
+    <Dialog.Root open={open} onOpenChange={(o) => (o ? null : close())}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[var(--brand-green)]/30 z-[60] backdrop-blur-sm data-[state=open]:animate-fade-in" />
         <Dialog.Content className="theme-aware fixed top-0 right-0 h-full w-full max-w-[440px] bg-[var(--bg-card)] shadow-2xl z-[70] flex flex-col animate-slide-in-right">

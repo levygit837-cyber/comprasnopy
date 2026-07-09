@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { groupForDisplay } from "./variants";
+import { groupForDisplay, uniqueProductCount } from "./variants";
 import type { Product } from "./types";
 
 function p(partial: Partial<Product>): Product {
@@ -42,3 +42,36 @@ describe("variant grouping", () => {
     expect(items.map((i) => i.primary.id)).toEqual(["a", "b", "c"]);
   });
 });
+
+describe("uniqueProductCount", () => {
+  it("counts each variant family as one product", () => {
+    const list = [
+      p({ id: "a", variantGroup: "fam", strength: "100mg", priceUSD: 100 }),
+      p({ id: "b", variantGroup: "fam", strength: "200mg", priceUSD: 200 }),
+      p({ id: "c", variantGroup: "fam", strength: "300mg", priceUSD: 300 }),
+      p({ id: "d" }),
+    ];
+    expect(uniqueProductCount(list)).toBe(2);
+  });
+
+  it("filters by category and still collapses variants", () => {
+    const list = [
+      p({ id: "a", variantGroup: "fam", category: "hormonas-peptidos" }),
+      p({ id: "b", variantGroup: "fam", category: "hormonas-peptidos" }),
+      p({ id: "c", category: "esteroides-anabolicos" }),
+      p({ id: "d", category: "hormonas-peptidos" }),
+    ];
+    expect(uniqueProductCount(list, "hormonas-peptidos")).toBe(2);
+    expect(uniqueProductCount(list, "esteroides-anabolicos")).toBe(1);
+  });
+
+  it("returns the total when category is 'all'", () => {
+    const list = [
+      p({ id: "a", variantGroup: "fam" }),
+      p({ id: "b", variantGroup: "fam" }),
+      p({ id: "c" }),
+    ];
+    expect(uniqueProductCount(list, "all")).toBe(2);
+  });
+});
+

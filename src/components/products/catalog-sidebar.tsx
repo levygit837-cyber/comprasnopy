@@ -14,8 +14,10 @@ import {
 
 import { categories } from "@/lib/categories";
 import { products } from "@/lib/products";
+import { uniqueProductCount } from "@/lib/variants";
 import { useLanguage } from "@/lib/language-context";
 import { useCurrency } from "@/lib/currency-context";
+import { formatFromUSD, DEFAULT_RATES, MIN_PRICE_USD } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 type IconComponent = React.ComponentType<{ size?: number; weight?: "fill" | "regular" | "bold"; className?: string }>;
@@ -44,7 +46,8 @@ export function CatalogSidebar({
   onMaxPriceChange,
 }: CatalogSidebarProps) {
   const { t, lang } = useLanguage();
-  const { format } = useCurrency();
+  const { currency, format } = useCurrency();
+  const minLabel = formatFromUSD(MIN_PRICE_USD, currency, lang, DEFAULT_RATES);
 
   return (
     <aside className="theme-aware hidden lg:flex flex-col w-[220px] flex-shrink-0 sticky top-[100px] h-[calc(100vh-120px)] overflow-y-auto pb-8 pr-4">
@@ -58,7 +61,7 @@ export function CatalogSidebar({
             onClick={() => onCategoryChange("all")}
             icon={<SquaresFour size={15} weight="fill" />}
             label={t("navAllCategories")}
-            count={products.length}
+            count={uniqueProductCount(products)}
           />
           {categories.map((c) => {
             const Icon = ICON_MAP[c.icon] ?? Pill;
@@ -69,7 +72,7 @@ export function CatalogSidebar({
                 onClick={() => onCategoryChange(c.id)}
                 icon={<Icon size={15} weight="fill" />}
                 label={c.name[lang]}
-                count={products.filter((p) => p.category === c.id).length}
+                count={uniqueProductCount(products, c.id)}
               />
             );
           })}
@@ -84,7 +87,7 @@ export function CatalogSidebar({
           <Slider.Root
             value={[maxPriceUSD]}
             onValueChange={(v) => onMaxPriceChange(v[0] ?? 500)}
-            min={20}
+            min={MIN_PRICE_USD}
             max={500}
             step={5}
             className="relative flex items-center select-none touch-none w-full h-5"
@@ -98,7 +101,7 @@ export function CatalogSidebar({
             />
           </Slider.Root>
           <div className="flex items-center justify-between text-[10px] font-bold text-[var(--text-muted)] mt-2 tabular-nums">
-            <span>US$ 20</span>
+            <span>{minLabel}</span>
             <span className="text-[var(--brand-green)]">
               {t("catalogMaxPrice")} {format(maxPriceUSD)}
             </span>

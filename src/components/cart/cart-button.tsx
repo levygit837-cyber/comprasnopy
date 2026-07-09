@@ -4,18 +4,19 @@ import { ShoppingBag } from "@phosphor-icons/react/dist/ssr";
 
 import { totalUnits, useCartStore } from "@/lib/cart-store";
 import { useLanguage } from "@/lib/language-context";
+import { useOverlayStore } from "@/lib/overlay-store";
 import { cn } from "@/lib/utils";
 
 export function CartButton({ className }: { className?: string }) {
   const lines = useCartStore((s) => s.lines);
-  const openDrawer = useCartStore((s) => s.openDrawer);
   const { t } = useLanguage();
+  const openOverlay = useOverlayStore((s) => s.open);
   const count = totalUnits(lines);
 
   return (
     <button
       type="button"
-      onClick={openDrawer}
+      onClick={() => openOverlay("cart")}
       aria-label={t("navCart")}
       className={cn(
         "theme-aware flex items-center gap-1.5 text-[var(--text)] hover:text-[var(--brand-copper)] transition-colors group",

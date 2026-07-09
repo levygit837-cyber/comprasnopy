@@ -85,16 +85,27 @@ scripts/              remove-backgrounds.py
 
 ## Supabase setup
 
-The schema lives in `src/lib/supabase/`. To finish wiring the backend:
+The schema lives in `supabase/migrations/`. To finish wiring the backend:
 
-1. Create a Supabase project and copy URL + anon key into `.env.local`.
-2. Apply the SQL in `docs/` (or import the schema) for `profiles`, `categories`,
-   `products`, `product_variants`, `product_images`, `exchange_rates`.
-3. Enable Row Level Security on every table; deny all reads/writes by default
-   and add policies for authenticated users on `profiles` and public reads on
-   catalog tables.
+1. Create a Supabase project and copy the URL and **publishable key**
+   (`sb_publishable_...`) into `.env.local` as `NEXT_PUBLIC_SUPABASE_URL`
+   and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+2. Apply the migrations in order (`supabase/migrations/0001_init.sql`,
+   then `supabase/seed.sql`). The init migration creates `profiles`,
+   `categories`, `products`, `product_images`, `exchange_rates`, `orders`,
+   and `order_lines`, plus the `handle_new_user()` trigger that mirrors
+   `raw_user_meta_data` into a `profiles` row on signup.
+3. In **Authentication -> Providers -> Email**, toggle **Confirm email**
+   off. The storefront signs users in immediately after registration, so
+   the email-verification round trip is undesirable; the auth-popover
+   submit handler also falls back to a `signInWithPassword` if a
+   confirmation step ever sneaks back in. Run this once after enabling
+   auth to confirm any pre-existing users waiting on the flow:
+   `update auth.users set email_confirmed_at = coalesce(email_confirmed_at, now()) where email_confirmed_at is null;`
+4. Add the production site URL to **Authentication -> URL Configuration**
+   so the password-reset email links back to the right origin.
 
 The current build renders entirely from the local catalog at
-`src/lib/products.ts` so the UI works end-to-end before the database is wired
-up. To switch to Supabase data, replace the static `products` import in
-catalog components with a server fetch.
+`src/lib/products.ts` so the UI works end-to-end before the database is
+wired up. To switch to Supabase data, replace the static `products`
+import in catalog components with a server fetch.

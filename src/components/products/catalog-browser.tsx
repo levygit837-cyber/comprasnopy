@@ -48,7 +48,7 @@ export function CatalogBrowser() {
       />
 
       <div className="flex-1 min-w-0 w-full">
-        <CatalogToolbar sort={sort} onSortChange={setSort} count={filtered.length} />
+        <CatalogToolbar sort={sort} onSortChange={setSort} count={items.length} />
 
         {category !== "all" && (
           <div className="flex items-center gap-2 mb-3 flex-wrap">

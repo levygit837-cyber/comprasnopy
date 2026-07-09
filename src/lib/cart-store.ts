@@ -5,6 +5,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 import { formatFromUSD, DEFAULT_RATES } from "./store";
 import { getPrimaryImage } from "./images";
+import { checkRateLimit } from "./rate-limit";
+import { useOverlayStore } from "./overlay-store";
 import type { Product } from "./types";
 
 export interface CartLine {
@@ -19,20 +21,42 @@ export interface CartLine {
   lab?: string;
 }
 
+export interface CartNotification {
+  id: string;
+  productId: string;
+  name: string;
+  strength: string;
+  qty: number;
+  image: string | null;
+  /** Increments on every add so subscribers can detect new events. */
+  token: number;
+}
+
 interface CartState {
   lines: CartLine[];
-  drawerOpen: boolean;
   detailProduct: Product | null;
   detailVariants: Product[];
+  /** Latest add event, consumed by the notifier. */
+  lastAdded: CartNotification | null;
+  /** Wall-clock ms of the last `add()` that passed the rate-limit check. */
+  lastAddAt: number;
   add: (product: Product, qty?: number) => void;
   remove: (lineId: string) => void;
   setQty: (lineId: string, qty: number) => void;
   clear: () => void;
-  openDrawer: () => void;
-  closeDrawer: () => void;
   openDetail: (product: Product, variants: Product[]) => void;
   closeDetail: () => void;
+  /** Acknowledge the most recent add so the notifier can dismiss. */
+  consumeLastAdded: () => void;
 }
+
+/**
+ * Hard cap on how many "add to cart" clicks a single tab can issue per
+ * second. Mass-clicking the "+" button should never reach the notifier or
+ * the cart lines, so we drop the event at the store level. Real users
+ * click a few times per minute at most.
+ */
+const MAX_ADDS_PER_SECOND = 8;
 
 export const lineIdFor = (product: Product): string =>
   `${product.id}::${product.strength || ""}`;
@@ -41,38 +65,64 @@ export const useCartStore = create<CartState>()(
   persist(
     (set) => ({
       lines: [],
-      drawerOpen: false,
       detailProduct: null,
       detailVariants: [],
-      add: (product, qty = 1) =>
+      lastAdded: null,
+      lastAddAt: 0,
+      add: (product, qty = 1) => {
+        // Throttle mass-clicks at the store boundary. The check is a pure
+        // function of time so it costs nothing and survives across renders.
+        const now = Date.now();
+        const rl = checkRateLimit({
+          key: "cart:add",
+          limit: MAX_ADDS_PER_SECOND,
+          windowMs: 1_000,
+        });
+        if (!rl.ok) return;
         set((state) => {
           const id = lineIdFor(product);
           const existing = state.lines.find((l) => l.id === id);
-          if (existing) {
-            return {
-              lines: state.lines.map((l) =>
+          const nextLines = existing
+            ? state.lines.map((l) =>
                 l.id === id ? { ...l, qty: l.qty + qty } : l,
-              ),
-              drawerOpen: true,
-            };
-          }
-          const line: CartLine = {
-            id,
-            productId: product.id,
-            name: product.name.en,
-            strength: product.strength || "",
-            priceUSD: product.priceUSD,
-            qty,
-            image: getPrimaryImage(product),
-            category: product.category,
-            lab: product.lab,
+              )
+            : [
+                ...state.lines,
+                {
+                  id,
+                  productId: product.id,
+                  name: product.name.en,
+                  strength: product.strength || "",
+                  priceUSD: product.priceUSD,
+                  qty,
+                  image: getPrimaryImage(product),
+                  category: product.category,
+                  lab: product.lab,
+                },
+              ];
+          const newQty = existing ? existing.qty + qty : qty;
+          return {
+            lines: nextLines,
+            lastAddAt: now,
+            lastAdded: {
+              id,
+              productId: product.id,
+              name: product.name.en,
+              strength: product.strength || "",
+              qty: newQty,
+              image: getPrimaryImage(product),
+              token: (state.lastAdded?.token ?? 0) + 1,
+            },
           };
-          return { lines: [...state.lines, line], drawerOpen: true };
-        }),
+        });
+      },
       remove: (lineId) =>
         set((state) => ({ lines: state.lines.filter((l) => l.id !== lineId) })),
       setQty: (lineId, qty) =>
         set((state) => {
+          if (!checkRateLimit({ key: "cart:setQty", limit: 30, windowMs: 1_000 }).ok) {
+            return {};
+          }
           if (qty <= 0) return { lines: state.lines.filter((l) => l.id !== lineId) };
           return {
             lines: state.lines.map((l) =>
@@ -81,11 +131,20 @@ export const useCartStore = create<CartState>()(
           };
         }),
       clear: () => set({ lines: [] }),
-      openDrawer: () => set({ drawerOpen: true }),
-      closeDrawer: () => set({ drawerOpen: false }),
-      openDetail: (product, variants) =>
-        set({ detailProduct: product, detailVariants: variants }),
-      closeDetail: () => set({ detailProduct: null, detailVariants: [] }),
+      openDetail: (product, variants) => {
+        set({ detailProduct: product, detailVariants: variants });
+        // The Radix Dialog open prop in ProductDetailDrawer subscribes to
+        // the overlay store, so we toggle it here in lockstep. Throttled
+        // to keep mass-clicks cheap.
+        if (checkRateLimit({ key: "ui:openDetail", limit: 12, windowMs: 1_000 }).ok) {
+          useOverlayStore.getState().open("detail");
+        }
+      },
+      closeDetail: () => {
+        set({ detailProduct: null, detailVariants: [] });
+        useOverlayStore.getState().close("detail");
+      },
+      consumeLastAdded: () => set({ lastAdded: null }),
     }),
     {
       name: "viana.cart.v1",

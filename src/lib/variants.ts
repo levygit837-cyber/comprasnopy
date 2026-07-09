@@ -58,3 +58,18 @@ export function getGroupedProducts(list: Product[]): DisplayItem[] {
 export function isGroupFeatured(item: DisplayItem): boolean {
   return item.variants.some((v) => v.featured);
 }
+
+/**
+ * Count distinct catalog products, collapsing variant families so that a
+ * 3-dose family counts as 1 product. When `categoryId` is provided, only
+ * display items whose primary product belongs to that category are counted.
+ *
+ * Used by the catalog sidebar to render accurate "items per category"
+ * totals. Without this, families like Tirzepatide (3 vials + 2 pens = 5
+ * entries) inflated the count shown to the user.
+ */
+export function uniqueProductCount(list: Product[], categoryId?: string): number {
+  const items = groupForDisplay(list);
+  if (!categoryId || categoryId === "all") return items.length;
+  return items.filter((item) => item.primary.category === categoryId).length;
+}

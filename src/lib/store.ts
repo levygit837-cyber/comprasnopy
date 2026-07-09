@@ -43,6 +43,13 @@ export const DEFAULT_RATES: Record<CurrencyCode, number> = {
   PYG: 7250,
 };
 
+/**
+ * Floor for the catalog price-range slider, expressed in USD. The slider
+ * itself works in USD for arithmetic reasons; the UI label converts this
+ * value into the user's selected currency so it always reads naturally.
+ */
+export const MIN_PRICE_USD = 20;
+
 export const storeConfig = {
   storeName: "Viana",
   storeFullName: "Farmacia Viana",

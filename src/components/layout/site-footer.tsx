@@ -74,8 +74,8 @@ export function SiteFooter() {
             </h5>
             <ul className="space-y-1.5 text-white/80 font-medium text-xs">
               <li><Link href="/account" className="hover:text-white transition-colors">{t("authProfile")}</Link></li>
-              <li><Link href="/account/sign-in" className="hover:text-white transition-colors">{t("authSignIn")}</Link></li>
-              <li><Link href="/account/sign-up" className="hover:text-white transition-colors">{t("authSignUp")}</Link></li>
+              <li><Link href="/#signin" className="hover:text-white transition-colors">{t("authSignIn")}</Link></li>
+              <li><Link href="/#signup" className="hover:text-white transition-colors">{t("authSignUp")}</Link></li>
             </ul>
           </div>
 

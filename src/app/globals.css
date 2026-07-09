@@ -223,6 +223,38 @@ body {
   will-change: transform;
 }
 
+@keyframes notifier-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes notifier-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.97);
+  }
+}
+
+.animate-notifier-in {
+  animation: notifier-in 0.32s var(--ease-out-quart) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-notifier-out {
+  animation: notifier-out 0.22s var(--ease-out-quart) forwards;
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -12,14 +12,15 @@ import {
 } from "@/lib/cart-store";
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
+import { useOverlayOpen, useOverlayStore } from "@/lib/overlay-store";
 import { storeConfig } from "@/lib/store";
 
 export function CartDrawer() {
   const lines = useCartStore((s) => s.lines);
-  const drawerOpen = useCartStore((s) => s.drawerOpen);
-  const closeDrawer = useCartStore((s) => s.closeDrawer);
   const setQty = useCartStore((s) => s.setQty);
   const remove = useCartStore((s) => s.remove);
+  const open = useOverlayOpen("cart");
+  const close = useOverlayStore((s) => s.close);
 
   const { currency, format } = useCurrency();
   const { t } = useLanguage();
@@ -34,7 +35,7 @@ export function CartDrawer() {
   );
 
   return (
-    <Dialog.Root open={drawerOpen} onOpenChange={(o) => (o ? null : closeDrawer())}>
+    <Dialog.Root open={open} onOpenChange={(o) => (o ? null : close("cart"))}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[var(--brand-green)]/30 z-[60] backdrop-blur-sm data-[state=open]:animate-fade-in" />
         <Dialog.Content className="theme-aware fixed top-0 right-0 h-full w-full max-w-[400px] bg-[var(--bg-card)] shadow-2xl z-[70] flex flex-col animate-slide-in-right">

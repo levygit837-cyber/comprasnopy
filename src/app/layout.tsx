@@ -5,6 +5,7 @@ import { CurrencyProvider } from "@/lib/currency-context";
 import { LanguageProvider } from "@/lib/language-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { CartHydrator } from "@/components/cart/cart-hydrator";
+import { CartNotifier } from "@/components/cart/cart-notifier";
 
 export const metadata: Metadata = {
   title: "Farmacia Viana - Tu farmacia de confianza en Paraguay",
@@ -24,6 +25,7 @@ export default function RootLayout({
           <LanguageProvider>
             <CurrencyProvider>
               <CartHydrator />
+              <CartNotifier />
               {children}
             </CurrencyProvider>
           </LanguageProvider>
