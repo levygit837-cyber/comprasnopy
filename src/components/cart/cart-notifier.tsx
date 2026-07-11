@@ -94,8 +94,7 @@ export function CartNotifier() {
               width={40}
               height={40}
               className="w-full h-full object-contain"
-              style={{ mixBlendMode: "var(--image-blend)" as React.CSSProperties["mixBlendMode"] }}
-              unoptimized
+              quality={75}
             />
           ) : (
             <ShoppingBag size={14} className="text-[var(--text-subtle)]" />

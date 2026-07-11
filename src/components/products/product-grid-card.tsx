@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
+import { ImageSquare, Plus } from "@phosphor-icons/react/dist/ssr";
 
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
@@ -17,20 +17,21 @@ interface ProductGridCardProps {
   product: Product;
   /** Variants in the same family. When > 1, render the inline strength picker. */
   variants?: Product[];
+  priority?: boolean;
 }
 
-export function ProductGridCard({ product, variants }: ProductGridCardProps) {
+export function ProductGridCard({ product, variants, priority = false }: ProductGridCardProps) {
   const { format, formatCompact, primaryCurrency } = useCurrency();
   const { t, lang } = useLanguage();
   const add = useCartStore((s) => s.add);
 
-  const images = getImageSrcs(product.id) ?? [];
   const category = categoryById(product.category);
   const familyVariants = variants && variants.length > 1 ? variants : null;
 
   const [activeId, setActiveId] = useState(product.id);
   const active: Product =
     familyVariants?.find((v) => v.id === activeId) ?? product;
+  const images = getImageSrcs(active) ?? [];
 
   const order: Array<"USD" | "BRL" | "PYG"> = ["USD", "BRL", "PYG"];
   const secondary = order.filter((c) => c !== primaryCurrency);
@@ -38,15 +39,7 @@ export function ProductGridCard({ product, variants }: ProductGridCardProps) {
   const secondaryLine = secondary.map((c) => formatCompact(active.priceUSD, c)).join(" . ");
 
   return (
-    <article className="theme-aware group relative bg-[var(--bg-card)] rounded-2xl p-3 border border-[var(--bg-border)] shadow-sm hover:shadow-[var(--shadow-hover)] flex flex-col h-full overflow-hidden">
-      <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1">
-        {category && (
-          <span className="bg-[var(--brand-sage)] text-[var(--brand-green)] text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md">
-            {category.name[lang]}
-          </span>
-        )}
-      </div>
-
+    <article className="theme-aware group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--bg-border)] bg-[var(--bg-card)] p-3 shadow-sm hover:shadow-[var(--shadow-hover)]">
       <Link
         href={`/products/${active.slug}`}
         className="relative w-full aspect-square rounded-xl overflow-hidden flex items-center justify-center p-3"
@@ -55,28 +48,31 @@ export function ProductGridCard({ product, variants }: ProductGridCardProps) {
         {images[0] ? (
           <Image
             src={images[0]}
-            alt={active.name.en}
+            alt={active.name[lang]}
             fill
-            sizes="(max-width: 768px) 50vw, 25vw"
-            loading="lazy"
+            sizes="(max-width: 639px) calc(50vw - 24px), (max-width: 1023px) 33vw, 240px"
+            priority={priority}
+            loading={priority ? undefined : "lazy"}
+            quality={82}
             className="object-contain transition-transform duration-300 group-hover:scale-105"
-            style={{ mixBlendMode: "var(--image-blend)" as React.CSSProperties["mixBlendMode"] }}
-            unoptimized
           />
         ) : (
-          <span className="text-xs text-[var(--text-subtle)]">
-            Sin imagen
+          <span className="flex flex-col items-center gap-2 text-center text-[10px] font-medium text-[var(--text-subtle)]">
+            <ImageSquare size={24} />
+            {t("productImagePending")}
           </span>
         )}
       </Link>
 
       <div className="flex flex-col flex-1 px-1 pt-2.5">
-        <h3 className="font-bold text-[13px] leading-tight mb-0.5 text-[var(--text)] line-clamp-1">
-          {active.name.en}
-        </h3>
-        <p className="text-[11px] text-[var(--text-muted)] mb-2 line-clamp-1">
-          {active.desc[lang]}
+        <p className="mb-1 truncate text-[9px] font-bold uppercase tracking-wider text-[var(--text-subtle)]">
+          {[category?.name[lang], active.lab, active.sku ? `Cod. ${active.sku}` : null]
+            .filter(Boolean)
+            .join(" | ")}
         </p>
+        <h3 className="mb-2 min-h-8 text-[13px] font-bold leading-tight text-[var(--text)] line-clamp-2">
+          {active.name[lang]}
+        </h3>
 
         {familyVariants && (
           <div className="mb-2.5">
@@ -92,7 +88,7 @@ export function ProductGridCard({ product, variants }: ProductGridCardProps) {
                       setActiveId(v.id);
                     }}
                     className={cn(
-                      "px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors",
+                      "min-h-7 rounded-full border px-2 py-1 text-[10px] font-bold transition-colors",
                       isActive
                         ? "bg-[var(--brand-green)] text-white border-[var(--brand-green)]"
                         : "bg-transparent text-[var(--text-muted)] border-[var(--bg-border-strong)] hover:border-[var(--brand-copper)] hover:text-[var(--brand-copper)]",
@@ -127,8 +123,8 @@ export function ProductGridCard({ product, variants }: ProductGridCardProps) {
               e.preventDefault();
               add(active, 1);
             }}
-            aria-label={t("productAddToCart")}
-            className="theme-aware w-8 h-8 rounded-full bg-[var(--brand-sage)] text-[var(--brand-green)] flex items-center justify-center hover:bg-[var(--brand-copper)] hover:text-white active:scale-[0.92] transition-colors flex-shrink-0"
+            aria-label={`${t("productAddToCart")}: ${active.name[lang]}`}
+            className="theme-aware flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--brand-sage)] text-[var(--brand-green)] transition-colors hover:bg-[var(--brand-copper)] hover:text-white active:scale-[0.92]"
           >
             <Plus size={14} weight="bold" />
           </button>

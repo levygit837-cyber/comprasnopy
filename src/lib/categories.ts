@@ -67,6 +67,28 @@ export const categories: Category[] = [
       en: "Wellness & Anti-Aging",
     },
   },
+  {
+    id: "estetica-dermocosmetica",
+    slug: "estetica-dermocosmetica",
+    icon: "Sparkle",
+    tint: "cool",
+    name: {
+      es: "Estetica y Dermocosmetica",
+      pt: "Estetica e Dermocosmeticos",
+      en: "Aesthetics & Dermocosmetics",
+    },
+  },
+  {
+    id: "farmacia-cuidados",
+    slug: "farmacia-cuidados",
+    icon: "Pill",
+    tint: "sage",
+    name: {
+      es: "Farmacia y Cuidados",
+      pt: "Farmacia e Cuidados",
+      en: "Pharmacy & Care",
+    },
+  },
 ];
 
 export const categoryById = (id: string): Category | undefined =>

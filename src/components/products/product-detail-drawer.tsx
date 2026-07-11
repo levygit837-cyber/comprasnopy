@@ -61,16 +61,20 @@ export function ProductDetailDrawer() {
 
   if (!product || !selected) return null;
 
-  const images = getImageSrcs(selected.id) ?? [];
+  const images = getImageSrcs(selected) ?? [];
   const category = categoryById(selected.category);
 
   const savings = selected.oldPriceUSD
     ? Math.max(0, selected.oldPriceUSD - selected.priceUSD)
     : null;
 
-  const waMessage = `Hola Farmacia Viana. Quiero consultar sobre el producto: ${selected.name.en}${
-    selected.strength ? " (" + selected.strength + ")" : ""
-  } (${format(selected.priceUSD)}). Esta disponible?`;
+  const productLabel = `${selected.name[lang]}${selected.strength ? ` (${selected.strength})` : ""}`;
+  const waMessage =
+    lang === "es"
+      ? `Hola Farmacia Viana. Quiero consultar ${productLabel} (${format(selected.priceUSD)}) y coordinar el pedido y el pago. Esta disponible?`
+      : lang === "pt"
+        ? `Ola Farmacia Viana. Quero consultar ${productLabel} (${format(selected.priceUSD)}) e combinar o pedido e o pagamento. Esta disponivel?`
+        : `Hello Viana Pharmacy. I would like to ask about ${productLabel} (${format(selected.priceUSD)}) and arrange the order and payment. Is it available?`;
   const waUrl = waLink(waMessage);
 
   return (
@@ -112,17 +116,16 @@ export function ProductDetailDrawer() {
               {images[0] ? (
                 <Image
                   src={images[0]}
-                  alt={selected.name.en}
+                  alt={selected.name[lang]}
                   fill
                   sizes="440px"
                   loading="lazy"
+                  quality={84}
                   className="object-contain drop-shadow-xl p-4"
-                  style={{ mixBlendMode: "var(--image-blend)" as React.CSSProperties["mixBlendMode"] }}
-                  unoptimized
                 />
               ) : (
                 <span className="text-[var(--text-subtle)] text-xs">
-                  Imagen no disponible
+                  {t("productImagePending")}
                 </span>
               )}
             </div>
@@ -134,7 +137,7 @@ export function ProductDetailDrawer() {
                 </p>
               )}
               <h2 className="font-sans text-xl md:text-2xl text-[var(--text)] font-semibold leading-tight mb-1.5 tracking-tight">
-                {selected.name.en}
+                {selected.name[lang]}
                 {selected.strength && (
                   <span className="block text-sm font-medium text-[var(--text-muted)] mt-0.5">
                     {selected.strength}
@@ -164,7 +167,7 @@ export function ProductDetailDrawer() {
                             : "border-[var(--bg-border-strong)] text-[var(--text-muted)] hover:border-[var(--brand-copper)] bg-[var(--bg-card)]",
                         )}
                       >
-                        {v.strength ?? v.name.en}
+                        {v.strength ?? v.name[lang]}
                         <span className="block text-[9px] font-medium tabular-nums opacity-70 mt-0.5">
                           {format(v.priceUSD)}
                         </span>

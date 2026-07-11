@@ -37,6 +37,7 @@ interface CatalogSidebarProps {
   onCategoryChange: (id: string) => void;
   maxPriceUSD: number;
   onMaxPriceChange: (value: number) => void;
+  mobile?: boolean;
 }
 
 export function CatalogSidebar({
@@ -44,13 +45,21 @@ export function CatalogSidebar({
   onCategoryChange,
   maxPriceUSD,
   onMaxPriceChange,
+  mobile = false,
 }: CatalogSidebarProps) {
   const { t, lang } = useLanguage();
   const { currency, format } = useCurrency();
   const minLabel = formatFromUSD(MIN_PRICE_USD, currency, lang, DEFAULT_RATES);
 
   return (
-    <aside className="theme-aware hidden lg:flex flex-col w-[220px] flex-shrink-0 sticky top-[100px] h-[calc(100vh-120px)] overflow-y-auto pb-8 pr-4">
+    <aside
+      className={cn(
+        "theme-aware flex flex-col",
+        mobile
+          ? "w-full px-4 pb-6"
+          : "sticky top-[100px] hidden h-[calc(100vh-120px)] w-[220px] flex-shrink-0 overflow-y-auto pb-8 pr-4 lg:flex",
+      )}
+    >
       <div className="mb-5">
         <h3 className="text-[10px] uppercase font-bold text-[var(--text-subtle)] tracking-wider mb-2 px-3">
           {t("catalogExplore")}
@@ -118,15 +127,16 @@ export function CatalogSidebar({
         </div>
         <ul className="text-[var(--text-muted)] space-y-1 text-[10px]">
           <li className="flex items-start gap-1">
-            <span className="text-[var(--brand-green-mid)]">.</span>
             {lang === "es" ? "Puntos de retiro en Asuncion" : lang === "pt" ? "Pontos de retirada em Assuncao" : "Pickup points in Asuncion"}
           </li>
           <li className="flex items-start gap-1">
-            <span className="text-[var(--brand-green-mid)]">.</span>
-            {lang === "es" ? "Pagos por PIX y tarjetas" : lang === "pt" ? "Pagamentos por PIX e cartoes" : "Pay by PIX or card"}
+            {lang === "es"
+              ? "Pedido y pago coordinados por WhatsApp"
+              : lang === "pt"
+                ? "Pedido e pagamento combinados pelo WhatsApp"
+                : "Order and payment arranged on WhatsApp"}
           </li>
           <li className="flex items-start gap-1">
-            <span className="text-[var(--brand-green-mid)]">.</span>
             {lang === "es" ? "Asesoramiento profesional" : lang === "pt" ? "Orientacao profissional" : "Professional advice"}
           </li>
         </ul>

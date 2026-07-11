@@ -1,0 +1,61 @@
+[
+  {
+    "id": "trestolone-acetato-50mg",
+    "slug": "trestolone-acetato-50mg",
+    "name": {
+      "es": "ZPHC TRESTOLONE ACETATO 50MG",
+      "pt": "ZPHC TRESTOLONE ACETATO 50MG",
+      "en": "ZPHC TRESTOLONE ACETATE 50MG"
+    },
+    "desc": {
+      "es": "Presentacion de 50 mg segun el catalogo Viana. Confirma disponibilidad por WhatsApp.",
+      "pt": "Apresentacao de 50 mg conforme o catalogo Viana. Confirme a disponibilidade pelo WhatsApp.",
+      "en": "50 mg presentation from the Viana catalog. Confirm availability on WhatsApp."
+    },
+    "priceUSD": 75,
+    "category": "esteroides-anabolicos",
+    "image": "",
+    "lab": "ZPHC",
+    "variantGroup": "trestolone-acetato",
+    "strength": "50mg",
+    "imageStatus": "awaiting-reference"
+  },
+  {
+    "id": "spectrum-6500-pen",
+    "slug": "spectrum-6500-pen",
+    "name": {
+      "es": "SPECTRUM 6500 PEN",
+      "pt": "SPECTRUM 6500 PEN",
+      "en": "SPECTRUM 6500 PEN"
+    },
+    "desc": {
+      "es": "Presentacion Pen segun el catalogo Viana. Confirma disponibilidad por WhatsApp.",
+      "pt": "Apresentacao Pen conforme o catalogo Viana. Confirme a disponibilidade pelo WhatsApp.",
+      "en": "Pen presentation from the Viana catalog. Confirm availability on WhatsApp."
+    },
+    "priceUSD": 80,
+    "category": "hormonas-peptidos",
+    "image": "",
+    "lab": "SPECTRUM",
+    "imageStatus": "awaiting-reference"
+  },
+  {
+    "id": "spectrum-pt-141-pen",
+    "slug": "spectrum-pt-141-pen",
+    "name": {
+      "es": "SPECTRUM PT-141 PEN",
+      "pt": "SPECTRUM PT-141 PEN",
+      "en": "SPECTRUM PT-141 PEN"
+    },
+    "desc": {
+      "es": "Presentacion Pen segun el catalogo Viana. Confirma disponibilidad por WhatsApp.",
+      "pt": "Apresentacao Pen conforme o catalogo Viana. Confirme a disponibilidade pelo WhatsApp.",
+      "en": "Pen presentation from the Viana catalog. Confirm availability on WhatsApp."
+    },
+    "priceUSD": 230,
+    "category": "hormonas-peptidos",
+    "image": "",
+    "lab": "SPECTRUM",
+    "imageStatus": "awaiting-reference"
+  }
+]

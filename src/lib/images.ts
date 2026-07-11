@@ -1,124 +1,149 @@
+import verifiedWebImagesData from "@/data/verified-web-images.json";
+import generatedProductImagesData from "@/data/generated-product-images.json";
 import type { Product } from "./types";
 
-/**
- * Viana Pharmacy — image resolver.
- * Maps product ids to one or more cutout filenames in /public/images/products/.
- * The first entry is the primary image shown on cards.
- *
- * Files live under public/images/products/ and are referenced by `stem.png`.
- * Products without an entry render an "image coming soon" placeholder.
- */
-const MAP: Record<string, string[]> = {
-  // ── Hormonas y Peptidos ───────────────────────────────────────────────
-  "ztrop-pen-72ui": ["ztrop-pen-72ui"],
-  "ztrop-aq-90ui": ["ZTROP-AQ-90IU"],
-  "ztrop-x-80ui": ["ztrop-x-80ui"],
-  "ztrop-x-150ui-diluido": ["ztrop-150ui-premixed"],
-  "ztrop-x-200ui": ["ztrop-200ui"],
-  "ztrop-x-320ui": ["ztrop-320iu"],
-  "ztrop-144ui-2-refills": ["ztrop-144ui"],
-  "multi-pen-gh-180ui": ["multi-pen-gh"],
-  "hgh-fragment-5mg": ["HGH-FRAGMENT-5MG"],
-  "hgh-fragment-5mg-5": ["HGH-FRAGMENT-5MG"],
-  "hgh-fragment-2-5mg": ["HGH-FRAGMENT-5MG"],
-  "hgh-fragment-10mg": ["HGH-FRAGMENT-10MG"],
-  "igf-1-1mg": ["IGF-1-1MG"],
-  "retatrutida-120mg": ["Retratutide-60mg"],
-  "retatrutide-pen-60mg": ["Retratutide-60mg"],
-  "retatrutide-pen-30mg": ["RETRATUTIDE-30MG"],
-  "retatrutide-60mg-5": ["Retratutide-60mg"],
-  "tirzepatida-pen-75mg": ["tirzepatide-75-pen-box"],
-  "tirzepatida-pen-30mg": ["tirzerpatide-15mg"],
-  "tirzepatide-150mg": ["zphc-tizerpatide-150mg"],
-  "tirzepatide-15mg": ["tizerpatide-15mg-box", "tizerpatide-pen-15mg"],
-  "tirzepatide-25mg-amp": ["tirzerpatide-25mg"],
-  "tirzepatide-50mg-amp": ["tirzerpatide-50mg"],
-  "semaglutida-pen": ["semaglutide-pen-6mg"],
-  "hcg-5000ui": ["HCG-5000IU"],
-  "melanotan-2-pen": ["melanotan-2-30mg"],
-  "melanotan-2-10mg": ["melanotan-2-10mg"],
+interface VerifiedImageEntry {
+  images: string[];
+  source: {
+    kind: "reviewed-product-page";
+    page: string;
+  };
+}
 
-  // ── Esteroides Anabolicos ─────────────────────────────────────────────
-  "testosterone-suspension": ["testosterone-aq-100mg"],
-  "testosterone-undecanoato": ["testosterone-undecaonate-250mg"],
-  "testosterone-propionato": ["propionato-testo-100mg"],
-  "test-enantato-400": ["testosterone-enanthate-10ml"],
-  "testosterone-cypionate": ["testo-cyphionate-250mg"],
-  "trembo-hexa-100mg": ["trenbolone-hexa"],
-  "trembo-hexa-10ml": ["trenbolone-hexa"],
-  "trembo-enantato": ["trembo-enantato-200mg"],
-  "trestolone-enantato-50mg": ["trestolone-enanthate-50mg"],
-  "trestolone-enantato-100mg": ["trestolone-enanthate-100mg"],
-  "stano-susp-50mg": ["stano-susp-50mg"],
-  "fluoxymesterolona": ["fluoxymesterone"],
-  "methandione": ["methandione"],
-  "super-mix": ["super-mix-250mg"],
-  "mega-mix": ["megamix-250mg"],
-  "mega-mass-mix": ["mega-mass-mix-50mg"],
+const REVIEWED_WEB_IMAGES = verifiedWebImagesData as unknown as Record<
+  string,
+  VerifiedImageEntry
+>;
 
-  // ── Moduladores Hormonales ────────────────────────────────────────────
-  "tamoxifeno": ["Tamoxifen-Citrate-20mg"],
-  "anastrozol": ["anastrozol-1mg"],
-  "cabergoline": ["caber-goline-0-25"],
+const GENERATED_PRODUCT_IMAGES = generatedProductImagesData as Record<
+  string,
+  string[]
+>;
 
-  // ── Metabolicos y Quemagrasas ─────────────────────────────────────────
-  "aod-9604-12mg": ["AOD9604-12-5"],
-  "aod-9604-25mg": ["AOD9604"],
-  "clenbuterol": ["clembuterol-40mcg"],
-  "cyt3": ["CYT3-6MG"],
-  "super-slim-27mg": ["super-slim-mix-27-5-mg"],
-  "super-slim-55mg": ["super-slim-mix-55mg"],
-  "double-burn": ["double-burn-mix-25mg"],
-  "synthol-seo": ["synthol-40ml"],
-
-  // ── Regeneracion y Reparacion ─────────────────────────────────────────
-  "bpc-157-20mg": ["bpc-157-20mg"],
-  "bpc-157-25mg": ["BPC-157-25MG"],
-  "tb-500-20mg": ["tb-500-20mg"],
-  "tb-500-25mg": ["tb-500-25mg"],
-  "ghk-cu-60mg": ["ghkcu-60mg"],
-  "ghk-cu-50mg": ["GHK-CU-50MG"],
-  "ghk-cu-200mg": ["GHK-CU-200MG"],
-  "ultra-rehab-50mg": ["ultra-rehab-mix-50mg"],
-  "ultra-rehab-20mg": ["ultra-rehab-mix-20mg"],
-  "ipamorelin": ["IPAMORELIN-25MG"],
-  "ghrp-2": ["gphr-2-25mg"],
-  "ghrp-6": ["ghrp-6"],
-  "mots-c": ["mots-c-20mg"],
-  "trestolone-acetato-25mg": ["trestrolone-acetato-50mg"],
-
-  // ── Bienestar y Antienvejecimiento ────────────────────────────────────
-  "nad-1000mg": ["NAD+1000MG"],
-  "nad-2500mg": ["NAD+2500MG"],
-  "nad-pen-aquoso": ["nad+1000mg-aquoso"],
-  "glutathione": ["gluthatione-3000mg"],
-  "epitalon-100mg": ["Ephitalon-100mg"],
-  "epitalon-50mg": ["ephitalon-50mg"],
-  "glow-pro-mix": ["glow-pro-mix-60mg"],
-  "wellness-mix": ["wellness-mix-25mg"],
-
-  // ── Misc ──────────────────────────────────────────────────────────────
-  "ll37": ["LL37-25MG"],
+const LEGACY_PRODUCT_IMAGES: Record<string, string[]> = {
+  "ztrop-pen-72ui": ["ztrop-pen-72ui.png"],
+  "ztrop-aq-90ui": ["ZTROP-AQ-90IU.png"],
+  "ztrop-x-80ui": ["ztrop-x-80ui.png"],
+  "ztrop-x-150ui-diluido": ["ztrop-150ui-premixed.png"],
+  "ztrop-x-200ui": ["ztrop-200ui.png"],
+  "ztrop-x-320ui": ["ztrop-320iu.png"],
+  "ztrop-144ui-2-refills": ["ztrop-144ui.png"],
+  "multi-pen-gh-180ui": ["multi-pen-gh.png"],
+  "hgh-fragment-5mg-5": ["HGH-FRAGMENT-5MG.png"],
+  "hgh-fragment-10mg": ["HGH-FRAGMENT-10MG.png"],
+  "retatrutide-pen-30mg": ["RETRATUTIDE-30MG.png"],
+  "retatrutide-60mg-5": ["Retratutide-60mg.png"],
+  "tirzepatide-15mg": ["tizerpatide-15mg-box.png", "tizerpatide-pen-15mg.png"],
+  "tirzepatide-25mg-amp": ["tirzerpatide-25mg.png"],
+  "semaglutida-pen": ["semaglutide-pen-6mg.png"],
+  "hcg-5000ui": ["HCG-5000IU.png"],
+  "melanotan-2-pen": ["melanotan-2-30mg.png"],
+  "testosterone-suspension": ["testosterone-aq-100mg.png"],
+  "test-enantato-400": ["testosterone-enanthate-10ml.png"],
+  "testosterone-cypionate": ["testo-cyphionate-250mg.png"],
+  "trembo-hexa-100mg": ["trenbolone-hexa.png"],
+  "trembo-hexa-10ml": ["trenbolone-hexa.png"],
+  "trestolone-acetato-50mg": ["trestrolone-acetato-50mg.png"],
+  "stano-susp-50mg": ["stano-susp-50mg.png"],
+  "fluoxymesterolona": ["fluoxymesterone.png"],
+  "methandione": ["methandione.png"],
+  "super-mix": ["super-mix-250mg.png"],
+  "tamoxifeno": ["Tamoxifen-Citrate-20mg.png"],
+  "anastrozol": ["anastrozol-1mg.png"],
+  "cabergoline": ["caber-goline-0-25.png"],
+  "aod-9604-12mg": ["AOD9604-12-5.png"],
+  "clenbuterol": ["clembuterol-40mcg.png"],
+  "cyt3": ["CYT3-6MG.png"],
+  "super-slim-55mg": ["super-slim-mix-55mg.png"],
+  "double-burn": ["double-burn-mix-25mg.png"],
+  "bpc-157-25mg": ["BPC-157-25MG.png"],
+  "ghk-cu-50mg": ["GHK-CU-50MG.png"],
+  "ghk-cu-200mg": ["GHK-CU-200MG.png"],
+  "ultra-rehab-20mg": ["ultra-rehab-mix-20mg.png"],
+  "nad-2500mg": ["NAD+2500MG.png"],
+  "nad-pen-aquoso": ["nad+1000mg-aquoso.png"],
+  "glutathione": ["gluthatione-3000mg.png"],
+  "epitalon-100mg": ["Ephitalon-100mg.png"],
 };
 
-/** Build a /images/products/<stem>.png path. */
-export function imagePath(stem: string): string {
-  return `/images/products/${stem}.png`;
+/**
+ * Exact matches between products from docs/catalog.md and embedded supplier
+ * images from Product_List (7).pdf. Similar dosages and package types are
+ * intentionally not mapped.
+ */
+const VERIFIED_PDF_IMAGES: Record<string, string[]> = {
+  "testosterone-undecanoato": [
+    "/images/products/verified/supplier-47391-full.webp",
+    "/images/products/verified/supplier-47391-detail.webp",
+  ],
+  "testosterone-propionato": [
+    "/images/products/verified/supplier-47235-full.webp",
+    "/images/products/verified/supplier-47235-detail.webp",
+  ],
+  "trembo-enantato": [
+    "/images/products/verified/supplier-47415-full.webp",
+    "/images/products/verified/supplier-47415-detail.webp",
+  ],
+  "trestolone-enantato-50mg": [
+    "/images/products/verified/supplier-47189-full.webp",
+    "/images/products/verified/supplier-47189-detail.webp",
+  ],
+  "trestolone-enantato-100mg": [
+    "/images/products/verified/supplier-47358-full.webp",
+    "/images/products/verified/supplier-47358-detail.webp",
+  ],
+  "mega-mix": [
+    "/images/products/verified/supplier-47404-full.webp",
+    "/images/products/verified/supplier-47404-detail.webp",
+  ],
+  "synthol-seo": [
+    "/images/products/verified/supplier-47370-full.webp",
+    "/images/products/verified/supplier-47370-detail.webp",
+  ],
+  "tb-500-25mg": [
+    "/images/products/verified/supplier-47190-full.webp",
+    "/images/products/verified/supplier-47190-detail.webp",
+  ],
+  "ghrp-2": [
+    "/images/products/verified/supplier-47280-full.webp",
+    "/images/products/verified/supplier-47280-detail.webp",
+  ],
+  "wellness-mix": [
+    "/images/products/verified/supplier-33915-full.webp",
+    "/images/products/verified/supplier-33915-detail.webp",
+  ],
+  "tirzepatide-50mg-amp": [
+    "/images/products/verified/supplier-34646-full.webp",
+    "/images/products/verified/supplier-34646-detail.webp",
+  ],
+};
+
+export function getImageSrcs(product: Product | string): string[] | null {
+  const id = typeof product === "string" ? product : product.id;
+
+  const generated = GENERATED_PRODUCT_IMAGES[id];
+  if (generated?.length) return generated;
+
+  if (typeof product !== "string" && product.images?.length) {
+    return product.images;
+  }
+
+  const reviewed = REVIEWED_WEB_IMAGES[id]?.images;
+  if (reviewed?.length) return reviewed;
+
+  const supplier = VERIFIED_PDF_IMAGES[id];
+  if (supplier?.length) return supplier;
+
+  const legacy = LEGACY_PRODUCT_IMAGES[id];
+  return legacy?.length
+    ? legacy.map((filename) => `/images/products/${filename}`)
+    : null;
 }
 
-/** Return optimized image src URLs for a product, or null if it has no photo. */
-export function getImageSrcs(productId: string): string[] | null {
-  const stems = MAP[productId];
-  if (!stems || stems.length === 0) return null;
-  return stems.map(imagePath);
-}
-
-/** First (primary) image for a product, or null if it has no photo. */
 export function getPrimaryImage(product: Product): string | null {
-  const srcs = getImageSrcs(product.id);
-  return srcs && srcs.length > 0 ? srcs[0] : null;
+  return getImageSrcs(product)?.[0] ?? null;
 }
 
-export function hasImage(productId: string): boolean {
-  return productId in MAP;
+export function hasImage(product: Product | string): boolean {
+  return Boolean(getImageSrcs(product)?.length);
 }

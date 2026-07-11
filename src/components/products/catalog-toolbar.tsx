@@ -38,7 +38,7 @@ export function CatalogToolbar({ sort, onSortChange, count, onOpenFilters }: Cat
         <button
           type="button"
           onClick={onOpenFilters}
-          className="lg:hidden w-8 h-8 border border-[var(--bg-border-strong)] rounded-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-card)]"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-card)] text-[var(--text-muted)] lg:hidden"
           aria-label={t("catalogFilters")}
         >
           <Funnel size={12} />
@@ -51,7 +51,7 @@ export function CatalogToolbar({ sort, onSortChange, count, onOpenFilters }: Cat
           <Select.Root value={sort} onValueChange={(v) => onSortChange(v as SortKey)}>
             <Select.Trigger
               className={cn(
-                "theme-aware flex items-center gap-2 bg-[var(--bg-card)] border border-[var(--bg-border-strong)] px-3 py-1.5 rounded-lg text-xs font-bold text-[var(--text)]",
+                "theme-aware flex min-h-11 items-center gap-2 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg-card)] px-3 py-2 text-xs font-bold text-[var(--text)]",
                 "hover:bg-[var(--bg-muted)] outline-none focus:border-[var(--brand-copper)]",
               )}
             >

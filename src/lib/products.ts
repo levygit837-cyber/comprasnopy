@@ -1,4 +1,6 @@
 import type { Localized, Product } from "./types";
+import catalogAdditionsData from "@/data/catalog-additions.json";
+import supplierProductsData from "@/data/supplier-products.json";
 
 /**
  * Viana Pharmacy — full product catalog.
@@ -9,12 +11,12 @@ function en(value: string): Localized {
   return { es: upper, pt: upper, en: upper };
 }
 
-export const products: Product[] = [
+const catalogProducts: Product[] = [
   // ── HORMONAS Y PEPTIDOS ─────────────────────────────────────────────
   {
     id: "ztrop-pen-72ui",
     slug: "ztrop-pen-72ui",
-    name: en("Ztrop Pen 72IU Liof."),
+    name: en("Ztrop Pen 72IU Lyophilized"),
     desc: en("Lyophilized growth hormone pen (72IU single-dose)."),
     priceUSD: 195,
     category: "hormonas-peptidos",
@@ -136,10 +138,10 @@ export const products: Product[] = [
     id: "hgh-fragment-2-5mg",
     slug: "hgh-fragment-2-5mg",
     name: en("HGH Fragment 2.5mg x5"),
-    desc: en("Growth hormone fragment peptide, 2.5mg."),
+    desc: en("Growth hormone fragment peptide, five 2.5mg vials."),
     priceUSD: 175,
     category: "hormonas-peptidos",
-    image: "HGH-FRAGMENT-5MG",
+    image: "hgh-fragment-2-5mg",
     lab: "ZPHC",
     variantGroup: "hgh-fragment",
     strength: "2.5mg",
@@ -170,15 +172,15 @@ export const products: Product[] = [
   {
     id: "retatrutida-120mg",
     slug: "retatrutida-120mg",
-    name: en("Retatrutide 120mg Diluted"),
-    desc: en("GLP-1/GIP/Glucagon analog, high-concentration diluted vial."),
+    name: en("Retatrutide 120mg (5 x 24mg)"),
+    desc: en("ZPHC Retatrutide kit with five 24mg vials, 120mg total."),
     priceUSD: 325,
     category: "hormonas-peptidos",
-    image: "Retratutide-60mg",
+    image: "retatrutida-120mg",
     lab: "ZPHC",
     featured: true,
     variantGroup: "retatrutide-vial",
-    strength: "120mg diluted",
+    strength: "120mg (5 x 24mg)",
   },
   {
     id: "retatrutide-pen-60mg",
@@ -237,7 +239,7 @@ export const products: Product[] = [
     desc: en("GIP/GLP-1 analog, pre-filled pen."),
     priceUSD: 160,
     category: "hormonas-peptidos",
-    image: "tirzerpatide-15mg",
+    image: "tirzepatida-pen-30mg",
     lab: "ZPHC",
     variantGroup: "tirzepatide-pen",
     strength: "Pen 30mg",
@@ -245,8 +247,8 @@ export const products: Product[] = [
   {
     id: "tirzepatide-150mg",
     slug: "tirzepatide-150mg",
-    name: en("Tirzepatide 150mg"),
-    desc: en("GIP/GLP-1 analog, 150mg vial."),
+    name: en("Tirzepatide 150mg (5 x 30mg)"),
+    desc: en("Five-vial presentation, 30mg per vial, 150mg total."),
     priceUSD: 265,
     category: "hormonas-peptidos",
     image: "zphc-tizerpatide-150mg",
@@ -303,7 +305,7 @@ export const products: Product[] = [
   {
     id: "hcg-5000ui",
     slug: "hcg-5000ui",
-    name: en("HCG 5000IU"),
+    name: en("HCG 5000IU x5"),
     desc: en("Human chorionic gonadotropin, 5000IU."),
     priceUSD: 45,
     category: "hormonas-peptidos",
@@ -424,14 +426,14 @@ export const products: Product[] = [
   {
     id: "trestolone-acetato-25mg",
     slug: "trestolone-acetato-25mg",
-    name: en("Trestolone Acetate 25mg"),
-    desc: en("Trestolone acetate injectable solution, 10ml vial."),
+    name: en("Trestolone Acetate 25mg/mL (10 x 1mL)"),
+    desc: en("Trestolone acetate injectable solution, ten 1mL ampoules."),
     priceUSD: 57,
     category: "esteroides-anabolicos",
-    image: "trestrolone-acetato-50mg",
+    image: "trestolone-acetato-25mg",
     lab: "ZPHC",
     variantGroup: "trestolone-acetate",
-    strength: "25mg 10ml",
+    strength: "25mg/mL (10 x 1mL)",
   },
   {
     id: "trestolone-enantato-50mg",
@@ -470,7 +472,7 @@ export const products: Product[] = [
   {
     id: "fluoxymesterolona",
     slug: "fluoxymesterolona",
-    name: en("Fluoxymesterolone"),
+    name: en("Fluoxymesterolone 100 tablets"),
     desc: en("Oral anabolic steroid, 100 tablets per bottle."),
     priceUSD: 80,
     category: "esteroides-anabolicos",
@@ -480,7 +482,7 @@ export const products: Product[] = [
   {
     id: "methandione",
     slug: "methandione",
-    name: en("Methandione"),
+    name: en("Methandione 100 tablets"),
     desc: en("Oral methandienone, 100 tablets per bottle."),
     priceUSD: 47.80,
     category: "esteroides-anabolicos",
@@ -522,7 +524,7 @@ export const products: Product[] = [
   {
     id: "tamoxifeno",
     slug: "tamoxifeno",
-    name: en("Tamoxifen Citrate 20mg"),
+    name: en("Tamoxifen Citrate 20mg (100 capsules)"),
     desc: en("Selective estrogen receptor modulator (SERM), 100 capsules per bottle."),
     priceUSD: 50,
     category: "moduladores-hormonales",
@@ -532,7 +534,7 @@ export const products: Product[] = [
   {
     id: "anastrozol",
     slug: "anastrozol",
-    name: en("Anastrozole 1mg"),
+    name: en("Anastrozole 1mg (100 capsules)"),
     desc: en("Aromatase inhibitor, 100 capsules per bottle."),
     priceUSD: 56,
     category: "moduladores-hormonales",
@@ -578,7 +580,7 @@ export const products: Product[] = [
   {
     id: "clenbuterol",
     slug: "clenbuterol",
-    name: en("Clenbuterol 40mcg"),
+    name: en("Clenbuterol 40mcg (100 tablets)"),
     desc: en("Bronchodilator and thermogenic, 100 tablets per bottle."),
     priceUSD: 39,
     category: "metabolicos-quemagrasas",
@@ -894,6 +896,36 @@ export const products: Product[] = [
     image: "wellness-mix-25mg",
     lab: "ZPHC",
   },
+];
+
+const DUPLICATE_SUPPLIER_SKUS = new Set([
+  "33915",
+  "34635",
+  "34646",
+  "34657",
+  "47189",
+  "47190",
+  "47213",
+  "47235",
+  "47280",
+  "47336",
+  "47358",
+  "47370",
+  "47391",
+  "47404",
+  "47415",
+  "47582",
+]);
+
+const catalogAdditions = catalogAdditionsData as unknown as Product[];
+const supplierProducts = (supplierProductsData as unknown as Product[]).filter(
+  (product) => !product.sku || !DUPLICATE_SUPPLIER_SKUS.has(product.sku),
+);
+
+export const products: Product[] = [
+  ...catalogProducts,
+  ...catalogAdditions,
+  ...supplierProducts,
 ];
 
 export const productById = (id: string): Product | undefined =>

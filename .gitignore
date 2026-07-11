@@ -2,6 +2,8 @@
 dist/
 .astro/
 .next/
+.open-next/
+.wrangler/
 
 # Dependencies
 node_modules/

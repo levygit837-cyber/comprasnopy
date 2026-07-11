@@ -7,6 +7,7 @@ import { formatFromUSD, DEFAULT_RATES } from "./store";
 import { getPrimaryImage } from "./images";
 import { checkRateLimit } from "./rate-limit";
 import { useOverlayStore } from "./overlay-store";
+import { productById } from "./products";
 import type { Product } from "./types";
 
 export interface CartLine {
@@ -148,6 +149,20 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "viana.cart.v1",
+      version: 2,
+      migrate: (persisted) => {
+        const state = persisted as Partial<CartState>;
+        return {
+          ...state,
+          lines: (state.lines ?? []).map((line) => {
+            const product = productById(line.productId);
+            return {
+              ...line,
+              image: product ? getPrimaryImage(product) : null,
+            };
+          }),
+        } as CartState;
+      },
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ lines: state.lines }),
     },

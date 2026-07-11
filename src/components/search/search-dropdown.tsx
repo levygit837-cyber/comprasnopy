@@ -3,20 +3,30 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { ImageSquare, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 import { scoreQuery, type Result } from "@/lib/search";
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
 import { getPrimaryImage } from "@/lib/images";
+import { cn } from "@/lib/utils";
 
-export function SearchDropdown() {
+interface SearchDropdownProps {
+  mobile?: boolean;
+  autoFocus?: boolean;
+  onNavigate?: () => void;
+}
+
+export function SearchDropdown({
+  mobile = false,
+  autoFocus = false,
+  onNavigate,
+}: SearchDropdownProps) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { format } = useCurrency();
 
   const results: Result[] = useMemo(() => {
@@ -25,86 +35,100 @@ export function SearchDropdown() {
   }, [query]);
 
   useEffect(() => {
+    if (mobile) return;
     const onClickOutside = (event: MouseEvent) => {
-      if (!containerRef.current) return;
-      if (!containerRef.current.contains(event.target as Node)) setOpen(false);
+      if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
     };
     window.addEventListener("mousedown", onClickOutside);
     return () => window.removeEventListener("mousedown", onClickOutside);
-  }, []);
+  }, [mobile]);
+
+  const showResults = open && query.trim().length >= 2;
 
   return (
     <div
       ref={containerRef}
-      className="flex-grow max-w-xl hidden md:block relative z-50 group"
+      className={cn(
+        "relative group",
+        mobile ? "block w-full" : "z-50 hidden max-w-xl flex-grow md:block",
+      )}
     >
-      <div className="relative flex items-center w-full">
+      <div className="relative flex w-full items-center">
         <input
-          ref={inputRef}
-          type="text"
+          type="search"
           value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
+          autoFocus={autoFocus}
+          aria-label={t("navSearch")}
+          onChange={(event) => {
+            setQuery(event.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
           placeholder={t("navSearch")}
-          className="theme-aware w-full h-9 pl-9 pr-3 rounded-full bg-[var(--bg-muted)] border border-transparent focus:bg-[var(--bg-card)] focus:border-[var(--brand-copper)] focus:ring-2 focus:ring-[var(--brand-copper)]/10 outline-none text-xs text-[var(--text)] placeholder:text-[var(--text-muted)] font-medium"
+          className={cn(
+            "theme-aware w-full rounded-full border border-transparent bg-[var(--bg-muted)] pl-10 pr-4 text-sm font-medium text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--brand-copper)] focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--brand-copper)]/10",
+            mobile ? "h-12" : "h-9 text-xs",
+          )}
         />
         <MagnifyingGlass
-          size={14}
-          weight="regular"
-          className="absolute left-3 text-[var(--text-muted)] group-focus-within:text-[var(--brand-copper)] transition-colors"
+          size={mobile ? 17 : 14}
+          className="absolute left-3.5 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--brand-copper)]"
         />
       </div>
 
-      {open && query.trim().length >= 2 && (
-        <div className="theme-aware absolute top-full left-0 right-0 mt-2 bg-[var(--bg-card)] rounded-2xl shadow-lg border border-[var(--bg-border-strong)] overflow-hidden animate-fade-in z-[80]">
+      {showResults && (
+        <div
+          className={cn(
+            "theme-aware overflow-hidden rounded-xl border border-[var(--bg-border-strong)] bg-[var(--bg-card)] animate-fade-in",
+            mobile ? "relative mt-3" : "absolute left-0 right-0 top-full z-[80] mt-2 shadow-lg",
+          )}
+        >
           {results.length === 0 ? (
-            <div className="p-4 text-center text-xs text-[var(--text-muted)]">
+            <div className="p-5 text-center text-xs text-[var(--text-muted)]">
               {t("searchNoResults")} &ldquo;{query}&rdquo;
             </div>
           ) : (
             <>
-              <div className="p-2 border-b border-[var(--bg-border)] text-[10px] font-bold text-[var(--text-subtle)] uppercase tracking-wider">
+              <div className="border-b border-[var(--bg-border)] p-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-subtle)]">
                 {t("searchSuggestions")}
               </div>
-              <div className="p-1 max-h-[400px] overflow-y-auto">
+              <div className={cn("p-1", mobile ? "max-h-[58dvh] overflow-y-auto" : "max-h-[400px] overflow-y-auto")}>
                 {results.map(({ product }) => {
-                  const img = getPrimaryImage(product);
+                  const image = getPrimaryImage(product);
                   return (
                     <Link
                       key={product.id}
-                      href={`/products?focus=${product.slug}`}
-                      onClick={() => setOpen(false)}
-                      className="theme-aware flex items-center gap-2.5 p-2 hover:bg-[var(--bg-muted)] rounded-lg transition-colors"
+                      href={`/products/${product.slug}`}
+                      onClick={() => {
+                        setOpen(false);
+                        onNavigate?.();
+                      }}
+                      className="theme-aware flex min-h-14 items-center gap-3 rounded-lg p-2 transition-colors hover:bg-[var(--bg-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-copper)]"
                     >
-                      <div
-                        className="w-10 h-10 rounded-md flex-shrink-0 overflow-hidden relative"
-                        style={{ backgroundColor: "var(--image-bg)" }}
-                      >
-                        {img && (
+                      <div className="relative h-11 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-[var(--image-bg)]">
+                        {image ? (
                           <Image
-                            src={img}
-                            alt={product.name.en}
-                            width={40}
-                            height={40}
+                            src={image}
+                            alt=""
+                            fill
+                            sizes="44px"
                             loading="lazy"
-                            className="w-full h-full object-contain"
-                            style={{ mixBlendMode: "var(--image-blend)" as React.CSSProperties["mixBlendMode"] }}
-                            unoptimized
+                            quality={75}
+                            className="object-contain"
                           />
+                        ) : (
+                          <span className="flex h-full w-full items-center justify-center text-[var(--text-subtle)]">
+                            <ImageSquare size={17} />
+                          </span>
                         )}
                       </div>
-                      <div className="flex-grow min-w-0">
-                        <p className="text-xs font-semibold text-[var(--text)] truncate">
-                          {product.name.en}
+                      <div className="min-w-0 flex-grow">
+                        <p className="truncate text-xs font-semibold text-[var(--text)]">
+                          {product.name[lang]}
                         </p>
-                        {product.strength && (
-                          <p className="text-[10px] text-[var(--text-muted)] truncate">
-                            {product.strength}
-                          </p>
-                        )}
+                        <p className="truncate text-[10px] text-[var(--text-muted)]">
+                          {[product.lab, product.strength].filter(Boolean).join(" | ")}
+                        </p>
                       </div>
                       <p className="text-xs font-bold tabular-nums text-[var(--brand-green)]">
                         {format(product.priceUSD)}
@@ -113,13 +137,16 @@ export function SearchDropdown() {
                   );
                 })}
               </div>
-              <div className="p-2 bg-[var(--bg-muted)] text-center border-t border-[var(--bg-border)]">
+              <div className="border-t border-[var(--bg-border)] bg-[var(--bg-muted)] p-2 text-center">
                 <Link
                   href={`/products?q=${encodeURIComponent(query)}`}
-                  onClick={() => setOpen(false)}
-                  className="text-xs text-[var(--brand-copper)] font-bold hover:text-[var(--brand-copper-dark)] inline-flex items-center gap-1"
+                  onClick={() => {
+                    setOpen(false);
+                    onNavigate?.();
+                  }}
+                  className="inline-flex min-h-9 items-center text-xs font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)]"
                 >
-                  {t("searchViewAll")} &rarr;
+                  {t("searchViewAll")}
                 </Link>
               </div>
             </>

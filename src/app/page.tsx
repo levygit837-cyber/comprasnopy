@@ -8,6 +8,7 @@ import { MarqueePartners } from "@/components/home/marquee-partners";
 import { BentoCategories } from "@/components/home/bento-categories";
 import { BestSellers } from "@/components/home/best-sellers";
 import { FirstBuyGuide } from "@/components/home/first-buy-guide";
+import { TirzecAnnouncement } from "@/components/home/tirzec-announcement";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,7 @@ export default function HomePage() {
 
       <CartDrawer />
       <ProductDetailDrawer />
+      <TirzecAnnouncement />
     </>
   );
 }

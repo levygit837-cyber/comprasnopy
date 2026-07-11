@@ -22,6 +22,19 @@ export interface Product {
   oldPriceUSD?: number;
   category: string;
   image: string;
+  /** Explicit responsive asset paths. These take precedence over legacy image stems. */
+  images?: string[];
+  /** Supplier or inventory code when the source provides one. */
+  sku?: string;
+  /** Indicates whether a visual is tied to an exact source or still needs validation. */
+  imageStatus?: "verified-source" | "awaiting-reference";
+  /** Traceability for catalog data and product visuals. */
+  source?: {
+    kind: "supplier-pdf" | "reviewed-product-page";
+    document?: string;
+    page?: string | number;
+    slot?: number;
+  };
   featured?: boolean;
   lab?: string;
   /** Variant family key, e.g. "tirzepatide". Members render as one card with a strength picker. */

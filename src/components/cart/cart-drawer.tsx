@@ -23,13 +23,19 @@ export function CartDrawer() {
   const close = useOverlayStore((s) => s.close);
 
   const { currency, format } = useCurrency();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const subtotalUSD = totalUSD(lines);
-  const checkoutUrl = buildWhatsAppMessage(
+  const intro =
+    lang === "es"
+      ? "Hola Farmacia Viana. Quiero enviar este pedido y coordinar el pago por WhatsApp (total {total})."
+      : lang === "pt"
+        ? "Ola Farmacia Viana. Quero enviar este pedido e combinar o pagamento pelo WhatsApp (total {total})."
+        : "Hello Viana Pharmacy. I would like to send this order and arrange payment on WhatsApp (total {total}).";
+  const whatsappUrl = buildWhatsAppMessage(
     lines,
     subtotalUSD,
-    "Hola Farmacia Viana. Quiero completar el siguiente pedido (total {total}).",
+    intro,
     currency,
     storeConfig.whatsappNumber,
   );
@@ -88,8 +94,7 @@ export function CartDrawer() {
                           height={48}
                           loading="lazy"
                           className="w-full h-full object-contain"
-                          style={{ mixBlendMode: "var(--image-blend)" as React.CSSProperties["mixBlendMode"] }}
-                          unoptimized
+                          quality={75}
                         />
                       ) : (
                         <ShoppingBag size={14} className="text-[var(--text-subtle)]" />
@@ -162,13 +167,16 @@ export function CartDrawer() {
                 </span>
               </div>
               <a
-                href={checkoutUrl}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full bg-[var(--brand-copper)] hover:bg-[var(--brand-copper-dark)] text-white rounded-full font-bold text-xs py-3 transition-colors shadow-md active:scale-[0.99]"
               >
-                {t("cartCheckout")}
+                {t("cartContinueWhatsApp")}
               </a>
+              <p className="text-center text-[10px] leading-relaxed text-[var(--text-muted)]">
+                {t("cartWhatsappNote")}
+              </p>
             </footer>
           )}
         </Dialog.Content>

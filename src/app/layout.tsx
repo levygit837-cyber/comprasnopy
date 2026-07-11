@@ -10,7 +10,7 @@ import { CartNotifier } from "@/components/cart/cart-notifier";
 export const metadata: Metadata = {
   title: "Farmacia Viana - Tu farmacia de confianza en Paraguay",
   description:
-    "Medicamentos y cuidado personal originales, con asesoramiento y entrega por WhatsApp en toda Asuncion.",
+    "Productos originales con atencion, pedidos y pagos coordinados directamente por WhatsApp en Asuncion.",
 };
 
 export default function RootLayout({

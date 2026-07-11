@@ -35,7 +35,7 @@ export function ProductDetailView({ product, variants }: Props) {
     return product;
   }, [product, variants, activeId]);
 
-  const images = getImageSrcs(selected.id) ?? [];
+  const images = getImageSrcs(selected) ?? [];
   const category = categoryById(selected.category);
 
   useEffect(() => {
@@ -46,9 +46,13 @@ export function ProductDetailView({ product, variants }: Props) {
     ? Math.max(0, selected.oldPriceUSD - selected.priceUSD)
     : null;
 
-  const waMessage = `Hola Farmacia Viana. Quiero consultar sobre el producto: ${selected.name.en}${
-    selected.strength ? " (" + selected.strength + ")" : ""
-  } (${format(selected.priceUSD)}). Esta disponible?`;
+  const productLabel = `${selected.name[lang]}${selected.strength ? ` (${selected.strength})` : ""}`;
+  const waMessage =
+    lang === "es"
+      ? `Hola Farmacia Viana. Quiero consultar ${productLabel} (${format(selected.priceUSD)}) y coordinar el pedido y el pago. Esta disponible?`
+      : lang === "pt"
+        ? `Ola Farmacia Viana. Quero consultar ${productLabel} (${format(selected.priceUSD)}) e combinar o pedido e o pagamento. Esta disponivel?`
+        : `Hello Viana Pharmacy. I would like to ask about ${productLabel} (${format(selected.priceUSD)}) and arrange the order and payment. Is it available?`;
   const waUrl = waLink(waMessage);
 
   return (
@@ -61,16 +65,15 @@ export function ProductDetailView({ product, variants }: Props) {
           {images[activeImage] ? (
             <Image
               src={images[activeImage]}
-              alt={selected.name.en}
+              alt={selected.name[lang]}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              loading="lazy"
+              priority
+              quality={86}
               className="object-contain p-4"
-              style={{ mixBlendMode: "var(--image-blend)" as React.CSSProperties["mixBlendMode"] }}
-              unoptimized
             />
           ) : (
-            <span className="text-[var(--text-subtle)] text-xs">Imagen no disponible</span>
+            <span className="text-[var(--text-subtle)] text-xs">{t("productImagePending")}</span>
           )}
           {savings && savings > 0 && (
             <span className="absolute top-3 left-3 bg-[var(--brand-red)] text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider shadow-sm">
@@ -94,7 +97,7 @@ export function ProductDetailView({ product, variants }: Props) {
                 )}
                 style={{ backgroundColor: "var(--bg-card)" }}
               >
-                <Image src={src} alt="" width={40} height={40} loading="lazy" className="object-contain" unoptimized />
+                <Image src={src} alt="" width={40} height={40} loading="lazy" quality={70} className="object-contain" />
               </button>
             ))}
           </div>
@@ -106,7 +109,7 @@ export function ProductDetailView({ product, variants }: Props) {
           {category?.name[lang] ?? selected.category}
         </div>
         <h1 className="font-sans text-2xl md:text-3xl text-[var(--text)] font-semibold leading-tight mb-1">
-          {selected.name.en}
+          {selected.name[lang]}
         </h1>
         {selected.strength && (
           <p className="text-xs text-[var(--text-muted)] font-medium mb-2">
@@ -141,7 +144,7 @@ export function ProductDetailView({ product, variants }: Props) {
                       : "bg-transparent text-[var(--text-muted)] border-[var(--bg-border-strong)] hover:border-[var(--brand-copper)] hover:text-[var(--brand-copper)]",
                   )}
                 >
-                  {v.strength ?? v.name.en}
+                  {v.strength ?? v.name[lang]}
                 </button>
               ))}
             </div>

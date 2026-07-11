@@ -2,215 +2,736 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  InstagramLogo,
+  WhatsappLogo,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { useLanguage } from "@/lib/language-context";
-import { waLink } from "@/lib/store";
+import { waLink, type Lang } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
-interface Slide {
+type CampaignId =
+  | "tirzec"
+  | "tg"
+  | "testosterone"
+  | "pen"
+  | "zphc-line"
+  | "whatsapp"
+  | "instagram";
+
+interface CampaignCopy {
   eyebrow: string;
   title: string;
   body: string;
-  image: string;
-  imagePosition: string;
-  cta: { href: string; label: string; external?: boolean };
+  cta?: string;
+  visualAlt: string;
+}
+
+interface CampaignMeta {
+  id: CampaignId;
+  href?: string;
+  external?: boolean;
+  copySide: "left" | "right";
+  tone: "light" | "dark";
+}
+
+interface CampaignSlide extends CampaignMeta, CampaignCopy {}
+
+const HERO_INTERVAL_MS = 3500;
+const LONG_INTERACTION_PAUSE_MS = 9500;
+const QUICK_INTERACTION_PAUSE_MS = 2200;
+
+const META: CampaignMeta[] = [
+  {
+    id: "tirzec",
+    href: "/products/tirzepatida-tirzec-15mg-4amp-37740",
+    copySide: "left",
+    tone: "light",
+  },
+  {
+    id: "tg",
+    href: "/products/tirzepatida-tg-15mg-4amp-27940",
+    copySide: "right",
+    tone: "dark",
+  },
+  {
+    id: "testosterone",
+    href: "/products/test-enantato-400",
+    copySide: "left",
+    tone: "light",
+  },
+  {
+    id: "pen",
+    href: "/products/tirzepatida-pen-75mg",
+    copySide: "right",
+    tone: "dark",
+  },
+  {
+    id: "zphc-line",
+    href: "/products",
+    copySide: "left",
+    tone: "light",
+  },
+  {
+    id: "whatsapp",
+    copySide: "left",
+    tone: "light",
+    external: true,
+  },
+  {
+    id: "instagram",
+    copySide: "right",
+    tone: "dark",
+    external: true,
+  },
+];
+
+const COPY: Record<Lang, CampaignCopy[]> = {
+  es: [
+    {
+      eyebrow: "NUEVA PRESENTACIÓN",
+      title: "TIRZEC 15 con nueva caja y nuevo vial",
+      body: "4 viales de 15 mg/0,5 mL. Presentación original disponible en el catálogo Viana.",
+      cta: "Ver TIRZEC 15",
+      visualAlt: "Nueva caja de TIRZEC 15 con cuatro viales",
+    },
+    {
+      eyebrow: "TIRZEPATIDA TG",
+      title: "TG 15 mg en caja con 4 viales",
+      body: "Presentación de 15 mg/0,5 mL con imagen real del producto.",
+      cta: "Ver TG 15",
+      visualAlt: "Caja y vial de tirzepatida TG 15 mg",
+    },
+    {
+      eyebrow: "DESTACADO ANABÓLICO",
+      title: "Testosterone Enanthate 400",
+      body: "Presentación de 10 mL de la línea ZPHC. Consulte disponibilidad.",
+      cta: "Ver presentación",
+      visualAlt: "Caja de Testosterone Enanthate 400 de ZPHC",
+    },
+    {
+      eyebrow: "PRESENTACIÓN EN PEN",
+      title: "Tirzepatide Pen 75 mg",
+      body: "Presentación en pluma con imagen validada del catálogo.",
+      cta: "Ver producto",
+      visualAlt: "Caja y pluma de Tirzepatide Pen 75 mg",
+    },
+    {
+      eyebrow: "LÍNEA ZPHC",
+      title: "Más presentaciones para comparar",
+      body: "HGH Fragment, BPC-157 y otras referencias con fotos reales.",
+      cta: "Explorar catálogo",
+      visualAlt: "Selección de productos ZPHC disponibles en el catálogo",
+    },
+    {
+      eyebrow: "ATENCIÓN DIRECTA",
+      title: "Pedido y consulta por WhatsApp",
+      body: "Envíe su lista, consulte disponibilidad y coordine pago, retiro o entrega.",
+      cta: "Abrir WhatsApp",
+      visualAlt: "Atención de Farmacia Viana por WhatsApp con productos del catálogo",
+    },
+    {
+      eyebrow: "VIANA EN INSTAGRAM",
+      title: "Novedades y productos en su feed",
+      body: "Acompañe nuevas presentaciones, avisos y destacados del catálogo.",
+      cta: "Abrir Instagram",
+      visualAlt: "Productos de Farmacia Viana presentados para Instagram",
+    },
+  ],
+  pt: [
+    {
+      eyebrow: "NOVA APRESENTAÇÃO",
+      title: "TIRZEC 15 com nova caixa e novo frasco",
+      body: "4 frascos de 15 mg/0,5 mL. Apresentação original disponível no catálogo Viana.",
+      cta: "Ver TIRZEC 15",
+      visualAlt: "Nova caixa de TIRZEC 15 com quatro frascos",
+    },
+    {
+      eyebrow: "TIRZEPATIDA TG",
+      title: "TG 15 mg em caixa com 4 frascos",
+      body: "Apresentação de 15 mg/0,5 mL com imagem real do produto.",
+      cta: "Ver TG 15",
+      visualAlt: "Caixa e frasco de tirzepatida TG 15 mg",
+    },
+    {
+      eyebrow: "DESTAQUE ANABOLIZANTE",
+      title: "Testosterone Enanthate 400",
+      body: "Apresentação de 10 mL da linha ZPHC. Consulte a disponibilidade.",
+      cta: "Ver apresentação",
+      visualAlt: "Caixa de Testosterone Enanthate 400 da ZPHC",
+    },
+    {
+      eyebrow: "APRESENTAÇÃO EM PEN",
+      title: "Tirzepatide Pen 75 mg",
+      body: "Apresentação em caneta com imagem validada do catálogo.",
+      cta: "Ver produto",
+      visualAlt: "Caixa e caneta de Tirzepatide Pen 75 mg",
+    },
+    {
+      eyebrow: "LINHA ZPHC",
+      title: "Mais apresentações para comparar",
+      body: "HGH Fragment, BPC-157 e outras referências com fotos reais.",
+      cta: "Explorar catálogo",
+      visualAlt: "Seleção de produtos ZPHC disponíveis no catálogo",
+    },
+    {
+      eyebrow: "ATENDIMENTO DIRETO",
+      title: "Pedido e consulta pelo WhatsApp",
+      body: "Envie sua lista, confira a disponibilidade e combine pagamento, retirada ou entrega.",
+      cta: "Abrir WhatsApp",
+      visualAlt: "Atendimento da Farmácia Viana pelo WhatsApp com produtos do catálogo",
+    },
+    {
+      eyebrow: "VIANA NO INSTAGRAM",
+      title: "Novidades e produtos no seu feed",
+      body: "Acompanhe novas apresentações, avisos e destaques do catálogo.",
+      cta: "Abrir Instagram",
+      visualAlt: "Produtos da Farmácia Viana apresentados para o Instagram",
+    },
+  ],
+  en: [
+    {
+      eyebrow: "NEW PRESENTATION",
+      title: "TIRZEC 15 with a new box and new vial",
+      body: "4 vials of 15 mg/0.5 mL. Original presentation available in the Viana catalog.",
+      cta: "View TIRZEC 15",
+      visualAlt: "New TIRZEC 15 box with four vials",
+    },
+    {
+      eyebrow: "TG TIRZEPATIDE",
+      title: "TG 15 mg in a box with 4 vials",
+      body: "15 mg/0.5 mL presentation shown with a real product image.",
+      cta: "View TG 15",
+      visualAlt: "TG 15 mg tirzepatide box and vial",
+    },
+    {
+      eyebrow: "ANABOLIC FEATURE",
+      title: "Testosterone Enanthate 400",
+      body: "10 mL presentation from the ZPHC line. Ask about availability.",
+      cta: "View presentation",
+      visualAlt: "ZPHC Testosterone Enanthate 400 box",
+    },
+    {
+      eyebrow: "PEN PRESENTATION",
+      title: "Tirzepatide Pen 75 mg",
+      body: "Pen presentation shown with a validated catalog image.",
+      cta: "View product",
+      visualAlt: "Tirzepatide Pen 75 mg box and pen",
+    },
+    {
+      eyebrow: "ZPHC LINE",
+      title: "More presentations to compare",
+      body: "HGH Fragment, BPC-157, and other references with real photos.",
+      cta: "Explore catalog",
+      visualAlt: "Selection of ZPHC products available in the catalog",
+    },
+    {
+      eyebrow: "DIRECT SUPPORT",
+      title: "Orders and questions on WhatsApp",
+      body: "Send your list, check availability, and arrange payment, pickup, or delivery.",
+      cta: "Open WhatsApp",
+      visualAlt: "Viana Pharmacy WhatsApp support with catalog products",
+    },
+    {
+      eyebrow: "VIANA ON INSTAGRAM",
+      title: "New products and updates in your feed",
+      body: "Follow new presentations, notices, and catalog highlights.",
+      cta: "Open Instagram",
+      visualAlt: "Viana Pharmacy products presented for Instagram",
+    },
+  ],
+};
+
+interface ProductVisualProps {
+  src: string;
+  alt: string;
+  className: string;
+  imageClassName?: string;
+  framed?: boolean;
+  priority?: boolean;
+}
+
+function ProductVisual({
+  src,
+  alt,
+  className,
+  imageClassName,
+  framed = false,
+  priority = false,
+}: ProductVisualProps) {
+  return (
+    <div
+      className={cn(
+        "absolute z-10",
+        framed &&
+          "overflow-hidden rounded-2xl border border-white/65 bg-white/96 shadow-[0_24px_60px_rgba(8,56,42,0.24)]",
+        className,
+      )}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority={priority}
+        quality={88}
+        sizes="(max-width: 767px) 82vw, 56vw"
+        className={cn("object-contain", imageClassName)}
+      />
+    </div>
+  );
+}
+
+function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: boolean }) {
+  const sharedAlt = slide.visualAlt;
+
+  switch (slide.id) {
+    case "tirzec":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_42%,rgba(217,119,78,0.32),transparent_30%),linear-gradient(115deg,#08382a_0%,#08382a_43%,#0e4b39_43%,#0e4b39_70%,#fcfbfa_70%,#fcfbfa_100%)]" />
+          <div className="absolute -right-[8%] -top-[40%] h-[120%] w-[46%] rotate-12 rounded-[50%] border-[3px] border-[#d9774e]/65" />
+          <div className="absolute right-[2%] top-[5%] text-[11vw] font-extrabold leading-none tracking-[-0.08em] text-[#08382a]/[0.055] md:text-[150px]">
+            T15
+          </div>
+          <ProductVisual
+            src="/images/products/tirzec/tirzec-15-set-canonical.webp"
+            alt={sharedAlt}
+            priority={priority}
+            className="bottom-[2%] left-[7%] h-[43%] w-[88%] md:bottom-[1%] md:left-[42%] md:h-[92%] md:w-[56%]"
+            imageClassName="drop-shadow-[0_22px_22px_rgba(8,56,42,0.30)]"
+          />
+        </>
+      );
+
+    case "tg":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,#fcfbfa_0%,#fcfbfa_58%,#e9ece8_58%,#e9ece8_96%,#08382a_96%,#08382a_100%)]" />
+          <div className="absolute -left-[8%] top-[4%] h-[36%] w-[65%] -rotate-3 bg-[#d9774e] opacity-95 [clip-path:polygon(0_0,94%_0,80%_100%,0_100%)]" />
+          <div className="absolute left-0 top-[38%] h-1 w-[72%] bg-[#08382a]" />
+          <div className="absolute bottom-[8%] left-[7%] h-[28%] w-[42%] rounded-[50%] bg-white shadow-[0_22px_40px_rgba(8,56,42,0.16)] md:bottom-[8%] md:left-[7%] md:h-[18%] md:w-[34%]" />
+          <ProductVisual
+            src="/images/products/premium/supplier-27940-primary.webp"
+            alt={sharedAlt}
+            priority={priority}
+            framed
+            className="bottom-[4%] left-[11%] h-[37%] w-[52%] md:bottom-[8%] md:left-[10%] md:h-[72%] md:w-[31%]"
+            imageClassName="mix-blend-multiply"
+          />
+        </>
+      );
+
+    case "testosterone":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_45%,rgba(217,119,78,0.22),transparent_28%),linear-gradient(118deg,#061f18_0%,#08382a_52%,#174b3b_100%)]" />
+          <div className="absolute bottom-[18%] right-[-3%] h-[16%] w-[62%] -rotate-6 bg-[#d9774e] opacity-90 [clip-path:polygon(4%_0,100%_0,94%_100%,0_100%)]" />
+          <div className="absolute right-[5%] top-[8%] h-[72%] w-[44%] rotate-6 rounded-3xl border border-white/15 bg-white/5" />
+          <ProductVisual
+            src="/images/products/testosterone-enanthate-10ml.png"
+            alt={sharedAlt}
+            priority={priority}
+            className="bottom-[3%] left-[12%] h-[39%] w-[78%] md:bottom-[4%] md:left-[48%] md:h-[84%] md:w-[47%]"
+            imageClassName="drop-shadow-[0_28px_30px_rgba(0,0,0,0.42)]"
+          />
+        </>
+      );
+
+    case "pen":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[linear-gradient(110deg,#fcfbfa_0%,#fcfbfa_58%,#e9ece8_58%,#e9ece8_96%,#08382a_96%,#08382a_100%)]" />
+          <div className="absolute -bottom-[24%] -left-[10%] h-[76%] w-[66%] rotate-6 rounded-[50%] border-[20px] border-[#d9774e]/85" />
+          <div className="absolute left-[4%] top-[12%] h-[68%] w-[54%] rounded-[2rem] bg-white shadow-[0_28px_70px_rgba(8,56,42,0.14)] md:w-[50%]" />
+          <ProductVisual
+            src="/images/products/verified/tirzepatida-pen-75mg-full.webp"
+            alt={sharedAlt}
+            priority={priority}
+            className="bottom-[3%] left-[8%] h-[41%] w-[74%] md:bottom-[8%] md:left-[6%] md:h-[77%] md:w-[44%]"
+            imageClassName="scale-[1.04] mix-blend-multiply"
+          />
+        </>
+      );
+
+    case "zphc-line":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_28%,rgba(217,119,78,0.25),transparent_26%),linear-gradient(118deg,#061f18_0%,#08382a_58%,#124939_100%)]" />
+          <div className="absolute bottom-[2%] right-[3%] h-[20%] w-[56%] rounded-[50%] border border-[#d9774e]/60 bg-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.28)]" />
+          <ProductVisual
+            src="/images/products/verified/hgh-fragment-5mg-full.webp"
+            alt="HGH Fragment 5 mg"
+            priority={priority}
+            framed
+            className="bottom-[3%] left-[30%] h-[30%] w-[29%] -rotate-2 md:bottom-[9%] md:left-[47%] md:h-[66%] md:w-[20%]"
+            imageClassName="mix-blend-multiply"
+          />
+          <ProductVisual
+            src="/images/products/verified/bpc-157-20mg-full.webp"
+            alt="BPC-157 20 mg"
+            framed
+            className="bottom-[4%] left-[53%] h-[32%] w-[30%] rotate-2 md:bottom-[5%] md:left-[64%] md:h-[72%] md:w-[21%]"
+            imageClassName="mix-blend-multiply"
+          />
+          <ProductVisual
+            src="/images/products/tirzec/tirzec-15-box-canonical.webp"
+            alt="TIRZEC 15"
+            className="bottom-[2%] right-[1%] h-[36%] w-[29%] md:bottom-[2%] md:right-[1%] md:h-[77%] md:w-[22%]"
+            imageClassName="drop-shadow-[0_22px_20px_rgba(0,0,0,0.32)]"
+          />
+        </>
+      );
+
+    case "whatsapp":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_50%,rgba(31,163,122,0.62),transparent_34%),linear-gradient(115deg,#08382a_0%,#08382a_53%,#0d5a43_100%)]" />
+          <div className="absolute right-[6%] top-[32%] h-[34%] w-[42%] rotate-3 rounded-[2.4rem] border border-white/25 bg-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.28)] md:top-[8%] md:h-[58%] md:w-[36%]" />
+          <div className="absolute right-[12%] top-[39%] flex h-24 w-24 items-center justify-center rounded-full bg-white text-[#1fa37a] shadow-xl md:right-[15%] md:top-[20%] md:h-32 md:w-32">
+            <WhatsappLogo size={72} weight="fill" />
+          </div>
+          <ProductVisual
+            src="/images/products/tirzec/tirzec-15-box-canonical.webp"
+            alt="TIRZEC 15"
+            className="bottom-[1%] left-[45%] h-[31%] w-[28%] md:bottom-[2%] md:left-[57%] md:h-[52%] md:w-[20%]"
+            imageClassName="drop-shadow-[0_18px_18px_rgba(0,0,0,0.30)]"
+          />
+          <ProductVisual
+            src="/images/products/testosterone-enanthate-10ml.png"
+            alt="Testosterone Enanthate 400"
+            className="bottom-[2%] right-[1%] h-[29%] w-[36%] md:bottom-[3%] md:right-[1%] md:h-[48%] md:w-[26%]"
+            imageClassName="drop-shadow-[0_18px_18px_rgba(0,0,0,0.30)]"
+          />
+        </>
+      );
+
+    case "instagram":
+      return (
+        <>
+          <div className="absolute inset-0 bg-[linear-gradient(112deg,#fcfbfa_0%,#fcfbfa_56%,#e9ece8_56%,#e9ece8_96%,#08382a_96%,#08382a_100%)]" />
+          <div className="absolute left-[2%] top-[30%] h-[34%] w-[48%] rotate-6 rounded-[32%] bg-[linear-gradient(135deg,#d9774e_0%,#c84f72_52%,#7d3f85_100%)] md:-left-[12%] md:-top-[40%] md:h-[92%] md:w-[60%] md:rotate-12" />
+          <div className="absolute left-[8%] top-[37%] flex h-20 w-20 items-center justify-center rounded-3xl bg-white text-[var(--brand-green)] shadow-xl md:top-[11%] md:h-28 md:w-28">
+            <InstagramLogo size={64} weight="bold" />
+          </div>
+          <ProductVisual
+            src="/images/products/tirzec/tirzec-15-box-canonical.webp"
+            alt="TIRZEC 15"
+            className="bottom-[2%] left-[4%] h-[31%] w-[29%] md:bottom-[3%] md:left-[5%] md:h-[60%] md:w-[20%]"
+            imageClassName="drop-shadow-[0_18px_18px_rgba(8,56,42,0.28)]"
+          />
+          <ProductVisual
+            src="/images/products/verified/tirzepatida-pen-75mg-full.webp"
+            alt="Tirzepatide Pen 75 mg"
+            framed
+            className="bottom-[4%] left-[28%] h-[27%] w-[30%] rotate-2 md:bottom-[6%] md:left-[21%] md:h-[55%] md:w-[20%]"
+            imageClassName="mix-blend-multiply"
+          />
+          <ProductVisual
+            src="/images/products/verified/hgh-fragment-5mg-full.webp"
+            alt="HGH Fragment 5 mg"
+            framed
+            className="bottom-[2%] left-[52%] h-[28%] w-[30%] -rotate-2 md:bottom-[3%] md:left-[35%] md:h-[57%] md:w-[18%]"
+            imageClassName="mix-blend-multiply"
+          />
+        </>
+      );
+  }
+}
+
+function Cta({ slide }: { slide: CampaignSlide }) {
+  if (!slide.cta || !slide.href) return null;
+
+  const className = cn(
+    "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-5 py-3 text-sm font-bold shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 active:scale-[0.98]",
+    slide.tone === "light"
+      ? "bg-white text-[var(--brand-green)] focus-visible:ring-white/55"
+      : "bg-[var(--brand-green)] text-white focus-visible:ring-[var(--brand-green)]/25",
+  );
+
+  const content: ReactNode = (
+    <>
+      {slide.cta}
+      <ArrowRight size={15} weight="bold" />
+    </>
+  );
+
+  if (slide.external) {
+    return (
+      <a href={slide.href} target="_blank" rel="noopener noreferrer" className={className}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={slide.href} className={className}>
+      {content}
+    </Link>
+  );
 }
 
 export function HeroSection() {
-  const { t, lang } = useLanguage();
+  const { lang } = useLanguage();
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const resumeTimerRef = useRef<number | null>(null);
+  const pointerRef = useRef({ id: -1, startX: 0, deltaX: 0 });
+  const suppressClickRef = useRef(false);
 
-  const slides = useMemo<Slide[]>(() => {
+  const slides = useMemo<CampaignSlide[]>(() => {
     const whatsappMessage =
       lang === "es"
-        ? "Hola, quiero recibir orientación para hacer un pedido en Farmacia Viana."
+        ? "Hola, quiero consultar disponibilidad y hacer un pedido en Farmacia Viana."
         : lang === "pt"
-          ? "Olá, quero receber orientação para fazer um pedido na Farmácia Viana."
-          : "Hello, I would like guidance to place an order with Viana Pharmacy.";
+          ? "Olá, quero consultar a disponibilidade e fazer um pedido na Farmácia Viana."
+          : "Hello, I would like to check availability and place an order with Viana Pharmacy.";
+    const instagramUrl = process.env.NEXT_PUBLIC_STORE_INSTAGRAM?.trim();
 
-    return [
-      {
-        eyebrow: lang === "es" ? "Confianza Viana" : lang === "pt" ? "Confiança Viana" : "Viana Trust",
-        title:
-          lang === "es"
-            ? "Tu farmacia, cuidada al detalle"
-            : lang === "pt"
-              ? "Sua farmácia, cuidada em cada detalhe"
-              : "Pharmacy care, refined",
-        body:
-          lang === "es"
-            ? "Productos originales, selección profesional y atención clara antes de comprar."
-            : lang === "pt"
-              ? "Produtos originais, seleção profissional e orientação clara antes de comprar."
-              : "Genuine products, professional selection, and clear guidance before you buy.",
-        image: "/bg1.png",
-        imagePosition: "center right",
-        cta: { href: "/products", label: t("heroCtaPrimary") },
-      },
-      {
-        eyebrow: lang === "es" ? "Vitalidad diaria" : lang === "pt" ? "Vitalidade diária" : "Daily vitality",
-        title:
-          lang === "es"
-            ? "Apoyo simple para tu rutina"
-            : lang === "pt"
-              ? "Apoio simples para sua rotina"
-              : "Simple support for your routine",
-        body:
-          lang === "es"
-            ? "Vitaminas y bienestar diario con una selección clara, segura y fácil de elegir."
-            : lang === "pt"
-              ? "Vitaminas e bem-estar diário com uma seleção clara, segura e fácil de escolher."
-              : "Vitamins and daily wellness, selected with clarity, safety, and ease.",
-        image: "/bg2.png",
-        imagePosition: "center right",
-        cta: { href: "/products", label: lang === "es" ? "Ver bienestar" : lang === "pt" ? "Ver bem-estar" : "View wellness" },
-      },
-      {
-        eyebrow: lang === "es" ? "Dermocosmética" : "Dermocosmetics",
-        title:
-          lang === "es"
-            ? "Piel cuidada con criterio"
-            : lang === "pt"
-              ? "Pele cuidada com critério"
-              : "Skin care with confidence",
-        body:
-          lang === "es"
-            ? "Sérums, protectores y tratamientos elegidos para una rutina más precisa."
-            : lang === "pt"
-              ? "Séruns, protetores e tratamentos escolhidos para uma rotina mais precisa."
-              : "Serums, sunscreens, and treatments selected for a more precise routine.",
-        image: "/bg3.png",
-        imagePosition: "center right",
-        cta: { href: "/products", label: lang === "es" ? "Explorar dermo" : lang === "pt" ? "Explorar dermo" : "Explore dermo" },
-      },
-      {
-        eyebrow: lang === "es" ? "Entrega guiada" : lang === "pt" ? "Entrega orientada" : "Guided delivery",
-        title:
-          lang === "es"
-            ? "Pide fácil, recibe con confianza"
-            : lang === "pt"
-              ? "Peça fácil, receba com confiança"
-              : "Order easily, receive confidently",
-        body:
-          lang === "es"
-            ? "Te orientamos por WhatsApp y preparamos tu pedido con detalle."
-            : lang === "pt"
-              ? "Orientamos pelo WhatsApp e preparamos seu pedido com cuidado."
-              : "We guide you on WhatsApp and prepare every order with care.",
-        image: "/bg4.png",
-        imagePosition: "center right",
-        cta: {
-          href: waLink(whatsappMessage),
-          label: lang === "es" ? "Consultar por WhatsApp" : lang === "pt" ? "Consultar pelo WhatsApp" : "Ask on WhatsApp",
-          external: true,
-        },
-      },
-    ];
-  }, [lang, t]);
+    return META.map((meta, index) => {
+      if (meta.id === "whatsapp") {
+        return { ...meta, ...COPY[lang][index]!, href: waLink(whatsappMessage) };
+      }
+      if (meta.id === "instagram") {
+        return {
+          ...meta,
+          ...COPY[lang][index]!,
+          href: instagramUrl || undefined,
+          external: Boolean(instagramUrl),
+          cta: instagramUrl ? COPY[lang][index]!.cta : undefined,
+        };
+      }
+      return { ...meta, ...COPY[lang][index]! };
+    });
+  }, [lang]);
+
+  const clearResumeTimer = useCallback(() => {
+    if (resumeTimerRef.current !== null) {
+      window.clearTimeout(resumeTimerRef.current);
+      resumeTimerRef.current = null;
+    }
+  }, []);
+
+  const pauseFor = useCallback(
+    (duration: number) => {
+      clearResumeTimer();
+      setPaused(true);
+      resumeTimerRef.current = window.setTimeout(() => {
+        setPaused(false);
+        resumeTimerRef.current = null;
+      }, duration);
+    },
+    [clearResumeTimer],
+  );
+
+  const pauseWhilePresent = useCallback(() => {
+    clearResumeTimer();
+    setPaused(true);
+  }, [clearResumeTimer]);
+
+  const goTo = useCallback(
+    (index: number, pauseDuration = LONG_INTERACTION_PAUSE_MS) => {
+      setActive((index + slides.length) % slides.length);
+      pauseFor(pauseDuration);
+    },
+    [pauseFor, slides.length],
+  );
 
   useEffect(() => {
-    const id = setInterval(() => setActive((i) => (i + 1) % slides.length), 6000);
-    return () => clearInterval(id);
-  }, [slides.length]);
+    if (paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(
+      () => setActive((index) => (index + 1) % slides.length),
+      HERO_INTERVAL_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [paused, slides.length]);
+
+  useEffect(() => () => clearResumeTimer(), [clearResumeTimer]);
+
+  const finishPointer = (event: ReactPointerEvent<HTMLDivElement>, cancelled = false) => {
+    if (event.pointerId !== pointerRef.current.id) return;
+    const delta = pointerRef.current.deltaX;
+    const deliberateSwipe = !cancelled && Math.abs(delta) >= 54;
+    suppressClickRef.current = deliberateSwipe;
+
+    if (deliberateSwipe) {
+      setActive((index) =>
+        delta < 0 ? (index + 1) % slides.length : (index - 1 + slides.length) % slides.length,
+      );
+    }
+
+    pointerRef.current = { id: -1, startX: 0, deltaX: 0 };
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    pauseFor(deliberateSwipe ? LONG_INTERACTION_PAUSE_MS : QUICK_INTERACTION_PAUSE_MS);
+    window.setTimeout(() => {
+      suppressClickRef.current = false;
+    }, 0);
+  };
+
+  const previousLabel = lang === "en" ? "Previous" : "Anterior";
+  const nextLabel = lang === "es" ? "Siguiente" : lang === "pt" ? "Próximo" : "Next";
+  const carouselLabel =
+    lang === "es"
+      ? "Campañas y productos de Farmacia Viana"
+      : lang === "pt"
+        ? "Campanhas e produtos da Farmácia Viana"
+        : "Viana Pharmacy campaigns and products";
 
   return (
-    <section className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
-      <div className="relative w-full h-[360px] md:h-[430px] xl:h-[500px] rounded-[2rem] overflow-hidden bg-[var(--brand-green)] shadow-[var(--shadow-soft)]">
-        <div className="absolute inset-0 w-full h-full">
-          {slides.map((slide, i) => (
-            <div
-              key={slide.image}
-              className={cn(
-                "absolute inset-0 transition-opacity duration-700 ease-out flex items-center",
-                i === active ? "opacity-100 z-10" : "opacity-0 pointer-events-none",
-              )}
+    <section className="mx-auto w-full max-w-[1400px] px-4 md:px-6 lg:px-8">
+      <h1 className="sr-only">Farmacia Viana</h1>
+      <div
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={carouselLabel}
+        data-testid="hero-carousel"
+        data-active-slide={active}
+        data-slide-count={slides.length}
+        data-autoplay-paused={paused}
+        className="relative h-[640px] touch-pan-y overflow-hidden rounded-2xl bg-[var(--brand-green)] shadow-[var(--shadow-soft)] md:h-[438px]"
+        onMouseEnter={pauseWhilePresent}
+        onMouseLeave={() => pauseFor(QUICK_INTERACTION_PAUSE_MS)}
+        onFocusCapture={pauseWhilePresent}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) pauseFor(4500);
+        }}
+        onPointerDown={(event) => {
+          if (!event.isPrimary || event.button !== 0) return;
+          // Buttons and links must keep their native click sequence. Capturing
+          // their pointer on the carousel can retarget pointerup/click to the
+          // slide container in some browsers, making the arrows look dead.
+          if ((event.target as HTMLElement).closest("button, a")) {
+            pauseWhilePresent();
+            return;
+          }
+          pointerRef.current = { id: event.pointerId, startX: event.clientX, deltaX: 0 };
+          event.currentTarget.setPointerCapture(event.pointerId);
+          pauseWhilePresent();
+        }}
+        onPointerMove={(event) => {
+          if (event.pointerId !== pointerRef.current.id) return;
+          pointerRef.current.deltaX = event.clientX - pointerRef.current.startX;
+        }}
+        onPointerUp={(event) => finishPointer(event)}
+        onPointerCancel={(event) => finishPointer(event, true)}
+        onClickCapture={(event) => {
+          if (suppressClickRef.current) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            goTo(active - 1);
+          }
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            goTo(active + 1);
+          }
+        }}
+      >
+        <div
+          className="flex h-full transition-transform duration-700 [transition-timing-function:var(--ease-out-expo)] motion-reduce:transition-none"
+          style={{ transform: `translate3d(${-active * 100}%, 0, 0)` }}
+        >
+          {slides.map((slide, index) => (
+            <article
+              key={`${slide.id}-${lang}`}
+              aria-hidden={index !== active}
+              inert={index !== active ? true : undefined}
+              className="relative h-full min-w-full overflow-hidden"
             >
-              <Image
-                src={slide.image}
-                alt=""
-                fill
-                priority={i === 0}
-                quality={92}
-                sizes="(min-width: 1400px) 1400px, 100vw"
-                className="object-cover"
-                style={{ objectPosition: slide.imagePosition }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[rgba(8,56,42,0.94)] via-[rgba(8,56,42,0.72)] md:via-[rgba(8,56,42,0.48)] to-[rgba(8,56,42,0.08)]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5" />
-              <div className="relative z-10 w-full max-w-[560px] px-6 md:px-10 lg:px-14 text-white">
-                <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/85 backdrop-blur-md">
+              <CampaignScene slide={slide} priority={index === 0} />
+
+              <div
+                className={cn(
+                  "absolute left-5 right-5 top-6 z-20 flex max-w-[560px] flex-col items-start md:inset-y-0 md:w-[43%] md:justify-center",
+                  slide.copySide === "right"
+                    ? "md:left-auto md:right-[5%]"
+                    : "md:left-[5%] md:right-auto",
+                  slide.tone === "light" ? "text-white" : "text-[var(--brand-green)]",
+                )}
+              >
+                <p
+                  className={cn(
+                    "mb-2.5 text-[10px] font-extrabold uppercase tracking-[0.19em]",
+                    slide.tone === "light" ? "text-white/72" : "text-[var(--brand-copper)]",
+                  )}
+                >
                   {slide.eyebrow}
-                </span>
-                <h2 className="mt-4 max-w-[14ch] font-sans text-[1.75rem] font-medium leading-[1.08] tracking-[-0.02em] md:text-[2.35rem] lg:text-[2.75rem]">
+                </p>
+                <h2 className="max-w-[16ch] text-[2rem] font-extrabold leading-[1.02] tracking-[-0.03em] sm:text-[2.25rem] md:text-[2.25rem] lg:text-[2.75rem]">
                   {slide.title}
                 </h2>
-                <p className="mt-3 max-w-[420px] text-[13px] font-normal leading-[1.55] text-white/80 md:text-[14px]">
+                <p
+                  className={cn(
+                    "mt-3 max-w-[44ch] text-[13px] font-medium leading-relaxed md:text-sm",
+                    slide.tone === "light"
+                      ? "text-white/80"
+                      : "text-[var(--brand-green)]/75",
+                  )}
+                >
                   {slide.body}
                 </p>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  {slide.cta.external ? (
-                    <a
-                      href={slide.cta.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-bold text-[var(--brand-green)] shadow-md transition-all hover:bg-[var(--brand-copper)] hover:text-white active:scale-[0.98] md:px-6"
-                    >
-                      {slide.cta.label}
-                      <ArrowRight size={13} weight="bold" />
-                    </a>
-                  ) : (
-                    <Link
-                      href={slide.cta.href}
-                      className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-bold text-[var(--brand-green)] shadow-md transition-all hover:bg-[var(--brand-copper)] hover:text-white active:scale-[0.98] md:px-6"
-                    >
-                      {slide.cta.label}
-                      <ArrowRight size={13} weight="bold" />
-                    </Link>
-                  )}
+                <div className="mt-5">
+                  <Cta slide={slide} />
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
-        <div className="absolute bottom-5 left-6 z-20 flex w-[190px] items-center gap-1.5 md:bottom-7 md:left-10 lg:left-14">
-          {slides.map((slide, i) => (
+        <div className="absolute bottom-4 right-4 z-30 flex items-center gap-2 sm:right-5">
+          <button
+            type="button"
+            aria-label={previousLabel}
+            onClick={() => goTo(active - 1)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-[var(--brand-green)]/92 text-white shadow-md transition-colors hover:bg-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          >
+            <ArrowLeft size={14} weight="bold" />
+          </button>
+          <button
+            type="button"
+            aria-label={nextLabel}
+            onClick={() => goTo(active + 1)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-[var(--brand-green)]/92 text-white shadow-md transition-colors hover:bg-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          >
+            <ArrowRight size={14} weight="bold" />
+          </button>
+        </div>
+
+        <div className="absolute bottom-5 left-5 z-30 flex w-[154px] items-center gap-1.5 sm:w-[182px]">
+          {slides.map((slide, index) => (
             <button
-              key={slide.image}
+              key={slide.id}
               type="button"
-              aria-label={`Slide ${i + 1}`}
-              onClick={() => setActive(i)}
-              className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/30 transition-colors hover:bg-white/50"
+              aria-label={`${slide.title} (${index + 1}/${slides.length})`}
+              aria-current={index === active ? "true" : undefined}
+              onClick={() => goTo(index)}
+              className="h-2 flex-1 rounded-full bg-white/35 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <span
                 className={cn(
-                  "block h-full rounded-full bg-white transition-all duration-500",
-                  i === active ? "w-full" : "w-0",
+                  "block h-full rounded-full transition-all duration-300",
+                  index === active ? "w-full bg-[var(--brand-copper)]" : "w-0 bg-transparent",
                 )}
               />
             </button>
           ))}
-        </div>
-
-        <div className="absolute bottom-5 right-6 z-20 hidden items-center gap-2 md:bottom-7 md:right-10 md:flex lg:right-14">
-          <button
-            type="button"
-            aria-label="Previous"
-            onClick={() => setActive((i) => (i - 1 + slides.length) % slides.length)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition-all hover:scale-105 hover:bg-white hover:text-[var(--brand-green)]"
-          >
-            <ArrowLeft size={12} weight="bold" />
-          </button>
-          <button
-            type="button"
-            aria-label="Next"
-            onClick={() => setActive((i) => (i + 1) % slides.length)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition-all hover:scale-105 hover:bg-white hover:text-[var(--brand-green)]"
-          >
-            <ArrowRight size={12} weight="bold" />
-          </button>
         </div>
       </div>
     </section>

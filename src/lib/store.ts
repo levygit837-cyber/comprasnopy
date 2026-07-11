@@ -48,7 +48,7 @@ export const DEFAULT_RATES: Record<CurrencyCode, number> = {
  * itself works in USD for arithmetic reasons; the UI label converts this
  * value into the user's selected currency so it always reads naturally.
  */
-export const MIN_PRICE_USD = 20;
+export const MIN_PRICE_USD = 0;
 
 export const storeConfig = {
   storeName: "Viana",

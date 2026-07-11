@@ -109,3 +109,12 @@ The current build renders entirely from the local catalog at
 `src/lib/products.ts` so the UI works end-to-end before the database is
 wired up. To switch to Supabase data, replace the static `products`
 import in catalog components with a server fetch.
+
+## Future implementation decisions
+
+The approved future direction for the Hostinger domain and professional email,
+email marketing, WhatsApp sales intelligence, customer segmentation, and
+personalized messaging is documented in
+[`docs/FUTURE_IMPLEMENTATION_DECISIONS.md`](docs/FUTURE_IMPLEMENTATION_DECISIONS.md).
+These capabilities are planned decisions and are not implemented in the current
+build.
