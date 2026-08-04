@@ -8,7 +8,8 @@ import { ImageSquare, Plus } from "@phosphor-icons/react/dist/ssr";
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
 import { useCartStore } from "@/lib/cart-store";
-import { getImageSrcs } from "@/lib/images";
+import { useTheme } from "@/lib/theme-context";
+import { getImageSrcs, hasOpaqueProductCanvas } from "@/lib/images";
 import { categoryById } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/lib/types";
@@ -24,6 +25,7 @@ export function ProductGridCard({ product, variants, priority = false }: Product
   const { format, formatCompact, primaryCurrency } = useCurrency();
   const { t, lang } = useLanguage();
   const add = useCartStore((s) => s.add);
+  const { theme } = useTheme();
 
   const category = categoryById(product.category);
   const familyVariants = variants && variants.length > 1 ? variants : null;
@@ -32,6 +34,8 @@ export function ProductGridCard({ product, variants, priority = false }: Product
   const active: Product =
     familyVariants?.find((v) => v.id === activeId) ?? product;
   const images = getImageSrcs(active) ?? [];
+  const primaryImage = images[0];
+  const hasOpaqueCanvas = hasOpaqueProductCanvas(primaryImage);
 
   const order: Array<"USD" | "BRL" | "PYG"> = ["USD", "BRL", "PYG"];
   const secondary = order.filter((c) => c !== primaryCurrency);
@@ -45,17 +49,20 @@ export function ProductGridCard({ product, variants, priority = false }: Product
         className="relative w-full aspect-square rounded-xl overflow-hidden flex items-center justify-center p-3"
         style={{ backgroundColor: "var(--image-bg)" }}
       >
-        {images[0] ? (
-          <Image
-            src={images[0]}
-            alt={active.name[lang]}
-            fill
-            sizes="(max-width: 639px) calc(50vw - 24px), (max-width: 1023px) 33vw, 240px"
-            priority={priority}
-            loading={priority ? undefined : "lazy"}
-            quality={82}
-            className="object-contain transition-transform duration-300 group-hover:scale-105"
-          />
+        {primaryImage ? (
+          <>
+            <Image
+              src={primaryImage}
+              alt={active.name[lang]}
+              fill
+              sizes="(max-width: 639px) calc(50vw - 24px), (max-width: 1023px) 33vw, 240px"
+              priority={priority}
+              loading={priority ? undefined : "lazy"}
+              quality={82}
+              style={hasOpaqueCanvas && theme === "dark" ? { filter: "brightness(0.72) contrast(1.1)", opacity: 0.74 } : undefined}
+              className="product-image-blend object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+          </>
         ) : (
           <span className="flex flex-col items-center gap-2 text-center text-[10px] font-medium text-[var(--text-subtle)]">
             <ImageSquare size={24} />
@@ -90,8 +97,8 @@ export function ProductGridCard({ product, variants, priority = false }: Product
                     className={cn(
                       "min-h-7 rounded-full border px-2 py-1 text-[10px] font-bold transition-colors",
                       isActive
-                        ? "bg-[var(--brand-green)] text-white border-[var(--brand-green)]"
-                        : "bg-transparent text-[var(--text-muted)] border-[var(--bg-border-strong)] hover:border-[var(--brand-copper)] hover:text-[var(--brand-copper)]",
+                        ? "bg-[var(--brand-action)] text-white border-[var(--brand-primary)]"
+                        : "bg-transparent text-[var(--text-muted)] border-[var(--bg-border-strong)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]",
                     )}
                     title={`${v.name.en}${v.strength ? " - " + v.strength : ""}`}
                   >
@@ -113,7 +120,7 @@ export function ProductGridCard({ product, variants, priority = false }: Product
             <div className="text-[9px] text-[var(--text-subtle)] font-medium mb-0.5 truncate tabular-nums">
               {secondaryLine}
             </div>
-            <div className="font-bold text-[15px] text-[var(--brand-green)] tabular-nums">
+            <div className="font-bold text-[15px] text-[var(--brand-primary)] tabular-nums">
               {primaryValue}
             </div>
           </div>
@@ -124,7 +131,7 @@ export function ProductGridCard({ product, variants, priority = false }: Product
               add(active, 1);
             }}
             aria-label={`${t("productAddToCart")}: ${active.name[lang]}`}
-            className="theme-aware flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--brand-sage)] text-[var(--brand-green)] transition-colors hover:bg-[var(--brand-copper)] hover:text-white active:scale-[0.92]"
+            className="theme-aware flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--brand-soft)] text-[var(--brand-primary)] transition-colors hover:bg-[var(--brand-action)] hover:text-white active:scale-[0.92]"
           >
             <Plus size={14} weight="bold" />
           </button>

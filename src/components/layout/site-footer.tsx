@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { FacebookLogo, Heartbeat, InstagramLogo, MapPin, WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
+import { FacebookLogo, InstagramLogo, MapPin, WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
 
 import { useLanguage } from "@/lib/language-context";
 import { categories } from "@/lib/categories";
@@ -15,18 +16,22 @@ export function SiteFooter() {
   );
 
   return (
-    <footer className="theme-aware bg-[var(--brand-green)] text-white pt-10 pb-6 mt-auto border-t-[6px] border-[var(--brand-copper)]">
+    <footer className="theme-aware bg-[var(--brand-footer)] text-white pt-10 pb-6 mt-auto border-t-[6px] border-[var(--brand-on-dark)]">
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-7 mb-8">
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-white text-[var(--brand-green)] flex items-center justify-center">
-                <Heartbeat size={18} weight="fill" />
-              </div>
-              <span className="font-sans font-semibold text-2xl tracking-tight leading-none mt-0.5">
-                VIANA
+            <Link href="/" aria-label="Compraspy - início" className="mb-3 inline-flex items-center gap-2">
+              <Image
+                src="/brand/compraspy-mark-orange.png"
+                alt=""
+                width={430}
+                height={460}
+                className="h-9 w-auto"
+              />
+              <span className="font-sans text-2xl font-semibold leading-none tracking-[-0.035em] text-white">
+                Compras<span className="text-[var(--brand-on-dark)]">py</span>
               </span>
-            </div>
+            </Link>
             <p className="text-white/70 font-medium max-w-sm mb-4 leading-relaxed text-xs">
               {t("heroSubtitle")}
             </p>
@@ -35,7 +40,7 @@ export function SiteFooter() {
                 href={storeConfig.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--brand-copper)] hover:text-white transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--brand-action)] hover:text-white transition-colors"
                 aria-label="Instagram"
               >
                 <InstagramLogo size={15} weight="fill" />
@@ -44,7 +49,7 @@ export function SiteFooter() {
                 href={storeConfig.social.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--brand-copper)] hover:text-white transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--brand-action)] hover:text-white transition-colors"
                 aria-label="Facebook"
               >
                 <FacebookLogo size={15} weight="fill" />
@@ -53,7 +58,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h5 className="font-bold mb-3 text-[var(--brand-copper)] uppercase tracking-wider text-xs">
+            <h5 className="font-bold mb-3 text-[var(--brand-on-dark)] uppercase tracking-wider text-xs">
               {t("footerCategories")}
             </h5>
             <ul className="space-y-1.5 text-white/80 font-medium text-xs">
@@ -69,7 +74,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h5 className="font-bold mb-3 text-[var(--brand-copper)] uppercase tracking-wider text-xs">
+            <h5 className="font-bold mb-3 text-[var(--brand-on-dark)] uppercase tracking-wider text-xs">
               {t("footerUseful")}
             </h5>
             <ul className="space-y-1.5 text-white/80 font-medium text-xs">
@@ -80,7 +85,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h5 className="font-bold mb-3 text-[var(--brand-copper)] uppercase tracking-wider text-xs">
+            <h5 className="font-bold mb-3 text-[var(--brand-on-dark)] uppercase tracking-wider text-xs">
               {t("footerHelp")}
             </h5>
             <ul className="space-y-2 text-white/80 font-medium text-xs">

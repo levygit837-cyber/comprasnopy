@@ -31,7 +31,7 @@ const ICON_MAP: Record<string, IconComponent> = {
 const TINT_VAR: Record<string, string> = {
   cool: "var(--tint-cool)",
   warm: "var(--tint-warm)",
-  sage: "var(--tint-sage)",
+  sun: "var(--tint-sun)",
 };
 
 const CATEGORY_COPY: Record<string, Record<"es" | "pt" | "en", string>> = {
@@ -65,7 +65,7 @@ export function BentoCategories() {
     <section className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 mt-10 md:mt-14">
       <div className="flex items-end justify-between mb-4">
         <div>
-          <h3 className="font-sans text-2xl md:text-3xl text-[var(--brand-green)] font-semibold tracking-tight">
+          <h3 className="font-sans text-2xl md:text-3xl text-[var(--brand-primary)] font-semibold tracking-tight">
             {t("bentoTitle")}
           </h3>
           <p className="text-[var(--text-muted)] text-xs mt-0.5 font-medium">
@@ -82,20 +82,20 @@ export function BentoCategories() {
             <Link
               key={c.id}
               href={`/products?category=${c.slug}`}
-              className="theme-aware relative rounded-2xl overflow-hidden group min-h-[132px] p-3.5 flex flex-col justify-between border border-[var(--bg-border)] hover:border-[var(--brand-green-mid)]/25 hover:shadow-md transition-all active:scale-[0.99]"
+              className="theme-aware relative rounded-2xl overflow-hidden group min-h-[132px] p-3.5 flex flex-col justify-between border border-[var(--bg-border)] hover:border-[var(--brand-primary-hover)]/25 hover:shadow-md transition-all active:scale-[0.99]"
               style={{ backgroundColor: TINT_VAR[c.tint] ?? "var(--tint-cool)" }}
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.9),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.42),transparent_58%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,var(--tint-sheen),transparent_34%),linear-gradient(135deg,var(--tint-glaze),transparent_58%)] pointer-events-none" />
               <Icon
                 size={82}
                 weight="regular"
-                className="absolute -right-4 -bottom-5 text-[var(--brand-green-mid)]/12 group-hover:rotate-6 group-hover:scale-105 transition-transform"
+                className="absolute -right-4 -bottom-5 text-[var(--brand-primary-hover)]/12 group-hover:rotate-6 group-hover:scale-105 transition-transform"
               />
               <div className="relative z-10 flex items-center justify-between">
-                <span className="w-9 h-9 rounded-xl bg-white/65 border border-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] flex items-center justify-center text-[var(--brand-green)]">
+                <span className="w-9 h-9 rounded-xl bg-[var(--tint-icon-bg)] border border-[var(--tint-icon-border)] shadow-[var(--shadow-inner-border)] flex items-center justify-center text-[var(--brand-primary)]">
                   <Icon size={18} weight="bold" />
                 </span>
-                <span className="w-7 h-7 rounded-full bg-white/55 text-[var(--brand-green)] flex items-center justify-center opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                <span className="w-7 h-7 rounded-full bg-[var(--tint-icon-bg)] text-[var(--brand-primary)] flex items-center justify-center opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
                   <ArrowRight size={12} weight="bold" />
                 </span>
               </div>
@@ -117,17 +117,17 @@ export function BentoCategories() {
       {/* All categories — full-width slim bar below the category grid */}
       <Link
         href="/products"
-        className="theme-aware mt-3 relative rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--bg-border-strong)] group flex items-center justify-between px-4 py-2.5 hover:border-[var(--brand-copper)] hover:shadow-md transition-all"
+        className="theme-aware mt-3 relative rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--bg-border-strong)] group flex items-center justify-between px-4 py-2.5 hover:border-[var(--brand-primary)] hover:shadow-md transition-all"
       >
         <div className="flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-lg bg-[var(--brand-sage)] flex items-center justify-center group-hover:bg-[var(--brand-green)] group-hover:text-white transition-colors text-[var(--brand-green)]">
+          <span className="w-7 h-7 rounded-lg bg-[var(--brand-soft)] flex items-center justify-center group-hover:bg-[var(--brand-action)] group-hover:text-white transition-colors text-[var(--brand-primary)]">
             <SquaresFour size={14} weight="fill" />
           </span>
-          <span className="font-sans text-sm font-semibold tracking-tight text-[var(--brand-green)]">
+          <span className="font-sans text-sm font-semibold tracking-tight text-[var(--brand-primary)]">
             {t("bentoViewAll")}
           </span>
         </div>
-        <span className="flex items-center gap-1.5 text-[var(--brand-copper)] font-bold text-xs group-hover:gap-2.5 transition-all">
+        <span className="flex items-center gap-1.5 text-[var(--brand-primary)] font-bold text-xs group-hover:gap-2.5 transition-all">
           {t("bentoSeeMore")}
           <ArrowRight size={12} weight="bold" />
         </span>

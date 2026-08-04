@@ -122,8 +122,15 @@ interface Product {
 
 - `translations.ts` keys every UI string by id, with ES / PT / EN values.
 - `t(key, lang)` looks up; `tpl(key, lang, vars)` interpolates `{placeholders}`.
-- The `<html lang>` attribute drives selection; a language toggle persists to
-  `localStorage`.
+- On the first visit, middleware selects the first supported value from
+  `Accept-Language`, then falls back to Cloudflare's `CF-IPCountry` location
+  header. The detected value is persisted in a cookie.
+- The `<html lang>` attribute reflects the active language; a manual language
+  change persists to both `localStorage` and the cookie and always wins over
+  future automatic detection.
+- Production country fallback requires **IP Geolocation** or the **Add visitor
+  location headers** Managed Transform to be enabled in Cloudflare so the
+  request includes `CF-IPCountry`.
 - Product/catalog copy is **per-product**, not in the UI dictionary.
 - Default language: **Spanish** (`es`).
 

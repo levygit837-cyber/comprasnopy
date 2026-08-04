@@ -43,7 +43,7 @@ export function CartDrawer() {
   return (
     <Dialog.Root open={open} onOpenChange={(o) => (o ? null : close("cart"))}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-[var(--brand-green)]/30 z-[60] backdrop-blur-sm data-[state=open]:animate-fade-in" />
+        <Dialog.Overlay className="fixed inset-0 bg-[var(--overlay)] z-[60] backdrop-blur-sm data-[state=open]:animate-fade-in" />
         <Dialog.Content className="theme-aware fixed top-0 right-0 h-full w-full max-w-[400px] bg-[var(--bg-card)] shadow-2xl z-[70] flex flex-col animate-slide-in-right">
           <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--bg-border)]">
             <Dialog.Title className="text-[10px] font-bold text-[var(--text-subtle)] uppercase tracking-widest">
@@ -62,14 +62,14 @@ export function CartDrawer() {
           <div className="flex-grow overflow-y-auto">
             {lines.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center px-8 py-12 gap-3">
-                <span className="w-12 h-12 rounded-full bg-[var(--brand-sage)] flex items-center justify-center text-[var(--brand-green-mid)]">
+                <span className="w-12 h-12 rounded-full bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand-primary-hover)]">
                   <ShoppingBag size={22} weight="regular" />
                 </span>
                 <p className="text-xs text-[var(--text-muted)] max-w-xs">{t("cartEmpty")}</p>
                 <Dialog.Close asChild>
                   <Link
                     href="/products"
-                    className="mt-2 text-xs font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)] transition-colors"
+                    className="mt-2 text-xs font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)] transition-colors"
                   >
                     {t("navCatalog")} &rarr;
                   </Link>
@@ -114,7 +114,7 @@ export function CartDrawer() {
                           {line.lab}
                         </p>
                       )}
-                      <p className="text-xs font-bold tabular-nums text-[var(--brand-green)] mt-1">
+                      <p className="text-xs font-bold tabular-nums text-[var(--brand-primary)] mt-1">
                         {format(line.priceUSD)}
                       </p>
 
@@ -162,7 +162,7 @@ export function CartDrawer() {
                 <span className="text-[10px] font-bold text-[var(--text-subtle)] uppercase tracking-widest">
                   {t("cartTotal")}
                 </span>
-                <span className="text-xl font-bold tabular-nums text-[var(--brand-green)]">
+                <span className="text-xl font-bold tabular-nums text-[var(--brand-primary)]">
                   {format(subtotalUSD)}
                 </span>
               </div>
@@ -170,7 +170,7 @@ export function CartDrawer() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full bg-[var(--brand-copper)] hover:bg-[var(--brand-copper-dark)] text-white rounded-full font-bold text-xs py-3 transition-colors shadow-md active:scale-[0.99]"
+                className="flex items-center justify-center gap-2 w-full bg-[var(--brand-action)] hover:bg-[var(--brand-action-hover)] text-white rounded-full font-bold text-xs py-3 transition-colors shadow-md active:scale-[0.99]"
               >
                 {t("cartContinueWhatsApp")}
               </a>

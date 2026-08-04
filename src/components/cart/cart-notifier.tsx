@@ -101,7 +101,7 @@ export function CartNotifier() {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="flex items-center gap-1 text-[10px] font-bold text-[var(--brand-green)] uppercase tracking-wider">
+          <p className="flex items-center gap-1 text-[10px] font-bold text-[var(--brand-primary)] uppercase tracking-wider">
             <Check size={10} weight="bold" /> {t("productAdded")}
           </p>
           <p className="text-xs font-bold text-[var(--text)] truncate">
@@ -118,7 +118,7 @@ export function CartNotifier() {
               handleClose();
               openOverlay("cart");
             }}
-            className="mt-0.5 text-[10px] font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)] transition-colors"
+            className="mt-0.5 text-[10px] font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)] transition-colors"
           >
             {t("cartTitle")} &rarr;
           </button>

@@ -16,7 +16,7 @@ export function FirstBuyGuide() {
 
   return (
     <section className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 mt-12 md:mt-16 mb-8">
-      <div className="bg-[var(--brand-green)] rounded-3xl p-6 md:p-10 relative overflow-hidden">
+      <div className="bg-[var(--brand-footer)] rounded-3xl p-6 md:p-10 relative overflow-hidden">
         <ShieldCheck
           size={220}
           weight="regular"
@@ -40,7 +40,7 @@ export function FirstBuyGuide() {
               key={step.key}
               className="flex flex-col items-center text-center group cursor-default"
             >
-              <div className="w-11 h-11 rounded-full bg-white/10 text-[var(--brand-copper)] flex items-center justify-center text-base font-sans font-semibold mb-2.5 group-hover:bg-[var(--brand-copper)] group-hover:text-white transition-colors">
+              <div className="w-11 h-11 rounded-full bg-white/10 text-[var(--brand-on-dark)] flex items-center justify-center text-base font-sans font-semibold mb-2.5 group-hover:bg-[var(--brand-action)] group-hover:text-white transition-colors">
                 {idx + 1}
               </div>
               <h4 className="text-white font-bold text-xs mb-0.5">{t(step.key)}</h4>

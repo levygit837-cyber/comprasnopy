@@ -27,7 +27,7 @@ export const categories: Category[] = [
     id: "moduladores-hormonales",
     slug: "moduladores-hormonales",
     icon: "SlidersHorizontal",
-    tint: "sage",
+    tint: "sun",
     name: {
       es: "Moduladores Hormonales",
       pt: "Moduladores Hormonais",
@@ -60,7 +60,7 @@ export const categories: Category[] = [
     id: "bienestar-antienvejecimiento",
     slug: "bienestar-antienvejecimiento",
     icon: "Sparkle",
-    tint: "sage",
+    tint: "sun",
     name: {
       es: "Bienestar y Antienvejecimiento",
       pt: "Bem-estar e Antienvelhecimento",
@@ -82,7 +82,7 @@ export const categories: Category[] = [
     id: "farmacia-cuidados",
     slug: "farmacia-cuidados",
     icon: "Pill",
-    tint: "sage",
+    tint: "sun",
     name: {
       es: "Farmacia y Cuidados",
       pt: "Farmacia e Cuidados",

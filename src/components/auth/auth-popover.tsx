@@ -77,7 +77,7 @@ export function AuthPopover() {
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="hidden sm:flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--brand-green)] transition-colors text-xs font-bold"
+            className="hidden sm:flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors text-xs font-bold"
           >
             <User size={16} />
             <span className="hidden lg:inline">{t("navRegister")}</span>
@@ -109,9 +109,9 @@ export function AuthPopover() {
         <DropdownMenu.Trigger asChild>
           <button
             type="button"
-            className="hidden sm:flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--brand-green)] transition-colors text-xs font-bold"
+            className="hidden sm:flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors text-xs font-bold"
           >
-            <span className="w-7 h-7 rounded-full bg-[var(--brand-sage)] text-[var(--brand-green)] flex items-center justify-center font-bold uppercase">
+            <span className="w-7 h-7 rounded-full bg-[var(--brand-soft)] text-[var(--brand-primary)] flex items-center justify-center font-bold uppercase">
               {(name[0] || "U").toUpperCase()}
             </span>
             <span className="hidden lg:inline max-w-[120px] truncate">{name}</span>
@@ -170,7 +170,7 @@ export function AuthPopover() {
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="hidden sm:flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--brand-green)] transition-colors text-xs font-bold"
+          className="hidden sm:flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors text-xs font-bold"
         >
           <User size={16} />
           <span className="hidden lg:inline">{t("navRegister")}</span>
@@ -368,7 +368,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
   return (
     <div className="animate-fade-in">
       <div className="mb-3">
-        <h3 className="font-sans text-base font-semibold text-[var(--brand-green)] tracking-tight leading-tight">
+        <h3 className="font-sans text-base font-semibold text-[var(--brand-primary)] tracking-tight leading-tight">
           {greeting}
         </h3>
         <p className="text-[11px] text-[var(--text-muted)] mt-0.5">{subline}</p>
@@ -392,7 +392,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
             className={cn(
               "theme-aware flex-1 text-[11px] font-bold py-1.5 rounded-md transition-colors",
               mode === "register"
-                ? "bg-[var(--bg-card)] text-[var(--brand-green)] shadow-sm"
+                ? "bg-[var(--bg-card)] text-[var(--brand-primary)] shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text)]",
             )}
           >
@@ -404,7 +404,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
             className={cn(
               "theme-aware flex-1 text-[11px] font-bold py-1.5 rounded-md transition-colors",
               mode === "login"
-                ? "bg-[var(--bg-card)] text-[var(--brand-green)] shadow-sm"
+                ? "bg-[var(--bg-card)] text-[var(--brand-primary)] shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text)]",
             )}
           >
@@ -500,13 +500,13 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
           <p className="text-[11px] text-[var(--brand-red)] font-medium pt-0.5">{error}</p>
         )}
         {info && (
-          <p className="text-[11px] text-[var(--brand-green)] font-medium pt-0.5">{info}</p>
+          <p className="text-[11px] text-[var(--brand-primary)] font-medium pt-0.5">{info}</p>
         )}
 
         <button
           type="submit"
           disabled={submitting || disabled}
-          className="w-full bg-[var(--brand-green)] hover:bg-[var(--brand-green-mid)] disabled:opacity-50 text-white font-bold rounded-lg py-2 text-xs transition-colors active:scale-[0.99]"
+          className="w-full bg-[var(--brand-action)] hover:bg-[var(--brand-action-hover)] disabled:opacity-50 text-white font-bold rounded-lg py-2 text-xs transition-colors active:scale-[0.99]"
         >
           {submitting
             ? "..."
@@ -523,7 +523,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
           <button
             type="button"
             onClick={() => onChangeMode("login")}
-            className="font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)]"
+            className="font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)]"
           >
             &larr; {t("navAccount")}
           </button>
@@ -533,7 +533,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
             <button
               type="button"
               onClick={() => onChangeMode("login")}
-              className="font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)]"
+              className="font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)]"
             >
               {t("navAccount")}
             </button>
@@ -543,7 +543,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
             <button
               type="button"
               onClick={() => onChangeMode("forgot")}
-              className="font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)]"
+              className="font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)]"
             >
               {t("authForgotPassword")}
             </button>
@@ -552,7 +552,7 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
             <button
               type="button"
               onClick={() => onChangeMode("register")}
-              className="font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)]"
+              className="font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)]"
             >
               {t("navRegister")}
             </button>
@@ -599,7 +599,7 @@ function FieldRow({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        className="theme-aware w-full h-9 pl-8 pr-3 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg)] text-xs text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:border-[var(--brand-copper)] focus:ring-2 focus:ring-[var(--brand-copper)]/15 outline-none transition-colors"
+        className="theme-aware w-full h-9 pl-8 pr-3 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg)] text-xs text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/15 outline-none transition-colors"
       />
     </div>
   );
@@ -616,7 +616,7 @@ function CountrySelect({ value, onChange, lang }: CountrySelectProps) {
   return (
     <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger
-        className="theme-aware flex items-center justify-between w-full h-9 px-3 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg)] text-xs text-[var(--text)] focus:border-[var(--brand-copper)] focus:ring-2 focus:ring-[var(--brand-copper)]/15 outline-none"
+        className="theme-aware flex items-center justify-between w-full h-9 px-3 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg)] text-xs text-[var(--text)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/15 outline-none"
       >
         <Select.Value>
           <span className="flex items-center gap-2">
@@ -639,7 +639,7 @@ function CountrySelect({ value, onChange, lang }: CountrySelectProps) {
               <Select.Item
                 key={c.code}
                 value={c.code}
-                className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:bg-[var(--bg-muted)] focus:bg-[var(--bg-muted)] outline-none cursor-pointer data-[state=checked]:text-[var(--brand-green)]"
+                className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:bg-[var(--bg-muted)] focus:bg-[var(--bg-muted)] outline-none cursor-pointer data-[state=checked]:text-[var(--brand-primary)]"
               >
                 <Select.ItemText>
                   <span className="flex items-center gap-2">
@@ -648,7 +648,7 @@ function CountrySelect({ value, onChange, lang }: CountrySelectProps) {
                   </span>
                 </Select.ItemText>
                 <Select.ItemIndicator>
-                  <Check size={11} weight="bold" className="text-[var(--brand-copper)]" />
+                  <Check size={11} weight="bold" className="text-[var(--brand-primary)]" />
                 </Select.ItemIndicator>
               </Select.Item>
             ))}

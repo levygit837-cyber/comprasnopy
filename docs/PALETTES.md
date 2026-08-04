@@ -1,68 +1,67 @@
-# Viana Pharmacy — Palette
+# Compraspy — Palette
 
-> The single, locked brand palette: **Herbal military-green** on a warm ivory
-> canvas. The earlier 3-palette comparison (Emerald / Herbal / Clinical) has
-> been retired after review; Herbal is the chosen system.
+> The brand system uses a restrained burnt orange on warm ivory in light mode,
+> and orange light over neutral black and charcoal surfaces in dark mode.
 
-## Why Herbal
+## Direction
 
-A deep, earthy military/forest green reads as authority, trust, and calm
-without going neon (too energetic) or clinical-teal (too corporate/sterile).
-On a warm ivory canvas (not pure white), it feels premium and human, the way a
-neighborhood pharmacy should. This matches the Apple-esque minimalist
-direction: confident color used sparingly, generous warm space around it.
+Orange communicates movement, accessibility, and the energy of cross-border
+commerce. The selected ramp stays burnt rather than neon so the marketplace
+continues to feel premium and trustworthy. Neutral surfaces carry most of the
+interface; orange is reserved for brand voice, focus, price emphasis, and
+actions.
 
-## The ramp (the only place raw hex lives)
+The dark theme is intentionally neutral. It does not tint black surfaces green
+or orange. Orange appears as a controlled highlight, which keeps product
+photography and text readable without abandoning the brand.
 
-Defined in `src/styles/tokens.css` as `--brand-50` through `--brand-950`.
+## Core brand colors
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| `--brand-50`  | `#f4f6ee` | Soft brand backgrounds, faint tints |
-| `--brand-100` | `#e5ead2` | Hover washes, subtle fills |
-| `--brand-200` | `#cdd5a8` | |
-| `--brand-300` | `#adbb78` | |
-| `--brand-400` | `#8ba24c` | |
-| `--brand-500` | `#6c8531` | Mid brand |
-| `--brand-600` | `#536e2c` | **PRIMARY brand** (buttons, links, marks) |
-| `--brand-700` | `#425824` | Strong (hovers) |
-| `--brand-800` | `#374820` | |
-| `--brand-900` | `#2d3b1d` | Deep section gradient start |
-| `--brand-950` | `#182110` | Deepest (footer, dark sections) |
+| Role | Light | Dark | Use |
+|---|---:|---:|---|
+| Brand primary | `#c94416` | `#ff8a5b` | Text links, focus, prices, marks |
+| Brand primary hover | `#a93511` | `#ffad8c` | Foreground hover states |
+| Action | `#c94416` | `#c94416` | Buttons and filled controls |
+| Action hover | `#a93511` | `#a93511` | Filled-control hover states |
+| Brand soft | `#fff0e8` | `#271a15` | Selected rows and soft washes |
+| Brand soft strong | `#f8c8b2` | `#45291f` | Focus halos and strong tint borders |
+| Brand on dark | `#ff8a5b` | `#ff8a5b` | Orange details on charcoal sections |
 
-## Surfaces, text, accent
+The brighter logo orange is `#e85d2a`. Interface actions use the deeper
+`#c94416` so white text maintains accessible contrast.
 
-| Role | Token | Value |
-|------|-------|-------|
-| Canvas | `--color-canvas` | `#fbfbf9` (warm ivory) |
-| Surface | `--color-surface` | `#ffffff` |
-| Surface muted | `--color-surface-muted` | `#f5f5f1` |
-| Text | `--color-text` | `#1f2418` (warm near-black, never pure) |
-| Text muted | `--color-text-muted` | `#5c5f55` |
-| Hairline border | `--color-border` | `rgba(31,36,24,0.08)` |
-| Accent (use sparingly) | `--color-accent` | `#b0822a` (deep amber/gold) |
-| WhatsApp CTA | `--wa-green` | `#1fa37a` (brand-harmonized, not `#25d366`) |
+## Surfaces and text
 
-## Rules
-
-- Components consume **only** semantic tokens, never raw ramp hex.
-- One accent only. The accent appears rarely, for emphasis (a stat, a chip),
-  never as a competing brand color.
-- WhatsApp green is desaturated toward the brand so the CTA stays part of the
-  family instead of looking like a loud sticker.
-- No section flips theme: the whole page is light ivory with green as the
-  voice of authority. The footer and any deep section use the brand-950
-  gradient, never an inverted white-on-green hero.
+| Role | Light | Dark |
+|---|---:|---:|
+| Canvas | `#fcfbfa` | `#0a0908` |
+| Card | `#ffffff` | `#141210` |
+| Muted surface | `#f8f2ee` | `#1d1916` |
+| Border | `#eee3dc` | `#2b2521` |
+| Strong border | `#dccbc1` | `#40362f` |
+| Text | `#241b17` | `#f8f4f1` |
+| Muted text | `#72645d` | `#c1b4ac` |
+| Subtle text | `#9d8d84` | `#8f8078` |
+| Footer / dark section | `#211815` | `#070605` |
 
 ## Category tints
 
-Each product category gets a desaturated wash background for its media:
+Category cards use quiet neutral, orange, and sunlit washes. In dark mode
+these become low-chroma charcoal variants rather than colored panels.
 
-| Tint | Token | Use |
-|------|-------|-----|
-| cool | `--tint-cool` | Medicamentos, Salud |
-| warm | `--tint-warm` | Cuidado personal, Bebe |
-| sage | `--tint-sage` | Higiene |
+| Tint | Light | Dark |
+|---|---:|---:|
+| Cool neutral | `#f2f0ee` | `#191817` |
+| Warm orange | `#fff0e8` | `#241713` |
+| Sun | `#fff6df` | `#241e12` |
 
-These live in the ramp section and are referenced by category in
-`src/data/categories.ts`.
+## Rules
+
+- Components consume semantic variables from `src/app/globals.css`.
+- Filled orange controls use `--brand-action`; orange foregrounds use
+  `--brand-primary`.
+- Dark-mode canvases stay neutral black or charcoal. Do not tint them with the
+  brand hue.
+- Product photography uses normal blending in dark mode to preserve color.
+- Platform colors, such as the WhatsApp icon green, are allowed only on the
+  platform mark itself.

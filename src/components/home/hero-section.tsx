@@ -103,7 +103,7 @@ const COPY: Record<Lang, CampaignCopy[]> = {
     {
       eyebrow: "NUEVA PRESENTACIÓN",
       title: "TIRZEC 15 con nueva caja y nuevo vial",
-      body: "4 viales de 15 mg/0,5 mL. Presentación original disponible en el catálogo Viana.",
+      body: "4 viales de 15 mg/0,5 mL. Presentación original disponible en el catálogo Compraspy.",
       cta: "Ver TIRZEC 15",
       visualAlt: "Nueva caja de TIRZEC 15 con cuatro viales",
     },
@@ -140,21 +140,21 @@ const COPY: Record<Lang, CampaignCopy[]> = {
       title: "Pedido y consulta por WhatsApp",
       body: "Envíe su lista, consulte disponibilidad y coordine pago, retiro o entrega.",
       cta: "Abrir WhatsApp",
-      visualAlt: "Atención de Farmacia Viana por WhatsApp con productos del catálogo",
+      visualAlt: "Atención de Compraspy por WhatsApp con productos del catálogo",
     },
     {
-      eyebrow: "VIANA EN INSTAGRAM",
+      eyebrow: "COMPRASPY EN INSTAGRAM",
       title: "Novedades y productos en su feed",
       body: "Acompañe nuevas presentaciones, avisos y destacados del catálogo.",
       cta: "Abrir Instagram",
-      visualAlt: "Productos de Farmacia Viana presentados para Instagram",
+      visualAlt: "Productos de Compraspy presentados para Instagram",
     },
   ],
   pt: [
     {
       eyebrow: "NOVA APRESENTAÇÃO",
       title: "TIRZEC 15 com nova caixa e novo frasco",
-      body: "4 frascos de 15 mg/0,5 mL. Apresentação original disponível no catálogo Viana.",
+      body: "4 frascos de 15 mg/0,5 mL. Apresentação original disponível no catálogo Compraspy.",
       cta: "Ver TIRZEC 15",
       visualAlt: "Nova caixa de TIRZEC 15 com quatro frascos",
     },
@@ -191,21 +191,21 @@ const COPY: Record<Lang, CampaignCopy[]> = {
       title: "Pedido e consulta pelo WhatsApp",
       body: "Envie sua lista, confira a disponibilidade e combine pagamento, retirada ou entrega.",
       cta: "Abrir WhatsApp",
-      visualAlt: "Atendimento da Farmácia Viana pelo WhatsApp com produtos do catálogo",
+      visualAlt: "Atendimento da Compraspy pelo WhatsApp com produtos do catálogo",
     },
     {
-      eyebrow: "VIANA NO INSTAGRAM",
+      eyebrow: "COMPRASPY NO INSTAGRAM",
       title: "Novidades e produtos no seu feed",
       body: "Acompanhe novas apresentações, avisos e destaques do catálogo.",
       cta: "Abrir Instagram",
-      visualAlt: "Produtos da Farmácia Viana apresentados para o Instagram",
+      visualAlt: "Produtos da Compraspy apresentados para o Instagram",
     },
   ],
   en: [
     {
       eyebrow: "NEW PRESENTATION",
       title: "TIRZEC 15 with a new box and new vial",
-      body: "4 vials of 15 mg/0.5 mL. Original presentation available in the Viana catalog.",
+      body: "4 vials of 15 mg/0.5 mL. Original presentation available in the Compraspy catalog.",
       cta: "View TIRZEC 15",
       visualAlt: "New TIRZEC 15 box with four vials",
     },
@@ -242,14 +242,14 @@ const COPY: Record<Lang, CampaignCopy[]> = {
       title: "Orders and questions on WhatsApp",
       body: "Send your list, check availability, and arrange payment, pickup, or delivery.",
       cta: "Open WhatsApp",
-      visualAlt: "Viana Pharmacy WhatsApp support with catalog products",
+      visualAlt: "Compraspy WhatsApp support with catalog products",
     },
     {
-      eyebrow: "VIANA ON INSTAGRAM",
+      eyebrow: "COMPRASPY ON INSTAGRAM",
       title: "New products and updates in your feed",
       body: "Follow new presentations, notices, and catalog highlights.",
       cta: "Open Instagram",
-      visualAlt: "Viana Pharmacy products presented for Instagram",
+      visualAlt: "Compraspy products presented for Instagram",
     },
   ],
 };
@@ -259,7 +259,7 @@ interface ProductVisualProps {
   alt: string;
   className: string;
   imageClassName?: string;
-  framed?: boolean;
+  editorialPhoto?: boolean;
   priority?: boolean;
 }
 
@@ -268,15 +268,15 @@ function ProductVisual({
   alt,
   className,
   imageClassName,
-  framed = false,
+  editorialPhoto = false,
   priority = false,
 }: ProductVisualProps) {
   return (
     <div
       className={cn(
         "absolute z-10",
-        framed &&
-          "overflow-hidden rounded-2xl border border-white/65 bg-white/96 shadow-[0_24px_60px_rgba(8,56,42,0.24)]",
+        editorialPhoto &&
+          "hero-editorial-photo overflow-hidden rounded-[1.75rem] border border-[var(--product-photo-border)] bg-[var(--product-photo-bg)] shadow-[0_24px_60px_rgba(76,36,20,0.24)]",
         className,
       )}
     >
@@ -300,9 +300,9 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "tirzec":
       return (
         <>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_42%,rgba(217,119,78,0.32),transparent_30%),linear-gradient(115deg,#08382a_0%,#08382a_43%,#0e4b39_43%,#0e4b39_70%,#fcfbfa_70%,#fcfbfa_100%)]" />
-          <div className="absolute -right-[8%] -top-[40%] h-[120%] w-[46%] rotate-12 rounded-[50%] border-[3px] border-[#d9774e]/65" />
-          <div className="absolute right-[2%] top-[5%] text-[11vw] font-extrabold leading-none tracking-[-0.08em] text-[#08382a]/[0.055] md:text-[150px]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_42%,var(--hero-glow),transparent_30%),linear-gradient(115deg,var(--hero-deep)_0%,var(--hero-deep)_43%,var(--hero-mid)_43%,var(--hero-mid)_70%,var(--hero-canvas)_70%,var(--hero-canvas)_100%)]" />
+          <div className="absolute -right-[8%] -top-[40%] h-[120%] w-[46%] rotate-12 rounded-[50%] border-[3px] border-[var(--brand-primary)]/65" />
+          <div className="absolute right-[2%] top-[5%] text-[11vw] font-extrabold leading-none tracking-[-0.08em] text-[var(--brand-primary)]/[0.07] md:text-[150px]">
             T15
           </div>
           <ProductVisual
@@ -310,7 +310,7 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
             alt={sharedAlt}
             priority={priority}
             className="bottom-[2%] left-[7%] h-[43%] w-[88%] md:bottom-[1%] md:left-[42%] md:h-[92%] md:w-[56%]"
-            imageClassName="drop-shadow-[0_22px_22px_rgba(8,56,42,0.30)]"
+            imageClassName="drop-shadow-[0_22px_22px_rgba(76,36,20,0.3)]"
           />
         </>
       );
@@ -318,17 +318,17 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "tg":
       return (
         <>
-          <div className="absolute inset-0 bg-[linear-gradient(120deg,#fcfbfa_0%,#fcfbfa_58%,#e9ece8_58%,#e9ece8_96%,#08382a_96%,#08382a_100%)]" />
-          <div className="absolute -left-[8%] top-[4%] h-[36%] w-[65%] -rotate-3 bg-[#d9774e] opacity-95 [clip-path:polygon(0_0,94%_0,80%_100%,0_100%)]" />
-          <div className="absolute left-0 top-[38%] h-1 w-[72%] bg-[#08382a]" />
-          <div className="absolute bottom-[8%] left-[7%] h-[28%] w-[42%] rounded-[50%] bg-white shadow-[0_22px_40px_rgba(8,56,42,0.16)] md:bottom-[8%] md:left-[7%] md:h-[18%] md:w-[34%]" />
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,var(--hero-canvas)_0%,var(--hero-canvas)_58%,var(--hero-soft)_58%,var(--hero-soft)_96%,var(--brand-action)_96%,var(--brand-action)_100%)]" />
+          <div className="absolute -left-[8%] top-[4%] h-[36%] w-[65%] -rotate-3 bg-[var(--brand-action)] opacity-95 [clip-path:polygon(0_0,94%_0,80%_100%,0_100%)]" />
+          <div className="absolute left-0 top-[38%] h-1 w-[72%] bg-[var(--hero-deep)]" />
+          <div className="absolute bottom-[8%] left-[7%] h-[28%] w-[42%] rounded-[50%] bg-[var(--product-stage-bg)] shadow-[0_22px_40px_rgba(76,36,20,0.16)] md:bottom-[8%] md:left-[7%] md:h-[18%] md:w-[34%]" />
           <ProductVisual
             src="/images/products/premium/supplier-27940-primary.webp"
             alt={sharedAlt}
             priority={priority}
-            framed
-            className="bottom-[4%] left-[11%] h-[37%] w-[52%] md:bottom-[8%] md:left-[10%] md:h-[72%] md:w-[31%]"
-            imageClassName="mix-blend-multiply"
+            editorialPhoto
+            className="bottom-[5%] left-[10%] h-[35%] w-[54%] md:bottom-[10%] md:left-[8%] md:h-[66%] md:w-[34%]"
+            imageClassName="object-cover"
           />
         </>
       );
@@ -336,8 +336,8 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "testosterone":
       return (
         <>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_45%,rgba(217,119,78,0.22),transparent_28%),linear-gradient(118deg,#061f18_0%,#08382a_52%,#174b3b_100%)]" />
-          <div className="absolute bottom-[18%] right-[-3%] h-[16%] w-[62%] -rotate-6 bg-[#d9774e] opacity-90 [clip-path:polygon(4%_0,100%_0,94%_100%,0_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_45%,var(--hero-glow),transparent_28%),linear-gradient(118deg,var(--hero-deep)_0%,var(--hero-deep)_52%,var(--hero-mid)_100%)]" />
+          <div className="absolute bottom-[18%] right-[-3%] h-[16%] w-[62%] -rotate-6 bg-[var(--brand-action)] opacity-90 [clip-path:polygon(4%_0,100%_0,94%_100%,0_100%)]" />
           <div className="absolute right-[5%] top-[8%] h-[72%] w-[44%] rotate-6 rounded-3xl border border-white/15 bg-white/5" />
           <ProductVisual
             src="/images/products/testosterone-enanthate-10ml.png"
@@ -352,15 +352,15 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "pen":
       return (
         <>
-          <div className="absolute inset-0 bg-[linear-gradient(110deg,#fcfbfa_0%,#fcfbfa_58%,#e9ece8_58%,#e9ece8_96%,#08382a_96%,#08382a_100%)]" />
-          <div className="absolute -bottom-[24%] -left-[10%] h-[76%] w-[66%] rotate-6 rounded-[50%] border-[20px] border-[#d9774e]/85" />
-          <div className="absolute left-[4%] top-[12%] h-[68%] w-[54%] rounded-[2rem] bg-white shadow-[0_28px_70px_rgba(8,56,42,0.14)] md:w-[50%]" />
+          <div className="absolute inset-0 bg-[linear-gradient(110deg,var(--hero-canvas)_0%,var(--hero-canvas)_58%,var(--hero-soft)_58%,var(--hero-soft)_96%,var(--brand-action)_96%,var(--brand-action)_100%)]" />
+          <div className="absolute -bottom-[24%] -left-[10%] h-[76%] w-[66%] rotate-6 rounded-[50%] border-[20px] border-[var(--brand-primary)]/85" />
+          <div className="absolute left-[4%] top-[12%] h-[68%] w-[54%] rounded-[2rem] border border-[var(--product-photo-border)] bg-[var(--product-stage-bg)] shadow-[0_28px_70px_rgba(76,36,20,0.14)] md:w-[50%]" />
           <ProductVisual
-            src="/images/products/verified/tirzepatida-pen-75mg-full.webp"
+            src="/images/products/tirzepatide-75-pen-box.png"
             alt={sharedAlt}
             priority={priority}
-            className="bottom-[3%] left-[8%] h-[41%] w-[74%] md:bottom-[8%] md:left-[6%] md:h-[77%] md:w-[44%]"
-            imageClassName="scale-[1.04] mix-blend-multiply"
+            className="bottom-[4%] left-[6%] h-[38%] w-[78%] md:bottom-[13%] md:left-[5%] md:h-[62%] md:w-[46%]"
+            imageClassName="scale-[1.02] drop-shadow-[0_24px_24px_rgba(0,0,0,0.26)]"
           />
         </>
       );
@@ -368,22 +368,20 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "zphc-line":
       return (
         <>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_28%,rgba(217,119,78,0.25),transparent_26%),linear-gradient(118deg,#061f18_0%,#08382a_58%,#124939_100%)]" />
-          <div className="absolute bottom-[2%] right-[3%] h-[20%] w-[56%] rounded-[50%] border border-[#d9774e]/60 bg-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.28)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_28%,var(--hero-glow),transparent_26%),linear-gradient(118deg,var(--hero-deep)_0%,var(--hero-deep)_58%,var(--hero-mid)_100%)]" />
+          <div className="absolute bottom-[2%] right-[3%] h-[20%] w-[56%] rounded-[50%] border border-[var(--brand-primary)]/60 bg-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.28)]" />
           <ProductVisual
-            src="/images/products/verified/hgh-fragment-5mg-full.webp"
+            src="/images/products/HGH-FRAGMENT-5MG.png"
             alt="HGH Fragment 5 mg"
             priority={priority}
-            framed
             className="bottom-[3%] left-[30%] h-[30%] w-[29%] -rotate-2 md:bottom-[9%] md:left-[47%] md:h-[66%] md:w-[20%]"
-            imageClassName="mix-blend-multiply"
+            imageClassName="drop-shadow-[0_24px_22px_rgba(0,0,0,0.34)]"
           />
           <ProductVisual
-            src="/images/products/verified/bpc-157-20mg-full.webp"
+            src="/images/products/bpc-157-20mg.png"
             alt="BPC-157 20 mg"
-            framed
             className="bottom-[4%] left-[53%] h-[32%] w-[30%] rotate-2 md:bottom-[5%] md:left-[64%] md:h-[72%] md:w-[21%]"
-            imageClassName="mix-blend-multiply"
+            imageClassName="drop-shadow-[0_24px_22px_rgba(0,0,0,0.34)]"
           />
           <ProductVisual
             src="/images/products/tirzec/tirzec-15-box-canonical.webp"
@@ -397,7 +395,7 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "whatsapp":
       return (
         <>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_50%,rgba(31,163,122,0.62),transparent_34%),linear-gradient(115deg,#08382a_0%,#08382a_53%,#0d5a43_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_50%,var(--hero-glow),transparent_34%),linear-gradient(115deg,var(--hero-deep)_0%,var(--hero-deep)_53%,var(--hero-mid)_100%)]" />
           <div className="absolute right-[6%] top-[32%] h-[34%] w-[42%] rotate-3 rounded-[2.4rem] border border-white/25 bg-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.28)] md:top-[8%] md:h-[58%] md:w-[36%]" />
           <div className="absolute right-[12%] top-[39%] flex h-24 w-24 items-center justify-center rounded-full bg-white text-[#1fa37a] shadow-xl md:right-[15%] md:top-[20%] md:h-32 md:w-32">
             <WhatsappLogo size={72} weight="fill" />
@@ -420,30 +418,28 @@ function CampaignScene({ slide, priority }: { slide: CampaignSlide; priority: bo
     case "instagram":
       return (
         <>
-          <div className="absolute inset-0 bg-[linear-gradient(112deg,#fcfbfa_0%,#fcfbfa_56%,#e9ece8_56%,#e9ece8_96%,#08382a_96%,#08382a_100%)]" />
-          <div className="absolute left-[2%] top-[30%] h-[34%] w-[48%] rotate-6 rounded-[32%] bg-[linear-gradient(135deg,#d9774e_0%,#c84f72_52%,#7d3f85_100%)] md:-left-[12%] md:-top-[40%] md:h-[92%] md:w-[60%] md:rotate-12" />
-          <div className="absolute left-[8%] top-[37%] flex h-20 w-20 items-center justify-center rounded-3xl bg-white text-[var(--brand-green)] shadow-xl md:top-[11%] md:h-28 md:w-28">
+          <div className="absolute inset-0 bg-[linear-gradient(112deg,var(--hero-canvas)_0%,var(--hero-canvas)_56%,var(--hero-soft)_56%,var(--hero-soft)_96%,var(--brand-action)_96%,var(--brand-action)_100%)]" />
+          <div className="absolute left-[2%] top-[30%] h-[34%] w-[48%] rotate-6 rounded-[32%] bg-[linear-gradient(135deg,#f07a46_0%,#d64d2a_52%,#6f2b16_100%)] md:-left-[12%] md:-top-[40%] md:h-[92%] md:w-[60%] md:rotate-12" />
+          <div className="absolute left-[8%] top-[37%] flex h-20 w-20 items-center justify-center rounded-3xl bg-white text-[var(--brand-primary)] shadow-xl md:top-[11%] md:h-28 md:w-28">
             <InstagramLogo size={64} weight="bold" />
           </div>
           <ProductVisual
             src="/images/products/tirzec/tirzec-15-box-canonical.webp"
             alt="TIRZEC 15"
             className="bottom-[2%] left-[4%] h-[31%] w-[29%] md:bottom-[3%] md:left-[5%] md:h-[60%] md:w-[20%]"
-            imageClassName="drop-shadow-[0_18px_18px_rgba(8,56,42,0.28)]"
+            imageClassName="drop-shadow-[0_18px_18px_rgba(76,36,20,0.28)]"
           />
           <ProductVisual
-            src="/images/products/verified/tirzepatida-pen-75mg-full.webp"
+            src="/images/products/tirzepatide-75-pen-box.png"
             alt="Tirzepatide Pen 75 mg"
-            framed
             className="bottom-[4%] left-[28%] h-[27%] w-[30%] rotate-2 md:bottom-[6%] md:left-[21%] md:h-[55%] md:w-[20%]"
-            imageClassName="mix-blend-multiply"
+            imageClassName="drop-shadow-[0_18px_18px_rgba(76,36,20,0.28)]"
           />
           <ProductVisual
-            src="/images/products/verified/hgh-fragment-5mg-full.webp"
+            src="/images/products/HGH-FRAGMENT-5MG.png"
             alt="HGH Fragment 5 mg"
-            framed
             className="bottom-[2%] left-[52%] h-[28%] w-[30%] -rotate-2 md:bottom-[3%] md:left-[35%] md:h-[57%] md:w-[18%]"
-            imageClassName="mix-blend-multiply"
+            imageClassName="drop-shadow-[0_18px_18px_rgba(76,36,20,0.28)]"
           />
         </>
       );
@@ -456,8 +452,8 @@ function Cta({ slide }: { slide: CampaignSlide }) {
   const className = cn(
     "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-5 py-3 text-sm font-bold shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 active:scale-[0.98]",
     slide.tone === "light"
-      ? "bg-white text-[var(--brand-green)] focus-visible:ring-white/55"
-      : "bg-[var(--brand-green)] text-white focus-visible:ring-[var(--brand-green)]/25",
+      ? "bg-white text-[var(--brand-primary)] focus-visible:ring-white/55"
+      : "bg-[var(--brand-action)] text-white focus-visible:ring-[var(--brand-primary)]/25",
   );
 
   const content: ReactNode = (
@@ -585,14 +581,14 @@ export function HeroSection() {
   const nextLabel = lang === "es" ? "Siguiente" : lang === "pt" ? "Próximo" : "Next";
   const carouselLabel =
     lang === "es"
-      ? "Campañas y productos de Farmacia Viana"
+      ? "Campañas y productos de Compraspy"
       : lang === "pt"
-        ? "Campanhas e produtos da Farmácia Viana"
-        : "Viana Pharmacy campaigns and products";
+        ? "Campanhas e produtos da Compraspy"
+        : "Compraspy campaigns and products";
 
   return (
     <section className="mx-auto w-full max-w-[1400px] px-4 md:px-6 lg:px-8">
-      <h1 className="sr-only">Farmacia Viana</h1>
+      <h1 className="sr-only">Compraspy</h1>
       <div
         role="region"
         aria-roledescription="carousel"
@@ -601,7 +597,7 @@ export function HeroSection() {
         data-active-slide={active}
         data-slide-count={slides.length}
         data-autoplay-paused={paused}
-        className="relative h-[640px] touch-pan-y overflow-hidden rounded-2xl bg-[var(--brand-green)] shadow-[var(--shadow-soft)] md:h-[438px]"
+        className="relative h-[640px] touch-pan-y overflow-hidden rounded-2xl bg-[var(--brand-action)] shadow-[var(--shadow-soft)] md:h-[438px]"
         onMouseEnter={pauseWhilePresent}
         onMouseLeave={() => pauseFor(QUICK_INTERACTION_PAUSE_MS)}
         onFocusCapture={pauseWhilePresent}
@@ -663,13 +659,13 @@ export function HeroSection() {
                   slide.copySide === "right"
                     ? "md:left-auto md:right-[5%]"
                     : "md:left-[5%] md:right-auto",
-                  slide.tone === "light" ? "text-white" : "text-[var(--brand-green)]",
+                  slide.tone === "light" ? "text-white" : "text-[var(--brand-primary)]",
                 )}
               >
                 <p
                   className={cn(
                     "mb-2.5 text-[10px] font-extrabold uppercase tracking-[0.19em]",
-                    slide.tone === "light" ? "text-white/72" : "text-[var(--brand-copper)]",
+                    slide.tone === "light" ? "text-white/72" : "text-[var(--brand-primary)]",
                   )}
                 >
                   {slide.eyebrow}
@@ -682,7 +678,7 @@ export function HeroSection() {
                     "mt-3 max-w-[44ch] text-[13px] font-medium leading-relaxed md:text-sm",
                     slide.tone === "light"
                       ? "text-white/80"
-                      : "text-[var(--brand-green)]/75",
+                      : "text-[var(--brand-primary)]/75",
                   )}
                 >
                   {slide.body}
@@ -700,7 +696,7 @@ export function HeroSection() {
             type="button"
             aria-label={previousLabel}
             onClick={() => goTo(active - 1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-[var(--brand-green)]/92 text-white shadow-md transition-colors hover:bg-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-[var(--brand-action)]/92 text-white shadow-md transition-colors hover:bg-[var(--brand-action)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <ArrowLeft size={14} weight="bold" />
           </button>
@@ -708,7 +704,7 @@ export function HeroSection() {
             type="button"
             aria-label={nextLabel}
             onClick={() => goTo(active + 1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-[var(--brand-green)]/92 text-white shadow-md transition-colors hover:bg-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-[var(--brand-action)]/92 text-white shadow-md transition-colors hover:bg-[var(--brand-action)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <ArrowRight size={14} weight="bold" />
           </button>
@@ -727,7 +723,7 @@ export function HeroSection() {
               <span
                 className={cn(
                   "block h-full rounded-full transition-all duration-300",
-                  index === active ? "w-full bg-[var(--brand-copper)]" : "w-0 bg-transparent",
+                  index === active ? "w-full bg-[var(--brand-action)]" : "w-0 bg-transparent",
                 )}
               />
             </button>

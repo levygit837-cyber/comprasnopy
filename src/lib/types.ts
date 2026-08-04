@@ -2,7 +2,7 @@ import type { Lang } from "./store";
 
 export type Localized = Record<Lang, string>;
 
-export type Tint = "cool" | "warm" | "sage";
+export type Tint = "cool" | "warm" | "sun";
 
 export interface Category {
   id: string;

@@ -8,8 +8,9 @@ import { Minus, Plus, ShieldCheck, Storefront, WhatsappLogo } from "@phosphor-ic
 import { useCartStore } from "@/lib/cart-store";
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
+import { useTheme } from "@/lib/theme-context";
 import { categoryById } from "@/lib/categories";
-import { getImageSrcs } from "@/lib/images";
+import { getImageSrcs, hasOpaqueProductCanvas } from "@/lib/images";
 import { waLink } from "@/lib/store";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ export function ProductDetailView({ product, variants }: Props) {
   const add = useCartStore((s) => s.add);
 
   const { t, lang } = useLanguage();
+  const { theme } = useTheme();
   const { format } = useCurrency();
 
   const selected = useMemo(() => {
@@ -36,6 +38,7 @@ export function ProductDetailView({ product, variants }: Props) {
   }, [product, variants, activeId]);
 
   const images = getImageSrcs(selected) ?? [];
+  const activeImageSrc = images[activeImage];
   const category = categoryById(selected.category);
 
   useEffect(() => {
@@ -62,16 +65,19 @@ export function ProductDetailView({ product, variants }: Props) {
           className="aspect-square relative rounded-xl flex items-center justify-center overflow-hidden"
           style={{ backgroundColor: "var(--bg-card)" }}
         >
-          {images[activeImage] ? (
-            <Image
-              src={images[activeImage]}
-              alt={selected.name[lang]}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-              quality={86}
-              className="object-contain p-4"
-            />
+          {activeImageSrc ? (
+            <>
+              <Image
+                src={activeImageSrc}
+                alt={selected.name[lang]}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+                quality={86}
+                style={hasOpaqueProductCanvas(activeImageSrc) && theme === "dark" ? { filter: "brightness(0.72) contrast(1.1)", opacity: 0.74 } : undefined}
+                className="product-image-blend object-contain p-4"
+              />
+            </>
           ) : (
             <span className="text-[var(--text-subtle)] text-xs">{t("productImagePending")}</span>
           )}
@@ -92,12 +98,12 @@ export function ProductDetailView({ product, variants }: Props) {
                 className={cn(
                   "w-12 h-12 rounded-lg overflow-hidden border-2 transition-colors flex items-center justify-center",
                   i === activeImage
-                    ? "border-[var(--brand-copper)]"
+                    ? "border-[var(--brand-primary)]"
                     : "border-transparent hover:border-[var(--bg-border-strong)]",
                 )}
                 style={{ backgroundColor: "var(--bg-card)" }}
               >
-                <Image src={src} alt="" width={40} height={40} loading="lazy" quality={70} className="object-contain" />
+                <Image src={src} alt="" width={40} height={40} loading="lazy" quality={70} className="product-image-blend object-contain" />
               </button>
             ))}
           </div>
@@ -140,8 +146,8 @@ export function ProductDetailView({ product, variants }: Props) {
                   className={cn(
                     "px-2.5 py-1 rounded-full text-[11px] font-bold border transition-colors",
                     v.id === selected.id
-                      ? "bg-[var(--brand-green)] text-white border-[var(--brand-green)]"
-                      : "bg-transparent text-[var(--text-muted)] border-[var(--bg-border-strong)] hover:border-[var(--brand-copper)] hover:text-[var(--brand-copper)]",
+                      ? "bg-[var(--brand-action)] text-white border-[var(--brand-primary)]"
+                      : "bg-transparent text-[var(--text-muted)] border-[var(--bg-border-strong)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]",
                   )}
                 >
                   {v.strength ?? v.name[lang]}
@@ -164,7 +170,7 @@ export function ProductDetailView({ product, variants }: Props) {
               )}
             </div>
           )}
-          <p className="text-3xl font-bold text-[var(--brand-green)] tabular-nums tracking-tighter">
+          <p className="text-3xl font-bold text-[var(--brand-primary)] tabular-nums tracking-tighter">
             {format(selected.priceUSD)}
           </p>
         </div>
@@ -192,7 +198,7 @@ export function ProductDetailView({ product, variants }: Props) {
           <button
             type="button"
             onClick={() => add(selected, qty)}
-            className="flex-grow bg-[var(--brand-copper)] hover:bg-[var(--brand-copper-dark)] text-white rounded-full font-bold text-xs transition-colors shadow-md active:scale-[0.99]"
+            className="flex-grow bg-[var(--brand-action)] hover:bg-[var(--brand-action-hover)] text-white rounded-full font-bold text-xs transition-colors shadow-md active:scale-[0.99]"
           >
             {t("drawerAdd")}
           </button>
@@ -210,18 +216,18 @@ export function ProductDetailView({ product, variants }: Props) {
 
         <div className="mt-4 pt-3 border-t border-[var(--bg-border)] flex flex-wrap gap-3 text-[10px] font-medium text-[var(--text-muted)]">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck size={13} className="text-[var(--brand-green)]" />
+            <ShieldCheck size={13} className="text-[var(--brand-primary)]" />
             {t("drawerTrustGenuine")}
           </div>
           <div className="flex items-center gap-1.5">
-            <Storefront size={13} className="text-[var(--brand-green)]" />
+            <Storefront size={13} className="text-[var(--brand-primary)]" />
             {t("drawerTrustPickup")}
           </div>
         </div>
 
         <Link
           href="/products"
-          className="inline-flex items-center gap-1.5 mt-3 text-xs font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)] transition-colors"
+          className="inline-flex items-center gap-1.5 mt-3 text-xs font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)] transition-colors"
         >
           &larr; {t("navCatalog")}
         </Link>

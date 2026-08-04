@@ -16,12 +16,12 @@ export function CurrencySwitcher({ compact = false }: { compact?: boolean }) {
         <button
           type="button"
           className={cn(
-            "theme-aware flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-muted)] px-2.5 py-1 transition-colors hover:bg-[var(--bg-card)] hover:border-[var(--brand-copper)]",
+            "theme-aware flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-muted)] px-2.5 py-1 transition-colors hover:bg-[var(--bg-card)] hover:border-[var(--brand-primary)]",
             compact && "px-2 py-1",
           )}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          <span className="text-[var(--brand-green)]">
+          <span className="text-[var(--brand-primary)]">
             {meta.code} {formatRate(meta.code, rates[meta.code])}
           </span>
           <CaretDown size={9} weight="bold" className="opacity-60" />
@@ -41,7 +41,7 @@ export function CurrencySwitcher({ compact = false }: { compact?: boolean }) {
                 className={cn(
                   "theme-aware flex items-center justify-between w-full gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-colors",
                   c.code === currency
-                    ? "bg-[var(--brand-sage)] text-[var(--brand-green)]"
+                    ? "bg-[var(--brand-soft)] text-[var(--brand-primary)]"
                     : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)]",
                 )}
               >
@@ -56,7 +56,7 @@ export function CurrencySwitcher({ compact = false }: { compact?: boolean }) {
                     {c.label}
                   </span>
                   {c.code === currency && (
-                    <Check size={11} weight="bold" className="text-[var(--brand-copper)]" />
+                    <Check size={11} weight="bold" className="text-[var(--brand-primary)]" />
                   )}
                 </span>
               </button>

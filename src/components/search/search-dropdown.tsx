@@ -66,13 +66,13 @@ export function SearchDropdown({
           onFocus={() => setOpen(true)}
           placeholder={t("navSearch")}
           className={cn(
-            "theme-aware w-full rounded-full border border-transparent bg-[var(--bg-muted)] pl-10 pr-4 text-sm font-medium text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--brand-copper)] focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--brand-copper)]/10",
+            "theme-aware w-full rounded-full border border-transparent bg-[var(--bg-muted)] pl-10 pr-4 text-sm font-medium text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--brand-primary)] focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--brand-primary)]/10",
             mobile ? "h-12" : "h-9 text-xs",
           )}
         />
         <MagnifyingGlass
           size={mobile ? 17 : 14}
-          className="absolute left-3.5 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--brand-copper)]"
+          className="absolute left-3.5 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--brand-primary)]"
         />
       </div>
 
@@ -103,7 +103,7 @@ export function SearchDropdown({
                         setOpen(false);
                         onNavigate?.();
                       }}
-                      className="theme-aware flex min-h-14 items-center gap-3 rounded-lg p-2 transition-colors hover:bg-[var(--bg-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-copper)]"
+                      className="theme-aware flex min-h-14 items-center gap-3 rounded-lg p-2 transition-colors hover:bg-[var(--bg-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]"
                     >
                       <div className="relative h-11 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-[var(--image-bg)]">
                         {image ? (
@@ -130,7 +130,7 @@ export function SearchDropdown({
                           {[product.lab, product.strength].filter(Boolean).join(" | ")}
                         </p>
                       </div>
-                      <p className="text-xs font-bold tabular-nums text-[var(--brand-green)]">
+                      <p className="text-xs font-bold tabular-nums text-[var(--brand-primary)]">
                         {format(product.priceUSD)}
                       </p>
                     </Link>
@@ -144,7 +144,7 @@ export function SearchDropdown({
                     setOpen(false);
                     onNavigate?.();
                   }}
-                  className="inline-flex min-h-9 items-center text-xs font-bold text-[var(--brand-copper)] hover:text-[var(--brand-copper-dark)]"
+                  className="inline-flex min-h-9 items-center text-xs font-bold text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)]"
                 >
                   {t("searchViewAll")}
                 </Link>

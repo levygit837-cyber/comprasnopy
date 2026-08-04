@@ -20,6 +20,13 @@ const GENERATED_PRODUCT_IMAGES = generatedProductImagesData as Record<
   string[]
 >;
 
+// Prefer the locally reviewed transparent cutouts when the remote catalog
+// capture includes a large white canvas that clashes with dark surfaces.
+const TRANSPARENT_PRODUCT_IMAGES: Record<string, string[]> = {
+  "bpc-157-20mg": ["/images/products/bpc-157-20mg.png"],
+  "tirzepatida-pen-75mg": ["/images/products/tirzepatide-75-pen-box.png"],
+};
+
 const LEGACY_PRODUCT_IMAGES: Record<string, string[]> = {
   "ztrop-pen-72ui": ["ztrop-pen-72ui.png"],
   "ztrop-aq-90ui": ["ZTROP-AQ-90IU.png"],
@@ -128,6 +135,9 @@ export function getImageSrcs(product: Product | string): string[] | null {
     return product.images;
   }
 
+  const transparent = TRANSPARENT_PRODUCT_IMAGES[id];
+  if (transparent?.length) return transparent;
+
   const reviewed = REVIEWED_WEB_IMAGES[id]?.images;
   if (reviewed?.length) return reviewed;
 
@@ -146,4 +156,20 @@ export function getPrimaryImage(product: Product): string | null {
 
 export function hasImage(product: Product | string): boolean {
   return Boolean(getImageSrcs(product)?.length);
+}
+
+const TRANSPARENT_WEBP_IMAGES = new Set([
+  "/images/products/tirzec/tirzec-15-set-canonical.webp",
+  "/images/products/tirzec/tirzec-15-vials-canonical.webp",
+  "/images/products/tirzec/tirzec-15-box-canonical.webp",
+]);
+
+/**
+ * The supplier/reviewed WebPs are exported without alpha. This lets image
+ * surfaces soften their baked-in white canvas in dark mode while leaving the
+ * three canonical transparent WebPs untouched.
+ */
+export function hasOpaqueProductCanvas(src: string | undefined): boolean {
+  if (!src) return false;
+  return /\.webp(?:\?.*)?$/i.test(src) && !TRANSPARENT_WEBP_IMAGES.has(src.split("?")[0]!);
 }

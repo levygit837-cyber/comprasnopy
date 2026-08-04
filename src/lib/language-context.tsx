@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import { DEFAULT_LANG, type Lang } from "./store";
+import { isLang, LANGUAGE_COOKIE } from "./language";
 import { t, tpl } from "./translations";
 
 interface LanguageContextValue {
@@ -20,30 +21,55 @@ interface LanguageContextValue {
   tpl: (key: Parameters<typeof tpl>[0], vars: Record<string, string | number>) => string;
 }
 
-const STORAGE_KEY = "viana.lang.v1";
+const STORAGE_KEY = LANGUAGE_COOKIE;
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(DEFAULT_LANG);
+function persistLanguage(lang: Lang) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, lang);
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    document.cookie = `${LANGUAGE_COOKIE}=${lang}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  } catch {
+    /* ignore */
+  }
+}
+
+export function LanguageProvider({
+  children,
+  initialLang = DEFAULT_LANG,
+}: {
+  children: ReactNode;
+  initialLang?: Lang;
+}) {
+  const [lang, setLangState] = useState<Lang>(initialLang);
 
   useEffect(() => {
+    let resolvedLanguage = initialLang;
+
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY) as Lang | null;
-      if (stored === "es" || stored === "pt" || stored === "en") setLangState(stored);
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (isLang(stored)) resolvedLanguage = stored;
     } catch {
       /* ignore */
     }
-  }, []);
+
+    setLangState(resolvedLanguage);
+    persistLanguage(resolvedLanguage);
+  }, [initialLang]);
 
   const setLang = useCallback((next: Lang) => {
     setLangState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* ignore */
-    }
+    persistLanguage(next);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang === "pt" ? "pt-BR" : lang;
+  }, [lang]);
 
   const value = useMemo<LanguageContextValue>(
     () => ({

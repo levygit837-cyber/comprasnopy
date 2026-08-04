@@ -70,7 +70,7 @@ export function CatalogBrowser() {
             <button
               type="button"
               onClick={() => setCategory("all")}
-              className="theme-aware bg-[var(--brand-sage)] text-[var(--brand-green)] text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 hover:bg-[var(--bg-muted)] transition-colors"
+              className="theme-aware bg-[var(--brand-soft)] text-[var(--brand-primary)] text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 hover:bg-[var(--bg-muted)] transition-colors"
             >
               {categories.find((c) => c.id === category)?.name[lang]}
               <X size={10} weight="bold" />
@@ -80,7 +80,7 @@ export function CatalogBrowser() {
 
         {items.length === 0 ? (
           <div className="text-center py-12">
-            <h3 className="font-sans text-xl font-semibold text-[var(--brand-green)] tracking-tight mb-1">
+            <h3 className="font-sans text-xl font-semibold text-[var(--brand-primary)] tracking-tight mb-1">
               {t("catalogEmpty")}
             </h3>
             <p className="text-[var(--text-muted)] text-xs">{t("catalogEmptyBody")}</p>
@@ -102,7 +102,7 @@ export function CatalogBrowser() {
 
       <Dialog.Root open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[60] bg-[var(--brand-green)]/35 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+          <Dialog.Overlay className="fixed inset-0 z-[60] bg-[var(--overlay)] backdrop-blur-sm data-[state=open]:animate-fade-in" />
           <Dialog.Content className="theme-aware fixed inset-y-0 left-0 z-[70] h-[100dvh] w-[min(90vw,380px)] overflow-y-auto bg-[var(--bg-card)] shadow-2xl focus:outline-none lg:hidden">
             <header className="sticky top-0 z-10 flex min-h-16 items-center justify-between border-b border-[var(--bg-border)] bg-[var(--bg-card)] px-4">
               <Dialog.Title className="text-sm font-bold text-[var(--text)]">

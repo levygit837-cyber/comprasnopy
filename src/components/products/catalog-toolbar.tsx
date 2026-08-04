@@ -52,7 +52,7 @@ export function CatalogToolbar({ sort, onSortChange, count, onOpenFilters }: Cat
             <Select.Trigger
               className={cn(
                 "theme-aware flex min-h-11 items-center gap-2 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg-card)] px-3 py-2 text-xs font-bold text-[var(--text)]",
-                "hover:bg-[var(--bg-muted)] outline-none focus:border-[var(--brand-copper)]",
+                "hover:bg-[var(--bg-muted)] outline-none focus:border-[var(--brand-primary)]",
               )}
             >
               <Select.Value>{active ? t(active.labelKey) : t("catalogRelevance")}</Select.Value>
@@ -74,13 +74,13 @@ export function CatalogToolbar({ sort, onSortChange, count, onOpenFilters }: Cat
                       className={cn(
                         "flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer outline-none",
                         o.value === sort
-                          ? "bg-[var(--brand-sage)] text-[var(--brand-green)]"
+                          ? "bg-[var(--brand-soft)] text-[var(--brand-primary)]"
                           : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] focus:bg-[var(--bg-muted)]",
                       )}
                     >
                       <Select.ItemText>{t(o.labelKey)}</Select.ItemText>
                       <Select.ItemIndicator>
-                        <Check size={11} weight="bold" className="text-[var(--brand-copper)]" />
+                        <Check size={11} weight="bold" className="text-[var(--brand-primary)]" />
                       </Select.ItemIndicator>
                     </Select.Item>
                   ))}

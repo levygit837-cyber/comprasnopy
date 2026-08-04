@@ -33,8 +33,8 @@ export function OrdersList({ orders }: OrdersListProps) {
               className={
                 "text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-full " +
                 (order.status === "completed"
-                  ? "bg-[var(--brand-sage)] text-[var(--brand-green)]"
-                  : "bg-[var(--brand-copper)]/10 text-[var(--brand-copper)]")
+                  ? "bg-[var(--brand-soft)] text-[var(--brand-primary)]"
+                  : "bg-[var(--brand-action)]/10 text-[var(--brand-primary)]")
               }
             >
               {order.status === "completed" ? t("ordersStatusCompleted") : t("ordersStatusPaid")}
@@ -53,7 +53,7 @@ export function OrdersList({ orders }: OrdersListProps) {
                   )}
                   <span className="text-[var(--text-subtle)] ml-1">x{line.qty}</span>
                 </span>
-                <span className="tabular-nums font-bold text-[var(--brand-green)]">
+                <span className="tabular-nums font-bold text-[var(--brand-primary)]">
                   {formatFromUSD(line.priceUSD * line.qty, order.currency, lang, DEFAULT_RATES)}
                 </span>
               </li>
@@ -63,7 +63,7 @@ export function OrdersList({ orders }: OrdersListProps) {
             <span className="text-[10px] text-[var(--text-subtle)] uppercase tracking-wider font-bold">
               {t("cartTotal")}
             </span>
-            <span className="font-bold text-sm tabular-nums text-[var(--brand-green)]">
+            <span className="font-bold text-sm tabular-nums text-[var(--brand-primary)]">
               {formatFromUSD(order.totalUSD, order.currency, lang, DEFAULT_RATES)}
             </span>
           </div>

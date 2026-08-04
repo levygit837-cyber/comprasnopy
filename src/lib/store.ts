@@ -60,7 +60,7 @@ export const storeConfig = {
   },
 
   /** WhatsApp number in international format, digits only. */
-  whatsappNumber: "595993342253",
+  whatsappNumber: "595994987699",
 
   contact: {
     address: "Av. Mariscal Lopez, Asuncion, Paraguay",

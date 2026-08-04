@@ -1,9 +1,9 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import Image from "next/image";
 import Link from "next/link";
 import {
-  Heartbeat,
   List,
   MagnifyingGlass,
   X,
@@ -40,12 +40,17 @@ export function SiteHeader() {
             <List size={22} />
           </button>
 
-          <Link href="/" className="group flex flex-shrink-0 items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--brand-green)] text-white transition-colors group-hover:bg-[var(--brand-green-mid)] md:h-9 md:w-9">
-              <Heartbeat size={18} weight="fill" />
-            </span>
-            <span className="mt-0.5 text-lg font-semibold leading-none text-[var(--brand-green)] md:text-xl">
-              VIANA
+          <Link href="/" aria-label="Compraspy - início" className="group flex flex-shrink-0 items-center gap-1.5">
+            <Image
+              src="/brand/compraspy-mark-orange.png"
+              alt=""
+              width={430}
+              height={460}
+              priority
+              className="h-8 w-auto transition-transform duration-200 group-hover:-rotate-3 group-hover:scale-105 md:h-9"
+            />
+            <span className="mt-0.5 text-[19px] font-semibold leading-none tracking-[-0.035em] text-[var(--text)] md:text-[22px]">
+              Compras<span className="text-[var(--brand-primary)]">py</span>
             </span>
           </Link>
 
@@ -80,7 +85,7 @@ export function SiteHeader() {
                 <Link
                   key={category.id}
                   href={`/products?category=${category.slug}`}
-                  className="transition-colors hover:text-[var(--brand-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-copper)]"
+                  className="transition-colors hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]"
                 >
                   {category.name[lang]}
                 </Link>
@@ -92,7 +97,7 @@ export function SiteHeader() {
 
       <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[60] bg-[var(--brand-green)]/35 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+          <Dialog.Overlay className="fixed inset-0 z-[60] bg-[var(--overlay)] backdrop-blur-sm data-[state=open]:animate-fade-in" />
           <Dialog.Content className="theme-aware fixed inset-y-0 left-0 z-[70] flex h-[100dvh] w-[min(88vw,360px)] flex-col overflow-hidden bg-[var(--bg-card)] shadow-2xl focus:outline-none">
             <header className="flex min-h-16 items-center justify-between border-b border-[var(--bg-border)] px-4">
               <Dialog.Title className="text-sm font-bold text-[var(--text)]">
@@ -113,7 +118,7 @@ export function SiteHeader() {
               <Dialog.Close asChild>
                 <Link
                   href="/products"
-                  className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-[var(--brand-green)] hover:bg-[var(--brand-sage)]"
+                  className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-[var(--brand-primary)] hover:bg-[var(--brand-soft)]"
                 >
                   {t("navAllCategories")}
                 </Link>
@@ -146,7 +151,7 @@ export function SiteHeader() {
 
       <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[60] bg-[var(--brand-green)]/35 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+          <Dialog.Overlay className="fixed inset-0 z-[60] bg-[var(--overlay)] backdrop-blur-sm data-[state=open]:animate-fade-in" />
           <Dialog.Content className="theme-aware fixed inset-x-0 top-0 z-[70] max-h-[100dvh] overflow-y-auto bg-[var(--bg-card)] p-4 shadow-2xl focus:outline-none md:hidden">
             <div className="mb-3 flex items-center justify-between">
               <Dialog.Title className="text-sm font-bold text-[var(--text)]">

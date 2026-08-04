@@ -70,7 +70,7 @@ export function SettingsShell() {
   if (!enabled || !session) {
     return (
       <div className="theme-aware bg-[var(--bg-card)] border border-[var(--bg-border)] rounded-2xl p-5 max-w-md mx-auto">
-        <h1 className="font-sans text-2xl font-semibold text-[var(--brand-green)] tracking-tight mb-2">
+        <h1 className="font-sans text-2xl font-semibold text-[var(--brand-primary)] tracking-tight mb-2">
           {t("authConfigTitle")}
         </h1>
         <p className="text-xs text-[var(--text-muted)] mb-4">{t("authConfigSubtitle")}</p>
@@ -112,7 +112,7 @@ export function SettingsShell() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="font-sans text-2xl md:text-3xl font-semibold text-[var(--brand-green)] tracking-tight">
+        <h1 className="font-sans text-2xl md:text-3xl font-semibold text-[var(--brand-primary)] tracking-tight">
           {t("authConfigTitle")}
         </h1>
         <p className="text-xs text-[var(--text-muted)] mt-1">{t("authConfigSubtitle")}</p>
@@ -158,7 +158,7 @@ export function SettingsShell() {
               type="checkbox"
               checked={marketing}
               onChange={(e) => setMarketing(e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-[var(--bg-border-strong)] accent-[var(--brand-green)]"
+              className="mt-0.5 w-4 h-4 rounded border-[var(--bg-border-strong)] accent-[var(--brand-primary)]"
             />
             <span className="flex-1">
               <span className="block text-xs font-bold text-[var(--text)]">
@@ -175,7 +175,7 @@ export function SettingsShell() {
           <p
             className={
               "text-[11px] font-medium " +
-              (message.kind === "ok" ? "text-[var(--brand-green)]" : "text-[var(--brand-red)]")
+              (message.kind === "ok" ? "text-[var(--brand-primary)]" : "text-[var(--brand-red)]")
             }
           >
             {message.text}
@@ -185,7 +185,7 @@ export function SettingsShell() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full bg-[var(--brand-green)] hover:bg-[var(--brand-green-mid)] disabled:opacity-50 text-white font-bold rounded-lg py-2 text-xs transition-colors active:scale-[0.99]"
+          className="w-full bg-[var(--brand-action)] hover:bg-[var(--brand-action-hover)] disabled:opacity-50 text-white font-bold rounded-lg py-2 text-xs transition-colors active:scale-[0.99]"
         >
           {saving ? "..." : t("authSave")}
         </button>
@@ -214,7 +214,7 @@ function Field({ label, value, onChange, type = "text", required, hint }: FieldP
         required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="theme-aware w-full h-10 px-3 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg)] text-sm text-[var(--text)] focus:border-[var(--brand-copper)] focus:ring-2 focus:ring-[var(--brand-copper)]/15 outline-none"
+        className="theme-aware w-full h-10 px-3 rounded-lg border border-[var(--bg-border-strong)] bg-[var(--bg)] text-sm text-[var(--text)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/15 outline-none"
       />
       {hint && <p className="text-[10px] text-[var(--text-subtle)] mt-1">{hint}</p>}
     </div>

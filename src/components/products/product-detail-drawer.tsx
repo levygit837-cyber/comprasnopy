@@ -17,8 +17,9 @@ import type { Product } from "@/lib/types";
 import { useCartStore } from "@/lib/cart-store";
 import { useCurrency } from "@/lib/currency-context";
 import { useLanguage } from "@/lib/language-context";
+import { useTheme } from "@/lib/theme-context";
 import { useOverlayOpen, useOverlayStore } from "@/lib/overlay-store";
-import { getImageSrcs } from "@/lib/images";
+import { getImageSrcs, hasOpaqueProductCanvas } from "@/lib/images";
 import { categoryById } from "@/lib/categories";
 import { waLink } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ export function ProductDetailDrawer() {
 
   const { format } = useCurrency();
   const { t, lang } = useLanguage();
+  const { theme } = useTheme();
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
@@ -80,7 +82,7 @@ export function ProductDetailDrawer() {
   return (
     <Dialog.Root open={open} onOpenChange={(o) => (o ? null : close())}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-[var(--brand-green)]/30 z-[60] backdrop-blur-sm data-[state=open]:animate-fade-in" />
+        <Dialog.Overlay className="fixed inset-0 bg-[var(--overlay)] z-[60] backdrop-blur-sm data-[state=open]:animate-fade-in" />
         <Dialog.Content className="theme-aware fixed top-0 right-0 h-full w-full max-w-[440px] bg-[var(--bg-card)] shadow-2xl z-[70] flex flex-col animate-slide-in-right">
           <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--bg-border)]">
             <Dialog.Title className="text-[10px] font-bold text-[var(--text-subtle)] uppercase tracking-widest">
@@ -114,15 +116,18 @@ export function ProductDetailDrawer() {
                 )}
               </div>
               {images[0] ? (
-                <Image
-                  src={images[0]}
-                  alt={selected.name[lang]}
-                  fill
-                  sizes="440px"
-                  loading="lazy"
-                  quality={84}
-                  className="object-contain drop-shadow-xl p-4"
-                />
+                <>
+                  <Image
+                    src={images[0]}
+                    alt={selected.name[lang]}
+                    fill
+                    sizes="440px"
+                    loading="lazy"
+                    quality={84}
+                    style={hasOpaqueProductCanvas(images[0]) && theme === "dark" ? { filter: "brightness(0.72) contrast(1.1)", opacity: 0.74 } : undefined}
+                    className="product-image-blend object-contain p-4 drop-shadow-xl"
+                  />
+                </>
               ) : (
                 <span className="text-[var(--text-subtle)] text-xs">
                   {t("productImagePending")}
@@ -163,8 +168,8 @@ export function ProductDetailDrawer() {
                         className={cn(
                           "px-3 py-1.5 rounded-lg border-2 font-bold text-xs transition-colors",
                           v.id === selected.id
-                            ? "border-[var(--brand-green)] text-[var(--brand-green)] bg-[var(--brand-green)]/5"
-                            : "border-[var(--bg-border-strong)] text-[var(--text-muted)] hover:border-[var(--brand-copper)] bg-[var(--bg-card)]",
+                            ? "border-[var(--brand-primary)] text-[var(--brand-primary)] bg-[var(--brand-action)]/5"
+                            : "border-[var(--bg-border-strong)] text-[var(--text-muted)] hover:border-[var(--brand-primary)] bg-[var(--bg-card)]",
                         )}
                       >
                         {v.strength ?? v.name[lang]}
@@ -190,7 +195,7 @@ export function ProductDetailDrawer() {
                     )}
                   </div>
                 )}
-                <p className="text-2xl font-bold text-[var(--brand-green)] tabular-nums tracking-tighter">
+                <p className="text-2xl font-bold text-[var(--brand-primary)] tabular-nums tracking-tighter">
                   {format(selected.priceUSD)}
                 </p>
               </div>
@@ -220,7 +225,7 @@ export function ProductDetailDrawer() {
                 <button
                   type="button"
                   onClick={() => add(selected, qty)}
-                  className="flex-grow bg-[var(--brand-copper)] hover:bg-[var(--brand-copper-dark)] text-white rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-md active:scale-[0.99]"
+                  className="flex-grow bg-[var(--brand-action)] hover:bg-[var(--brand-action-hover)] text-white rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-md active:scale-[0.99]"
                 >
                   <ShoppingBag size={14} weight="bold" />
                   {t("drawerAdd")}
@@ -239,11 +244,11 @@ export function ProductDetailDrawer() {
 
               <div className="mt-4 pt-3 border-t border-[var(--bg-border)] flex flex-wrap gap-3 text-[10px] font-medium text-[var(--text-muted)]">
                 <div className="flex items-center gap-1.5">
-                  <ShieldCheck size={13} className="text-[var(--brand-green)]" />
+                  <ShieldCheck size={13} className="text-[var(--brand-primary)]" />
                   {t("drawerTrustGenuine")}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Storefront size={13} className="text-[var(--brand-green)]" />
+                  <Storefront size={13} className="text-[var(--brand-primary)]" />
                   {t("drawerTrustPickup")}
                 </div>
               </div>

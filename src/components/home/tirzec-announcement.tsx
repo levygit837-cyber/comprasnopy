@@ -121,12 +121,12 @@ export function TirzecAnnouncement() {
           type="button"
           aria-label={lang === "en" ? "Close announcement" : lang === "pt" ? "Fechar anúncio" : "Cerrar anuncio"}
           onClick={dismiss}
-          className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[var(--brand-green)]/88 text-white shadow-md backdrop-blur transition-colors hover:bg-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"
+          className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[var(--brand-action)]/88 text-white shadow-md backdrop-blur transition-colors hover:bg-[var(--brand-action)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"
         >
           <X size={18} weight="bold" />
         </button>
 
-        <div className="relative min-h-[250px] bg-[var(--brand-green)] sm:min-h-[520px]">
+        <div className="relative min-h-[250px] bg-[var(--brand-action)] sm:min-h-[520px]">
           <Image
             src="/images/products/tirzec/tirzec-15-popup-editorial.webp"
             alt={lang === "en" ? "TIRZEC 15 box with four vials" : lang === "pt" ? "Caixa TIRZEC 15 com quatro frascos" : "Caja TIRZEC 15 con cuatro viales"}
@@ -140,12 +140,12 @@ export function TirzecAnnouncement() {
         </div>
 
         <div className="flex flex-col justify-center px-6 py-8 sm:px-10 sm:py-12">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-copper)]">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-primary)]">
             {copy.eyebrow}
           </p>
           <h2
             id="tirzec-announcement-title"
-            className="mt-3 max-w-[16ch] text-3xl font-semibold leading-[1.05] tracking-[-0.025em] text-[var(--brand-green)] sm:text-4xl"
+            className="mt-3 max-w-[16ch] text-3xl font-semibold leading-[1.05] tracking-[-0.025em] text-[var(--brand-primary)] sm:text-4xl"
           >
             {copy.title}
           </h2>
@@ -156,7 +156,7 @@ export function TirzecAnnouncement() {
           <button
             type="button"
             onClick={dismiss}
-            className="mt-6 inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-[var(--brand-green)] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[var(--brand-green-mid)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--brand-sage-dark)]"
+            className="mt-6 inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-[var(--brand-action)] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[var(--brand-action-hover)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--brand-soft-strong)]"
           >
             {copy.close}
           </button>

@@ -4,11 +4,19 @@ import { getImageSrcs } from "./images";
 import { productById } from "./products";
 
 describe("verified image resolver", () => {
-  it("uses the reviewed exact pen reference", () => {
+  it("prefers the exact transparent pen cutout over the reviewed white canvas", () => {
     const product = productById("tirzepatida-pen-75mg");
     expect(product).toBeDefined();
     expect(getImageSrcs(product!)).toEqual([
-      "/images/products/verified/tirzepatida-pen-75mg-full.webp",
+      "/images/products/tirzepatide-75-pen-box.png",
+    ]);
+  });
+
+  it("prefers the exact transparent BPC cutout over the reviewed white canvas", () => {
+    const product = productById("bpc-157-20mg");
+    expect(product).toBeDefined();
+    expect(getImageSrcs(product!)).toEqual([
+      "/images/products/bpc-157-20mg.png",
     ]);
   });
 

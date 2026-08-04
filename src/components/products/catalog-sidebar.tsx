@@ -102,16 +102,16 @@ export function CatalogSidebar({
             className="relative flex items-center select-none touch-none w-full h-5"
           >
             <Slider.Track className="bg-[var(--bg-border)] relative grow rounded-full h-1.5">
-              <Slider.Range className="absolute bg-[var(--brand-green)] rounded-full h-full" />
+              <Slider.Range className="absolute bg-[var(--brand-action)] rounded-full h-full" />
             </Slider.Track>
             <Slider.Thumb
               aria-label="Maximum price"
-              className="block w-4 h-4 bg-white border-2 border-[var(--brand-green)] rounded-full focus:outline-none focus:ring-4 focus:ring-[var(--brand-green)]/15"
+              className="block w-4 h-4 bg-white border-2 border-[var(--brand-primary)] rounded-full focus:outline-none focus:ring-4 focus:ring-[var(--brand-primary)]/15"
             />
           </Slider.Root>
           <div className="flex items-center justify-between text-[10px] font-bold text-[var(--text-muted)] mt-2 tabular-nums">
             <span>{minLabel}</span>
-            <span className="text-[var(--brand-green)]">
+            <span className="text-[var(--brand-primary)]">
               {t("catalogMaxPrice")} {format(maxPriceUSD)}
             </span>
           </div>
@@ -119,8 +119,8 @@ export function CatalogSidebar({
       </div>
 
       <div className="theme-aware mt-auto bg-[var(--bg-card)] rounded-2xl p-3 shadow-sm border border-[var(--bg-border)] text-[11px]">
-        <div className="flex items-center gap-2 mb-2 text-[var(--brand-green)] font-bold">
-          <span className="w-7 h-7 rounded-full bg-[var(--brand-sage)] flex items-center justify-center text-[var(--brand-green-mid)]">
+        <div className="flex items-center gap-2 mb-2 text-[var(--brand-primary)] font-bold">
+          <span className="w-7 h-7 rounded-full bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand-primary-hover)]">
             <ShieldCheck size={14} weight="fill" />
           </span>
           {lang === "es" ? "Compra con confianza" : lang === "pt" ? "Compre com confianca" : "Buy with confidence"}
@@ -161,14 +161,14 @@ function CategoryItem({ active, onClick, icon, label, count }: CategoryItemProps
       className={cn(
         "theme-aware flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors text-left w-full",
         active
-          ? "bg-[var(--brand-sage)] text-[var(--brand-green)]"
+          ? "bg-[var(--brand-soft)] text-[var(--brand-primary)]"
           : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text)]",
       )}
     >
       <span
         className={cn(
           "transition-colors",
-          active ? "text-[var(--brand-green)]" : "text-[var(--text-subtle)]",
+          active ? "text-[var(--brand-primary)]" : "text-[var(--text-subtle)]",
         )}
       >
         {icon}

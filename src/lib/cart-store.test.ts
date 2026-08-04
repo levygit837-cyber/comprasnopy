@@ -37,9 +37,9 @@ describe("whatsapp checkout url", () => {
       totalUSD(lines),
       "Hola Viana ({total}).",
       "USD",
-      "595993342253",
+      "595994987699",
     );
-    expect(url).toContain("https://wa.me/595993342253");
+    expect(url).toContain("https://wa.me/595994987699");
     expect(url).toContain("Tirzepatide");
     // Decoded query param contains the strength
     const decoded = decodeURIComponent(url.split("text=")[1] ?? "");

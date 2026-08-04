@@ -171,10 +171,10 @@ export function BestSellers() {
   );
 
   return (
-    <section className="mx-auto mt-10 max-w-[1400px] px-4 md:mt-14 md:px-6 lg:px-8">
+    <section id="mais-vendidos" className="mx-auto mt-10 max-w-[1400px] scroll-mt-32 px-4 md:mt-14 md:px-6 lg:px-8">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-sans text-2xl font-semibold tracking-tight text-[var(--brand-green)] md:text-3xl">
+          <h2 className="font-sans text-2xl font-semibold tracking-tight text-[var(--brand-primary)] md:text-3xl">
             {t("bestSellersTitle")}
           </h2>
           <p className="mt-0.5 text-xs font-medium text-[var(--text-muted)]">
@@ -185,7 +185,7 @@ export function BestSellers() {
         <div className="flex items-center gap-2">
           <Link
             href="/products"
-            className="mr-1 hidden items-center gap-1 text-xs font-bold text-[var(--brand-copper)] transition-colors hover:text-[var(--brand-copper-dark)] sm:flex"
+            className="mr-1 hidden items-center gap-1 text-xs font-bold text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)] sm:flex"
           >
             {t("bestSellersViewAll")} <ArrowRight size={10} weight="bold" />
           </Link>
@@ -193,7 +193,7 @@ export function BestSellers() {
             type="button"
             aria-label={previousLabel}
             onClick={() => moveByCard(-1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-card)] text-[var(--brand-green)] transition-colors hover:border-[var(--brand-copper)] hover:text-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-copper)]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-card)] text-[var(--brand-primary)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]"
           >
             <ArrowLeft size={14} weight="bold" />
           </button>
@@ -201,7 +201,7 @@ export function BestSellers() {
             type="button"
             aria-label={nextLabel}
             onClick={() => moveByCard(1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-card)] text-[var(--brand-green)] transition-colors hover:border-[var(--brand-copper)] hover:text-[var(--brand-copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-copper)]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--bg-border-strong)] bg-[var(--bg-card)] text-[var(--brand-primary)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]"
           >
             <ArrowRight size={14} weight="bold" />
           </button>
@@ -217,7 +217,7 @@ export function BestSellers() {
         tabIndex={0}
         data-testid="best-sellers-carousel"
         data-autoplay-paused={autoPaused}
-        className="no-scrollbar touch-pan-y cursor-grab overflow-x-auto overscroll-x-contain rounded-2xl active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-copper)] focus-visible:ring-offset-2"
+        className="no-scrollbar touch-pan-y cursor-grab overflow-x-auto overscroll-x-contain rounded-2xl active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)] focus-visible:ring-offset-2"
         onMouseEnter={pauseWhilePresent}
         onMouseLeave={() => pauseFor(QUICK_PAUSE_MS)}
         onFocusCapture={pauseWhilePresent}

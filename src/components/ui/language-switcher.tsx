@@ -22,7 +22,7 @@ export function LanguageSwitcher() {
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="theme-aware flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider rounded-full text-[var(--text-muted)] hover:text-[var(--brand-green)] transition-colors"
+          className="theme-aware flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider rounded-full text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors"
           aria-label="Change language"
         >
           {LANG_LABEL[lang]}
@@ -43,7 +43,7 @@ export function LanguageSwitcher() {
                 className={cn(
                   "theme-aware flex items-center justify-between w-full gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-colors",
                   l.code === lang
-                    ? "bg-[var(--brand-sage)] text-[var(--brand-green)]"
+                    ? "bg-[var(--brand-soft)] text-[var(--brand-primary)]"
                     : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)]",
                 )}
               >
@@ -54,7 +54,7 @@ export function LanguageSwitcher() {
                   {l.label}
                 </span>
                 {l.code === lang && (
-                  <Check size={11} weight="bold" className="text-[var(--brand-copper)]" />
+                  <Check size={11} weight="bold" className="text-[var(--brand-primary)]" />
                 )}
               </button>
             </Popover.Close>
