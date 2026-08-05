@@ -1,4 +1,19 @@
+<div align="center">
+
 # Compraspy
+
+**Protótipo cross-border de catálogo farmacêutico em três idiomas.**
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tests](https://img.shields.io/badge/tests-37%20passing-2ea44f)](#rodar)
+
+</div>
+
+## Navegação rápida
+
+[Problema](#problema-de-produto) · [Implementação](#o-que-está-implementado) · [Arquitetura](#arquitetura) · [Execução](#rodar) · [Limites](#limites-importantes)
 
 Protótipo de marketplace cross-border para uma farmácia no Paraguai, com catálogo pesquisável,
 páginas por produto, localização em três idiomas e fechamento do pedido por WhatsApp.
