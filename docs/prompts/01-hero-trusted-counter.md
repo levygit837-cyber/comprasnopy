@@ -24,9 +24,9 @@ Readable text, logos, brand names, fake labels, busy shelves, hospital bed, pati
 ## On-screen text, UI layer only
 | Language | Eyebrow | Title | Body | CTA |
 |---|---|---|---|---|
-| ES | Confianza Viana | Tu farmacia, cuidada al detalle | Productos originales, selección profesional y atención clara antes de comprar. | Ver catálogo |
-| PT | Confiança Viana | Sua farmácia, cuidada em cada detalhe | Produtos originais, seleção profissional e orientação clara antes de comprar. | Ver catálogo |
-| EN | Viana Trust | Pharmacy care, refined | Genuine products, professional selection, and clear guidance before you buy. | View catalog |
+| ES | Confianza Compraspy | Tu farmacia, cuidada al detalle | Productos originales, selección profesional y atención clara antes de comprar. | Ver catálogo |
+| PT | Confiança Compraspy | Sua farmácia, cuidada em cada detalhe | Produtos originais, seleção profissional e orientação clara antes de comprar. | Ver catálogo |
+| EN | Compraspy Trust | Pharmacy care, refined | Genuine products, professional selection, and clear guidance before you buy. | View catalog |
 
 ## Interaction and motion notes
 - Use a 4-segment progress bar, each segment fills over 6 seconds and resets on manual navigation.

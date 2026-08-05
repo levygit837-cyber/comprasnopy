@@ -5,7 +5,7 @@ import { getMyOrders } from "@/lib/orders";
 import { OrdersList } from "./orders-list";
 import { OrdersPageClient } from "./orders-page-client";
 
-export const metadata = { title: "My orders - Viana" };
+export const metadata = { title: "My orders - Compraspy" };
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {

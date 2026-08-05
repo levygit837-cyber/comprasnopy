@@ -7,7 +7,7 @@ import { AuthCard } from "@/components/auth/auth-popover";
 import { useLanguage } from "@/lib/language-context";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
-const MARKETING_KEY = "viana.marketing_opt_in.v1";
+const MARKETING_KEY = "viana.marketing_opt_in.v1"; // gitleaks:allow -- legacy localStorage key
 
 export function SettingsShell() {
   const { t } = useLanguage();
@@ -24,6 +24,18 @@ export function SettingsShell() {
     null,
   );
 
+  function applySession(current: Session | null) {
+    setSession(current);
+    if (!current) return;
+    const meta = current.user.user_metadata ?? {};
+    const full = (meta.full_name as string | undefined) ?? "";
+    const parts = full.split(/\s+/).filter(Boolean);
+    setFirstName(parts[0] ?? "");
+    setLastName(parts.slice(1).join(" "));
+    setEmail(current.user.email ?? "");
+    setPhone((meta.phone as string | undefined) ?? "");
+  }
+
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
@@ -39,7 +51,6 @@ export function SettingsShell() {
       applySession(current),
     );
     return () => sub.subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -50,18 +61,6 @@ export function SettingsShell() {
       /* ignore */
     }
   }, []);
-
-  function applySession(current: Session | null) {
-    setSession(current);
-    if (!current) return;
-    const meta = current.user.user_metadata ?? {};
-    const full = (meta.full_name as string | undefined) ?? "";
-    const parts = full.split(/\s+/).filter(Boolean);
-    setFirstName(parts[0] ?? "");
-    setLastName(parts.slice(1).join(" "));
-    setEmail(current.user.email ?? "");
-    setPhone((meta.phone as string | undefined) ?? "");
-  }
 
   if (!loaded) {
     return <p className="text-[var(--text-muted)] text-sm">{t("settingsLoading")}</p>;

@@ -3,7 +3,7 @@ import catalogAdditionsData from "@/data/catalog-additions.json";
 import supplierProductsData from "@/data/supplier-products.json";
 
 /**
- * Viana Pharmacy — full product catalog.
+ * Compraspy — full product catalog.
  * Prices in USD. BRL and PYG derive from currency-context rates at display.
  */
 function en(value: string): Localized {

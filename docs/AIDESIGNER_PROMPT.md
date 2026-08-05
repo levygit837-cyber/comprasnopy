@@ -1,4 +1,4 @@
-# AiDesigner Prompt — Farmacia Viana
+# AiDesigner Prompt — Compraspy
 
 > A vision-led brief. This gives AiDesigner the **complete idea**, the brand
 > soul, and the constraints, then trusts it to interpret the layout, rhythm,
@@ -8,15 +8,15 @@
 
 ## PROMPT
 
-Design a complete, production-quality website for **Farmacia Viana**, a
+Design a complete, production-quality website for **Compraspy**, a
 pharmacy in Asuncion, Paraguay. This is a real commerce site for a real
 neighborhood pharmacy. I want you to bring your own design judgement to the
 layout, spacing, composition, and motion. Tell me the *story* of this brand
 visually. Make it feel like a place people trust with their family's health.
 
-### Who Viana is
+### Who Compraspy is
 
-Farmacia Viana is a local Paraguayan pharmacy. It sells medicines, hygiene,
+Compraspy is a local Paraguayan pharmacy. It sells medicines, hygiene,
 personal care, baby products, and health-and-wellness items. What makes it
 different from a cold chain-pharmacy website is warmth and trust: genuine
 products, a real pharmacist who advises you, and the convenience of buying
@@ -44,7 +44,7 @@ neon or clinical teal. The overall impression on first scroll should be
    cliche, not floating emoji cards). Trust signals live just below, not
    crammed into the hero.
 
-2. **Get to know the pharmacy.** A short, editorial moment: who Viana is, a
+2. **Get to know the pharmacy.** A short, editorial moment: who Compraspy is, a
    few honest numbers (years, products, availability). Refined, not boastful.
 
 3. **Browse the products.** This is the heart. Rather than dumping every
@@ -61,7 +61,7 @@ neon or clinical teal. The overall impression on first scroll should be
 
 5. **Reach out.** A clean contact moment: where the pharmacy is, when it's
    open, how to message. The WhatsApp option is always one tap away,
-   everywhere, because that's how Viana actually does business.
+   everywhere, because that's how Compraspy actually does business.
 
 ### What to design (the complete site)
 

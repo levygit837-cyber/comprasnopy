@@ -18,7 +18,7 @@ import {
  * Without this middleware the server-side `supabase.auth.getUser()` would
  * see expired tokens and the user would be silently signed out.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const savedLanguage = request.cookies.get(LANGUAGE_COOKIE)?.value;
   const detectedLanguage = detectLanguage({
     savedLanguage,

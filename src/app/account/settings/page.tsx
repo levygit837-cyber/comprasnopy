@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SettingsShell } from "./settings-shell";
 
-export const metadata = { title: "Settings - Viana" };
+export const metadata = { title: "Settings - Compraspy" };
 
 export default function SettingsPage() {
   return (

@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "viana-pharma",
+  "name": "compraspy-marketplace",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-07-10",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -8,10 +8,6 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  "routes": [
-    { "pattern": "vianapharma.com", "custom_domain": true },
-    { "pattern": "www.vianapharma.com", "custom_domain": true }
-  ],
   "observability": {
     "enabled": true
   }

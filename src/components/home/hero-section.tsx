@@ -489,10 +489,10 @@ export function HeroSection() {
   const slides = useMemo<CampaignSlide[]>(() => {
     const whatsappMessage =
       lang === "es"
-        ? "Hola, quiero consultar disponibilidad y hacer un pedido en Farmacia Viana."
+        ? "Hola, quiero consultar disponibilidad y hacer un pedido en Compraspy."
         : lang === "pt"
-          ? "Olá, quero consultar a disponibilidade e fazer um pedido na Farmácia Viana."
-          : "Hello, I would like to check availability and place an order with Viana Pharmacy.";
+          ? "Olá, quero consultar a disponibilidade e fazer um pedido na Compraspy."
+          : "Hello, I would like to check availability and place an order with Compraspy.";
     const instagramUrl = process.env.NEXT_PUBLIC_STORE_INSTAGRAM?.trim();
 
     return META.map((meta, index) => {

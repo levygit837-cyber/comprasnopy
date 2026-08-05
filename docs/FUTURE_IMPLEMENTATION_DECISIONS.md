@@ -6,7 +6,7 @@ ativos. Ele não descreve funcionalidades existentes no estado atual do projeto.
 
 ## 1. Infraestrutura já adquirida
 
-- O domínio do site da Farmácia Viana foi comprado na Hostinger.
+- O domínio do site da Compraspy foi comprado na Hostinger.
 - Também foi contratado um serviço de e-mail profissional da Hostinger para a
   empresa. O nome e os limites exatos do plano ainda devem ser confirmados
   antes da integração.

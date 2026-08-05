@@ -3,7 +3,7 @@
 
 The script never synthesizes packaging. Product pixels come directly from the
 embedded PDF image. The presentation layer only removes the connected outer
-background, scales the cutout, and places it on a Viana-colored canvas.
+background, scales the cutout, and places it on a Compraspy-colored canvas.
 """
 
 from __future__ import annotations

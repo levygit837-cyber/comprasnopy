@@ -1,4 +1,4 @@
--- Viana Pharmacy — initial schema.
+-- Compraspy — initial schema.
 -- Profiles (extends auth.users), catalog (categories, products, variants,
 -- images), exchange rates, and orders. All tables have RLS enabled and
 -- default-deny policies; public reads on the catalog are explicit.

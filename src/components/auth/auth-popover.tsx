@@ -224,10 +224,10 @@ export function AuthCard({ mode, onChangeMode, onClose, disabled = false }: Auth
         ? "Redefinir senha"
         : "Reset your password"
       : lang === "es"
-      ? "Bienvenido a Viana"
+      ? "Bienvenido a Compraspy"
       : lang === "pt"
-      ? "Bem-vindo a Viana"
-      : "Welcome to Viana";
+      ? "Bem-vindo a Compraspy"
+      : "Welcome to Compraspy";
 
   const subline =
     mode === "forgot"

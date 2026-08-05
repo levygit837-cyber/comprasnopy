@@ -28,10 +28,10 @@ export function CartDrawer() {
   const subtotalUSD = totalUSD(lines);
   const intro =
     lang === "es"
-      ? "Hola Farmacia Viana. Quiero enviar este pedido y coordinar el pago por WhatsApp (total {total})."
+      ? "Hola Compraspy. Quiero enviar este pedido y coordinar el pago por WhatsApp (total {total})."
       : lang === "pt"
-        ? "Ola Farmacia Viana. Quero enviar este pedido e combinar o pagamento pelo WhatsApp (total {total})."
-        : "Hello Viana Pharmacy. I would like to send this order and arrange payment on WhatsApp (total {total}).";
+        ? "Ola Compraspy. Quero enviar este pedido e combinar o pagamento pelo WhatsApp (total {total})."
+        : "Hello Compraspy. I would like to send this order and arrange payment on WhatsApp (total {total}).";
   const whatsappUrl = buildWhatsAppMessage(
     lines,
     subtotalUSD,

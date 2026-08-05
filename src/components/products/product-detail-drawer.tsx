@@ -73,10 +73,10 @@ export function ProductDetailDrawer() {
   const productLabel = `${selected.name[lang]}${selected.strength ? ` (${selected.strength})` : ""}`;
   const waMessage =
     lang === "es"
-      ? `Hola Farmacia Viana. Quiero consultar ${productLabel} (${format(selected.priceUSD)}) y coordinar el pedido y el pago. Esta disponible?`
+      ? `Hola Compraspy. Quiero consultar ${productLabel} (${format(selected.priceUSD)}) y coordinar el pedido y el pago. Esta disponible?`
       : lang === "pt"
-        ? `Ola Farmacia Viana. Quero consultar ${productLabel} (${format(selected.priceUSD)}) e combinar o pedido e o pagamento. Esta disponivel?`
-        : `Hello Viana Pharmacy. I would like to ask about ${productLabel} (${format(selected.priceUSD)}) and arrange the order and payment. Is it available?`;
+        ? `Ola Compraspy. Quero consultar ${productLabel} (${format(selected.priceUSD)}) e combinar o pedido e o pagamento. Esta disponivel?`
+        : `Hello Compraspy. I would like to ask about ${productLabel} (${format(selected.priceUSD)}) and arrange the order and payment. Is it available?`;
   const waUrl = waLink(waMessage);
 
   return (

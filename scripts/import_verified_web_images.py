@@ -85,7 +85,7 @@ def parse_sitemap(path: Path) -> dict[str, dict[str, Any]]:
 
 
 def download(url: str) -> Image.Image:
-    request = urllib.request.Request(url, headers={"User-Agent": "VianaCatalogAssetPipeline/1.0"})
+    request = urllib.request.Request(url, headers={"User-Agent": "CompraspyCatalogAssetPipeline/1.0"})
     with urllib.request.urlopen(request, timeout=45) as response:
         return Image.open(io.BytesIO(response.read())).convert("RGB")
 

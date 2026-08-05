@@ -13,7 +13,7 @@ export interface Country {
 
 /**
  * Common worldwide coverage for the auth phone input. Ordered by relevance to
- * the Viana audience (Paraguay + Latin America first, then the rest of the
+ * the Compraspy audience (Paraguay + Latin America first, then the rest of the
  * world). Symbols are emoji flags rendered by the OS.
  */
 export const COUNTRIES: Country[] = [

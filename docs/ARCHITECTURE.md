@@ -1,6 +1,6 @@
-# Viana Pharmacy — Architecture
+# Compraspy — Architecture
 
-> Source of truth for the technical design of the Viana pharmacy store
+> Source of truth for the technical design of the Compraspy pharmacy store
 > (Paraguay). Trilingual ES / PT / EN, catalog + WhatsApp checkout.
 
 ## 1. Product vision
@@ -149,7 +149,7 @@ templates:
 | Use             | Key                 | Example                                                              |
 |-----------------|---------------------|----------------------------------------------------------------------|
 | Product CTA     | `waProductMessage`  | `Hola! Quiero consultar sobre: Paracetamol (₲12.000). ¿Disponible?` |
-| Generic contact | `waGenericMessage`  | `Hola Farmacia Viana! Quisiera hacer una consulta.`                  |
+| Generic contact | `waGenericMessage`  | `Hola Compraspy! Quisiera hacer una consulta.`                  |
 
 The product template is filled with the localized name + formatted PYG price.
 

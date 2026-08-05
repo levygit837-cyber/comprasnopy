@@ -1,4 +1,4 @@
--- Viana Pharmacy — minimal seed.
+-- Compraspy — minimal seed.
 -- Categories and exchange rates. The full product catalog continues to be
 -- rendered from `src/lib/products.ts` until a separate seeding pass is run
 -- (see scripts/seed-products.sql in a follow-up).

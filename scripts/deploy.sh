@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build and deploy Viana Marketplace to Cloudflare Workers.
+# Build and deploy Compraspy Marketplace to Cloudflare Workers.
 # Authenticate once with `npx wrangler login`, then run this script.
 set -euo pipefail
 

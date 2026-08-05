@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated and installed artifacts"
+paths = [
+  '''(^|/).next/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)coverage/''',
+]

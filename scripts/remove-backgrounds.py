@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Viana Pharmacy — background removal for product photos.
+Compraspy — background removal for product photos.
 
 Reads every *.png/*.jpg in assets/products/ and writes a transparent
 cutout (.png) of the same name to src/assets/products/, removing the

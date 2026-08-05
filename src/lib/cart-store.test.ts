@@ -35,7 +35,7 @@ describe("whatsapp checkout url", () => {
     const url = buildWhatsAppMessage(
       lines,
       totalUSD(lines),
-      "Hola Viana ({total}).",
+      "Hola Compraspy ({total}).",
       "USD",
       "595994987699",
     );

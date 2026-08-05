@@ -1,120 +1,93 @@
-# Viana Marketplace
+# Compraspy
 
-Production Next.js + Supabase build of the Viana retail pharmacy storefront
-for Paraguay. Visual target lives in
-[`design/farmacia-viana-home.html`](design/farmacia-viana-home.html).
+Protótipo de marketplace cross-border para uma farmácia no Paraguai, com catálogo pesquisável,
+páginas por produto, localização em três idiomas e fechamento do pedido por WhatsApp.
 
-## Stack
+## Problema de produto
 
-- [Next.js 15](https://nextjs.org) (App Router, React 19, TypeScript strict)
-- [Tailwind CSS v4](https://tailwindcss.com) with custom Viana design tokens
-- [Radix UI](https://radix-ui.com) primitives (Dialog, Popover, RadioGroup, Slider)
-- [@phosphor-icons/react](https://phosphoricons.com)
-- [Zustand](https://zustand-demo.pmnd.rs) for cart state (persisted to localStorage)
-- [Supabase](https://supabase.com) for auth, profiles, and Postgres data
-- [Vitest](https://vitest.dev) for unit tests
+Catálogos grandes ficam difíceis de navegar quando nomes, apresentações, moedas e idiomas variam.
+O Compraspy organiza essa jornada desde descoberta e busca até um carrinho compartilhável, mantendo
+o pagamento fora do sistema enquanto a operação ainda não possui checkout integrado.
 
-## Routes
+## O que está implementado
 
-- `/` — landing page (hero carousel, marquee, bento categories, best sellers, first-buy guide)
-- `/products` — catalog with category, price, and deals filters + smart search
-- `/products/[slug]` — shareable SEO product detail page
-- `/account/sign-in`, `/account/sign-up`, `/account` — Supabase Auth flow
+- 218 SKUs com IDs estáveis e páginas compartilháveis por slug;
+- catálogo com busca local, sinônimos, trigramas, categorias, preço e ofertas;
+- detalhe de produto, variantes, imagens, carrinho persistente e mensagem de pedido;
+- interface em espanhol, português e inglês;
+- exibição em USD, BRL e PYG a partir de preço canônico em USD;
+- autenticação, perfil e schema de pedidos preparados com Supabase;
+- proxy do Next.js para idioma e refresh de sessão;
+- layout responsivo, temas e componentes acessíveis baseados em Radix UI;
+- build para Next.js e configuração separada para Cloudflare/OpenNext.
 
-## Cart
+## Limites importantes
 
-Cart lives in a Zustand store, persisted to `localStorage` under `viana.cart.v1`.
-The "Complete order on WhatsApp" button builds a `https://wa.me/<number>?text=...`
-deep link with all lines, the active currency, and the running total.
+- taxas de câmbio são valores estáticos de exibição, não cotação em tempo real;
+- o botão final monta uma intenção de compra no WhatsApp; não há checkout ou pagamento integrado;
+- o catálogo atual é local; o schema Supabase existe, mas ainda não é a fonte principal dos produtos;
+- disponibilidade, conteúdo regulado e alegações dos produtos precisam de revisão operacional e
+  jurídica antes de qualquer uso comercial;
+- imagens e dados de fornecedores possuem direitos separados do código.
 
-## Currency
+## Arquitetura
 
-Canonical prices are stored in USD on each product. Display values are derived
-at render time from the user's selected currency (USD / BRL / PYG) using the
-exchange rates in `src/lib/store.ts`. The currency preference is persisted to
-`localStorage` under `viana.currency.v1`.
+```text
+src/app/                 # App Router, conta, catálogo e páginas por slug
+src/components/          # home, busca, produtos, carrinho, auth e layout
+src/lib/                 # catálogo, busca, moedas, i18n, Supabase e stores
+supabase/                # migration inicial e seed
+public/images/products/  # recortes usados pelo catálogo
+design/                  # referências HTML de direção visual
+docs/                    # decisões e limites futuros
+```
 
-## Develop
+As principais costuras são explícitas: o catálogo local não depende da interface, moedas partem de
+um preço canônico, busca é um módulo puro testável e o adapter Supabase pode substituir a fonte local
+sem mudar os componentes de apresentação.
+
+Stack: Next.js 16, React 19, TypeScript strict, Tailwind CSS 4, Radix UI, Zustand, Supabase e Vitest.
+
+## Rodar
+
+Pré-requisitos: Node.js 24 e npm.
 
 ```bash
-cp .env.example .env.local      # fill Supabase + store values
-npm install
-npm run dev                     # http://localhost:3000
-npm run build                   # production build
-npm run test                    # unit tests
-npm run typecheck               # tsc --noEmit
-npm run lint                    # next lint
+cp .env.example .env.local
+npm ci
+npm run dev
 ```
 
-## Project layout
+Verificação completa:
 
-```
-src/
-  app/                Next App Router pages
-    account/          sign-in / sign-up / profile
-    products/         catalog + [slug] detail
-    layout.tsx        root layout (providers)
-    globals.css       Tailwind v4 + design tokens
-  components/
-    auth/             auth form + account shell
-    cart/             cart store UI (button, drawer, hydrator)
-    home/             landing-page sections
-    layout/           announcement bar, header, footer
-    products/         product card, drawer, browser, detail view
-    search/           smart-search dropdown
-    ui/               language + currency switchers
-  lib/
-    supabase/         browser + server clients
-    cart-store.ts     Zustand store + WhatsApp message builder
-    categories.ts     6 product categories
-    currency-context.tsx
-    images.ts         product -> /images/products/<stem>.png resolver
-    language-context.tsx
-    products.ts       full catalog (~78 SKUs)
-    search.ts         token + trigram + synonym index
-    store.ts          currency rates, store config, formatters
-    translations.ts   ES / PT / EN UI strings
-    variants.ts       variant-family grouping
-    utils.ts          cn() helper
-public/
-  images/products/    background-removed product cutouts
-design/               farmacia-viana-home.html (visual reference)
-docs/                 ARCHITECTURE, PALETTES, catalog notes
-scripts/              remove-backgrounds.py
+```bash
+npm run typecheck
+npm run test
+npm run lint
+npm run build
 ```
 
-## Supabase setup
+Em 4 de agosto de 2026, typecheck, lint, build e 37 testes passaram. O audit de dependências de
+produção não encontrou advisories nessa data. Advisories restantes pertencem às ferramentas locais
+de Cloudflare e devem ser revistos antes do primeiro deploy.
 
-The schema lives in `supabase/migrations/`. To finish wiring the backend:
+## Configuração
 
-1. Create a Supabase project and copy the URL and **publishable key**
-   (`sb_publishable_...`) into `.env.local` as `NEXT_PUBLIC_SUPABASE_URL`
-   and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-2. Apply the migrations in order (`supabase/migrations/0001_init.sql`,
-   then `supabase/seed.sql`). The init migration creates `profiles`,
-   `categories`, `products`, `product_images`, `exchange_rates`, `orders`,
-   and `order_lines`, plus the `handle_new_user()` trigger that mirrors
-   `raw_user_meta_data` into a `profiles` row on signup.
-3. In **Authentication -> Providers -> Email**, toggle **Confirm email**
-   off. The storefront signs users in immediately after registration, so
-   the email-verification round trip is undesirable; the auth-popover
-   submit handler also falls back to a `signInWithPassword` if a
-   confirmation step ever sneaks back in. Run this once after enabling
-   auth to confirm any pre-existing users waiting on the flow:
-   `update auth.users set email_confirmed_at = coalesce(email_confirmed_at, now()) where email_confirmed_at is null;`
-4. Add the production site URL to **Authentication -> URL Configuration**
-   so the password-reset email links back to the right origin.
+`NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` habilitam autenticação. Sem elas,
+o catálogo continua navegável e as áreas de conta degradam para um estado desabilitado.
 
-The current build renders entirely from the local catalog at
-`src/lib/products.ts` so the UI works end-to-end before the database is
-wired up. To switch to Supabase data, replace the static `products`
-import in catalog components with a server fetch.
+Nome da loja, WhatsApp e endereço podem ser definidos em `.env.local`. Nenhum domínio customizado é
+versionado no `wrangler.jsonc`; ele deve ser adicionado somente quando houver uma URL aprovada.
 
-## Future implementation decisions
+Algumas chaves de `localStorage` ainda usam o prefixo legado `viana.*` para preservar sessões de
+desenvolvimento existentes. Isso não representa a marca pública atual.
 
-The approved future direction for the Hostinger domain and professional email,
-email marketing, WhatsApp sales intelligence, customer segmentation, and
-personalized messaging is documented in
-[`docs/FUTURE_IMPLEMENTATION_DECISIONS.md`](docs/FUTURE_IMPLEMENTATION_DECISIONS.md).
-These capabilities are planned decisions and are not implemented in the current
-build.
+## Desenvolvimento
+
+Projeto conduzido com desenvolvimento assistido por agentes de IA. O trabalho humano incluiu
+definição do produto, direção visual, reconciliação do catálogo, especificação dos fluxos, supervisão
+da implementação e validação por testes, build e revisão responsiva.
+
+## Licença
+
+Nenhuma licença de reutilização é concedida. Conteúdo, catálogo e assets exigem autorização separada.

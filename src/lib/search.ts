@@ -1,5 +1,5 @@
 /**
- * Viana Pharmacy — on-device smart search.
+ * Compraspy — on-device smart search.
  * Precomputes a token / trigram / synonym index over the catalog so a static
  * build can answer "tirzepatide weight loss" with the right family of
  * products, while junk queries yield zero results.

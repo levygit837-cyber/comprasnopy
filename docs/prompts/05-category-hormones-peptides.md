@@ -21,7 +21,7 @@ Photographic scene, real bottles, vials, syringes, pills, packaging, hands, phar
 ## Composition notes
 - Central icon should occupy about 45 percent of the card width.
 - Keep the lower-left quiet for overlaid category title.
-- Use a darker green gradient behind the icon for contrast, but keep the whole image light enough to match the Viana page.
+- Use a darker green gradient behind the icon for contrast, but keep the whole image light enough to match the Compraspy page.
 - The orbital ring and amber dots must match the other category prompts so the set feels like one visual system.
 
 ## On-card text, UI layer only

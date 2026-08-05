@@ -1,7 +1,7 @@
 /**
- * Viana Pharmacy — store configuration.
- * Single source of truth for store-wide values. Update the WhatsApp number
- * here once the real one is provided. Every CTA link re-derives from it.
+ * Compraspy — store configuration.
+ * Single source of truth for store-wide values. Public values can be
+ * overridden with NEXT_PUBLIC_STORE_* variables.
  */
 
 export type Lang = "es" | "pt" | "en";
@@ -51,8 +51,8 @@ export const DEFAULT_RATES: Record<CurrencyCode, number> = {
 export const MIN_PRICE_USD = 0;
 
 export const storeConfig = {
-  storeName: "Viana",
-  storeFullName: "Farmacia Viana",
+  storeName: process.env.NEXT_PUBLIC_STORE_NAME?.trim() || "Compraspy",
+  storeFullName: process.env.NEXT_PUBLIC_STORE_FULL_NAME?.trim() || "Compraspy",
   tagline: {
     es: "Tu farmacia de confianza en Paraguay",
     pt: "Sua farmacia de confianca no Paraguai",
@@ -60,12 +60,12 @@ export const storeConfig = {
   },
 
   /** WhatsApp number in international format, digits only. */
-  whatsappNumber: "595994987699",
+  whatsappNumber: process.env.NEXT_PUBLIC_STORE_WHATSAPP?.trim() || "595994987699",
 
   contact: {
-    address: "Av. Mariscal Lopez, Asuncion, Paraguay",
+    address: process.env.NEXT_PUBLIC_STORE_ADDRESS?.trim() || "Ciudad del Este, Paraguay",
     phone: "+595 21 000 000",
-    email: "contacto@viana.com.py",
+    email: "contact@example.invalid",
     hours: {
       es: "Lun a Dom, 07:00 a 22:00",
       pt: "Seg a Dom, 07:00 as 22:00",

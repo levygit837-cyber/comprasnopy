@@ -1,4 +1,4 @@
-# Viana — Tokens Extracted from the Dark Prototype
+# Compraspy — Tokens Extracted from the Dark Prototype
 
 > **Source of truth**: `prototype/index.html` ("Ultra-premium European Apothecary").
 > Every color value below is mapped to a token in `src/styles/tokens.css`. The

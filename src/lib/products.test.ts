@@ -4,7 +4,7 @@ import { categories } from "./categories";
 import { products, productById } from "./products";
 
 describe("catalog source reconciliation", () => {
-  it("keeps stable unique ids across the Viana and supplier catalogs", () => {
+  it("keeps stable unique ids across the Compraspy and supplier catalogs", () => {
     expect(products).toHaveLength(218);
     expect(new Set(products.map((product) => product.id)).size).toBe(products.length);
   });
